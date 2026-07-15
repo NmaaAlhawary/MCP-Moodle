@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="MCP-Moodle logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f98012"/>
+      <stop offset="1" stop-color="#8a2be2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- app-icon background -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="#0d1117"/>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="none" stroke="url(#g)" stroke-width="10"/>
+
+  <!-- graduation cap (mortarboard) = education / Moodle -->
+  <g fill="url(#g)">
+    <!-- board (diamond) -->
+    <polygon points="256,150 396,214 256,278 116,214"/>
+    <!-- head / cap base -->
+    <path d="M180 236 L256 270 L332 236 L332 300 C332 330 180 330 180 300 Z"/>
+  </g>
+
+  <!-- tassel = the MCP 'connection' node -->
+  <g fill="none" stroke="url(#g)" stroke-width="9" stroke-linecap="round">
+    <path d="M396 214 L396 300"/>
+  </g>
+  <circle cx="396" cy="318" r="18" fill="url(#g)"/>
+
+  <!-- small connection dot on the board, echoing node ⇄ node -->
+  <circle cx="256" cy="214" r="16" fill="#0d1117"/>
+</svg>
