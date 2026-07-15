@@ -4,6 +4,7 @@
 
 <br><br>
 
+[![Website](https://img.shields.io/badge/website-live-3fb950.svg?style=flat-square&logo=githubpages&logoColor=white)](https://nmaaalhawary.github.io/MCP-Moodle/)
 [![CI](https://img.shields.io/github/actions/workflow/status/NmaaAlhawary/MCP-Moodle/ci.yml?branch=main&style=flat-square&label=CI&logo=github)](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
@@ -12,7 +13,7 @@
 [![Release](https://img.shields.io/github/v/release/NmaaAlhawary/MCP-Moodle?style=flat-square&color=3fb950)](https://github.com/NmaaAlhawary/MCP-Moodle/releases)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
-<samp>[**Quick start**](#quick-start) · [**Tools**](#tool-reference) · [**How it works**](#how-it-works-two-pieces) · [**Contributing**](#contributing) · [**Releases**](https://github.com/NmaaAlhawary/MCP-Moodle/releases)</samp>
+<samp>🌐 **[Live site & guide](https://nmaaalhawary.github.io/MCP-Moodle/)** · [**Quick start**](#quick-start) · [**Tools**](#tool-reference) · [**How it works**](#how-it-works-two-pieces) · [**Contributing**](#contributing) · [**Releases**](https://github.com/NmaaAlhawary/MCP-Moodle/releases)</samp>
 
 <br>
 
