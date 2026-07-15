@@ -1,18 +1,23 @@
 <div align="center">
 
-# MCP-Moodle
+<img src="assets/banner.svg" alt="MCP-Moodle" width="100%">
 
-**Let an AI assistant read *and build* content in your Moodle site — in plain English.**
+<br><br>
 
-[![CI](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml/badge.svg)](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
-[![Moodle 4.2+](https://img.shields.io/badge/Moodle-4.2%2B-orange.svg)](https://moodle.org/)
-[![MCP](https://img.shields.io/badge/Model_Context_Protocol-compatible-8A2BE2.svg)](https://modelcontextprotocol.io/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![CI](https://img.shields.io/github/actions/workflow/status/NmaaAlhawary/MCP-Moodle/ci.yml?branch=main&style=flat-square&label=CI&logo=github)](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Moodle](https://img.shields.io/badge/moodle-4.2%2B-f98012.svg?style=flat-square&logo=moodle&logoColor=white)](https://moodle.org/)
+[![MCP](https://img.shields.io/badge/MCP-compatible-8A2BE2.svg?style=flat-square)](https://modelcontextprotocol.io/)
+[![Release](https://img.shields.io/github/v/release/NmaaAlhawary/MCP-Moodle?style=flat-square&color=3fb950)](https://github.com/NmaaAlhawary/MCP-Moodle/releases)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
-*"Create a course called Biology 101, add a welcome page, and enrol these five students."*
-→ and it actually happens.
+<samp>[**Quick start**](#quick-start) · [**Tools**](#tool-reference) · [**How it works**](#how-it-works-two-pieces) · [**Contributing**](#contributing) · [**Releases**](https://github.com/NmaaAlhawary/MCP-Moodle/releases)</samp>
+
+<br>
+
+> _"Create a course called Biology 101, add a welcome page, and enrol these five students."_
+> <br>→ and it actually happens.
 
 </div>
 
