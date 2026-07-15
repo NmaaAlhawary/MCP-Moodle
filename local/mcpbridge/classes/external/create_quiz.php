@@ -24,8 +24,6 @@
 
 namespace local_mcpbridge\external;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_value;
@@ -39,7 +37,11 @@ use context_course;
  * Question Bank API and is intentionally out of scope (stretch goal).
  */
 class create_quiz extends external_api {
-
+    /**
+     * Describe the input parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'courseid'  => new external_value(PARAM_INT, 'ID of the course'),
@@ -56,6 +58,8 @@ class create_quiz extends external_api {
     }
 
     /**
+     * Create the empty quiz activity.
+     *
      * @param int $courseid ID of the course.
      * @param int $section Section number (0 = top).
      * @param string $name Name of the quiz.
@@ -68,8 +72,18 @@ class create_quiz extends external_api {
      * @param int $visible Visible (1) or hidden (0).
      * @return array cmid and instance id of the new quiz.
      */
-    public static function execute($courseid, $section, $name, $intro = '', $timeopen = 0, $timeclose = 0,
-            $timelimit = 0, $grade = 100.0, $attempts = 0, $visible = 1) {
+    public static function execute(
+        $courseid,
+        $section,
+        $name,
+        $intro = '',
+        $timeopen = 0,
+        $timeclose = 0,
+        $timelimit = 0,
+        $grade = 100.0,
+        $attempts = 0,
+        $visible = 1
+    ) {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/course/modlib.php');
 
@@ -159,6 +173,11 @@ class create_quiz extends external_api {
         ];
     }
 
+    /**
+     * Describe the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'cmid'       => new external_value(PARAM_INT, 'Course module ID of the new quiz'),

@@ -21,7 +21,6 @@
  * @copyright  2026 Namaa Alhawary <namaa.alhawary@htu.edu.jo>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-// them into a single named service so an admin can generate one token for all.
 
 defined('MOODLE_INTERNAL') || die();
 

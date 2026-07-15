@@ -24,8 +24,6 @@
 
 namespace local_mcpbridge\external;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_multiple_structure;
@@ -46,7 +44,11 @@ use context_module;
  * (essay, matching, cloze, ...) each need their own form-data shape.
  */
 class add_quiz_question extends external_api {
-
+    /**
+     * Describe the input parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'quizcmid'     => new external_value(PARAM_INT, 'Course module ID (cmid) of the target quiz'),
@@ -55,19 +57,27 @@ class add_quiz_question extends external_api {
             'answers'      => new external_multiple_structure(
                 new external_single_structure([
                     'text'     => new external_value(PARAM_RAW, 'Answer option text (HTML)'),
-                    'fraction' => new external_value(PARAM_FLOAT,
-                        'Grade fraction: 1.0 = fully correct, 0 = wrong, negatives penalise'),
+                    'fraction' => new external_value(
+                        PARAM_FLOAT,
+                        'Grade fraction: 1.0 = fully correct, 0 = wrong, negatives penalise'
+                    ),
                     'feedback' => new external_value(PARAM_RAW, 'Optional per-answer feedback', VALUE_DEFAULT, ''),
                 ]),
                 'The answer options (at least two)'
             ),
-            'single'      => new external_value(PARAM_INT,
-                'Single correct answer (1) or multiple correct (0)', VALUE_DEFAULT, 1),
+            'single'      => new external_value(
+                PARAM_INT,
+                'Single correct answer (1) or multiple correct (0)',
+                VALUE_DEFAULT,
+                1
+            ),
             'defaultmark' => new external_value(PARAM_FLOAT, 'Marks this question is worth', VALUE_DEFAULT, 1.0),
         ]);
     }
 
     /**
+     * Add the multiple-choice question to the quiz.
+     *
      * @param int $quizcmid Course module ID (cmid) of the target quiz.
      * @param string $name Question name (bank label).
      * @param string $questiontext The question text shown to students (HTML).
@@ -135,9 +145,18 @@ class add_quiz_question extends external_api {
         $form->shuffleanswers        = 1;
         $form->answernumbering       = 'abc';
         $form->showstandardinstruction = 1;
-        $form->correctfeedback         = ['text' => get_string('correctfeedbackdefault', 'qtype_multichoice'), 'format' => FORMAT_HTML];
-        $form->partiallycorrectfeedback = ['text' => get_string('partiallycorrectfeedbackdefault', 'qtype_multichoice'), 'format' => FORMAT_HTML];
-        $form->incorrectfeedback       = ['text' => get_string('incorrectfeedbackdefault', 'qtype_multichoice'), 'format' => FORMAT_HTML];
+        $form->correctfeedback = [
+            'text' => get_string('correctfeedbackdefault', 'qtype_multichoice'),
+            'format' => FORMAT_HTML,
+        ];
+        $form->partiallycorrectfeedback = [
+            'text' => get_string('partiallycorrectfeedbackdefault', 'qtype_multichoice'),
+            'format' => FORMAT_HTML,
+        ];
+        $form->incorrectfeedback = [
+            'text' => get_string('incorrectfeedbackdefault', 'qtype_multichoice'),
+            'format' => FORMAT_HTML,
+        ];
         $form->shownumcorrect          = 1;
 
         // Answer options.
@@ -158,8 +177,12 @@ class add_quiz_question extends external_api {
         quiz_update_sumgrades($quiz);
 
         // Report the slot number this question landed in.
-        $slot = (int) $DB->get_field('quiz_slots', 'slot',
-            ['quizid' => $quiz->id, 'questionid' => $question->id], IGNORE_MULTIPLE);
+        $slot = (int) $DB->get_field(
+            'quiz_slots',
+            'slot',
+            ['quizid' => $quiz->id, 'questionid' => $question->id],
+            IGNORE_MULTIPLE
+        );
         if (!$slot) {
             // Moodle 4.1+ stores the question reference indirectly; fall back to the max slot.
             $slot = (int) $DB->get_field('quiz_slots', 'MAX(slot)', ['quizid' => $quiz->id]);
@@ -171,6 +194,11 @@ class add_quiz_question extends external_api {
         ];
     }
 
+    /**
+     * Describe the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'questionid' => new external_value(PARAM_INT, 'ID of the created question in the question bank'),

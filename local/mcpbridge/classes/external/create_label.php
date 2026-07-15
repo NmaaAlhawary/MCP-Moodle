@@ -24,8 +24,6 @@
 
 namespace local_mcpbridge\external;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_value;
@@ -38,7 +36,11 @@ use context_course;
  * A label stores its displayed text in the "intro" field of the module.
  */
 class create_label extends external_api {
-
+    /**
+     * Describe the input parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'courseid' => new external_value(PARAM_INT, 'ID of the course'),
@@ -50,6 +52,8 @@ class create_label extends external_api {
     }
 
     /**
+     * Create the label.
+     *
      * @param int $courseid ID of the course.
      * @param int $section Section number (0 = top).
      * @param string $content HTML content shown inline on the course page.
@@ -102,6 +106,11 @@ class create_label extends external_api {
         ];
     }
 
+    /**
+     * Describe the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'cmid'       => new external_value(PARAM_INT, 'Course module ID of the new label'),

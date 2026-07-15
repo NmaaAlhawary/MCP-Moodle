@@ -24,8 +24,6 @@
 
 namespace local_mcpbridge\external;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_value;
@@ -44,7 +42,6 @@ use context_course;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class create_page extends external_api {
-
     /**
      * Describe the input parameters.
      *
