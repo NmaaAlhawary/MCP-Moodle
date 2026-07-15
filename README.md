@@ -248,6 +248,8 @@ surfaces as a clean message.
 
 ## Safety & write mode
 
+For a full hardening checklist (dedicated service account, scoped role, HTTPS, token expiry), see **[SECURITY.md](SECURITY.md)**.
+
 - **Writes hit live data.** Every write tool creates or changes real records. There is no dry-run.
 - **Writes are gated.** If `MOODLE_ALLOW_WRITE` is not exactly `true`, the server registers **read tools only** — writes cannot be exposed by accident.
 - **The token is the blast radius.** Bind it to a dedicated service account with only the capabilities and courses you need. A site-admin token lets the AI do anything an admin can.
