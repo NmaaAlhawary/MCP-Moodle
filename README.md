@@ -1,138 +1,123 @@
-# Moodle MCP — Server + Companion Plugin
+<div align="center">
 
-Let an AI client (Claude Desktop, etc.) **do anything in a Moodle instance**: read
-courses, enrol users, upload files, and actually *build* content — create courses,
-pages, books, labels, URLs, and quizzes.
+# 🎓 MCP-Moodle
 
-It ships as **two pieces that work together**:
+**Let an AI assistant read *and build* content in your Moodle site — in plain English.**
 
-| Piece | What it is |
-|---|---|
-| **`local/mcpbridge/`** | A Moodle plugin that adds the activity-creation web service functions Moodle core is missing. |
-| **`moodle-mcp/`** | An MCP server (Python) that wraps Moodle's read/write API — including the plugin's new functions — as AI tools. |
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
+[![Moodle 4.2+](https://img.shields.io/badge/Moodle-4.2%2B-orange.svg)](https://moodle.org/)
+[![MCP](https://img.shields.io/badge/Model_Context_Protocol-compatible-8A2BE2.svg)](https://modelcontextprotocol.io/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## Why two pieces
+*"Create a course called Biology 101, add a welcome page, and enrol these five students."*
+→ and it actually happens.
 
-Moodle's Web Services API can create courses, users, enrolments, categories, groups,
-and upload files — but it has **no core function to create an activity** (a Page,
-Book, Label, URL, or Quiz). The plugin fills that gap by registering new web service
-functions that use Moodle's official `add_moduleinfo()` helper (the same code path the
-web UI uses — upgrade-safe, no raw table inserts). The MCP server then calls both core
-functions and the plugin's functions through a single token.
+</div>
 
 ---
 
-## Part A — Install the plugin (`local_mcpbridge`)
+## Table of contents
 
-1. Copy the `local/mcpbridge/` folder into your Moodle install so it lives at
-   `{moodle}/local/mcpbridge/`.
-2. Visit **Site administration** as an admin — Moodle detects the new plugin and
-   prompts you to upgrade the database. Confirm it.
-3. Done. The plugin registers five new web service functions and one service
-   (**MCP Bridge Service**).
-
-### Functions the plugin adds
-
-| Function | Creates |
-|---|---|
-| `local_mcpbridge_create_page` | A Page activity (HTML content) |
-| `local_mcpbridge_create_book` | A Book + its first chapter |
-| `local_mcpbridge_create_label` | A Label (inline text/HTML) |
-| `local_mcpbridge_create_url` | A URL resource |
-| `local_mcpbridge_create_quiz` | An empty Quiz (container/settings only) |
-| `local_mcpbridge_add_quiz_question` | A multiple-choice question added to an existing quiz (stretch goal) |
-
-> **Quizzes:** `create_quiz` makes the quiz container. `add_quiz_question` is the
-> stretch goal — it uses Moodle's Question Bank API to add a multiple-choice question
-> to a quiz. That API is heavier and more version-sensitive than activity creation, so
-> only single/multi-answer multiple-choice is supported; verify it on your Moodle
-> version before relying on it.
+- [What it does](#what-it-does)
+- [How it works (two pieces)](#how-it-works-two-pieces)
+- [Features](#features)
+- [Quick start](#quick-start)
+  - [1. Install the plugin](#1-install-the-plugin-local_mcpbridge)
+  - [2. Enable web services & get a token](#2-enable-web-services--generate-a-token)
+  - [3. Run the MCP server](#3-run-the-mcp-server)
+  - [4. Connect Claude Desktop](#4-connect-claude-desktop)
+- [Tool reference](#tool-reference)
+- [Testing from the shell](#testing-from-the-shell)
+- [Safety & write mode](#️-safety--write-mode)
+- [Extending it](#extending-it)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## Part B — Enable Web Services & generate a token
+## What it does
+
+Moodle is the learning platform used by thousands of universities and schools.
+**MCP-Moodle** connects it to any [Model Context Protocol](https://modelcontextprotocol.io/)
+client (like Claude Desktop), so an AI can:
+
+- 📖 **Read** — list courses, inspect course contents, see enrolled students, quizzes, and grades.
+- 🏗️ **Build** — create courses, users, categories, groups, enrolments, and *actual content*:
+  pages, books, labels, URLs, quizzes, and quiz questions.
+- 🔐 **Safely** — every write operation is off by default and only enabled with an explicit flag.
+
+## How it works (two pieces)
+
+Moodle's built-in Web Services API can create courses and users — but it has **no
+core function to create an activity** (a Page, Book, Quiz…). So this project ships
+two parts that work together:
+
+```
+┌────────────────┐     MCP tools      ┌──────────────────┐    REST + token    ┌─────────────────┐
+│  AI client     │ ◄────────────────► │   moodle-mcp     │ ◄────────────────► │   Moodle site   │
+│ (Claude, etc.) │                    │  (Python server) │                    │  + local plugin │
+└────────────────┘                    └──────────────────┘                    └─────────────────┘
+```
+
+| Piece | Path | Role |
+|---|---|---|
+| **Moodle plugin** | [`local/mcpbridge/`](local/mcpbridge) | Adds the activity-creation web service functions Moodle core is missing — using Moodle's official `add_moduleinfo()` helper, so it's upgrade-safe (no raw DB writes). |
+| **MCP server** | [`moodle-mcp/`](moodle-mcp) | Wraps Moodle's read/write API — core *and* the plugin's new functions — as typed MCP tools for an AI client. |
+
+## Features
+
+- ✅ **18+ tools** covering read, core writes, and activity creation
+- ✅ **Read/write split** — read tools always on; write tools gated behind `MOODLE_ALLOW_WRITE=true`
+- ✅ **Upgrade-safe plugin** — uses Moodle's own `add_moduleinfo()`, never touches module tables directly
+- ✅ **Clean error handling** — detects Moodle's JSON-error-on-HTTP-200 quirk and surfaces readable messages
+- ✅ **Token never logged** — config from environment variables only
+- ✅ **One token for everything** — read, core writes, and the plugin functions in a single service
+
+---
+
+## Quick start
+
+### 1. Install the plugin (`local_mcpbridge`)
+
+Copy the `local/mcpbridge/` folder into your Moodle so it lives at
+`{moodle}/local/mcpbridge/`, then visit **Site administration** as an admin —
+Moodle will detect it and prompt you to upgrade. Confirm, and you're done.
+
+### 2. Enable web services & generate a token
 
 In Moodle as an admin:
 
-1. **Enable web services**
-   *Site administration → Advanced features* → tick **Enable web services** → Save.
-2. **Enable the REST protocol**
-   *Site administration → Server → Web services → Manage protocols* → enable **REST**.
-3. **Build one service with everything**
-   *Site administration → Server → Web services → External services*.
-   - You can use the ready-made **MCP Bridge Service** the plugin created, then click
-     **Functions** and **add the core functions** you want the AI to use (see list
-     below). This gives you one service and one token covering read, core writes, and
-     activity creation.
-   - Recommended core functions to add:
-     `core_webservice_get_site_info`, `core_course_get_courses`,
-     `core_course_get_courses_by_field`, `core_course_get_contents`,
-     `core_enrol_get_enrolled_users`, `mod_quiz_get_quizzes_by_courses`,
-     `gradereport_user_get_grade_items`, `core_course_create_courses`,
-     `core_course_create_categories`, `core_user_create_users`,
-     `enrol_manual_enrol_users`, `core_group_create_groups`, `core_files_upload`.
-4. **Authorise a user** for the service (it is restricted-users by default) and make
-   sure that user has the capabilities the write functions need — notably
-   `moodle/course:manageactivities` in the target courses.
-5. **Create a token**
-   *Site administration → Server → Web services → Manage tokens* → **Create token** →
-   pick the user and the **MCP Bridge Service**. Copy the token.
+1. **Enable web services** — *Site administration → Advanced features* → tick **Enable web services**.
+2. **Enable REST** — *Server → Web services → Manage protocols* → enable **REST protocol**.
+3. **Build the service** — *Server → Web services → External services*. Use the
+   ready-made **MCP Bridge Service** the plugin created, then click **Functions**
+   and add the core read/write functions you want (list in [Tool reference](#tool-reference)).
+4. **Authorise a user** for the service and make sure they have the needed
+   capabilities (notably `moodle/course:manageactivities` in the target courses).
+5. **Create a token** — *Server → Web services → Manage tokens* → pick the user and
+   the **MCP Bridge Service**. Copy it.
 
-### Verify the plugin from a raw REST call (do this before wiring the AI)
+> 💡 **Verify before you wire up the AI:** run the [test script](#testing-from-the-shell)
+> to confirm the plugin and token work end to end.
 
-```bash
-curl "https://moodle.example.edu/webservice/rest/server.php" \
-  --data-urlencode "wstoken=YOUR_TOKEN" \
-  --data-urlencode "wsfunction=local_mcpbridge_create_page" \
-  --data-urlencode "moodlewsrestformat=json" \
-  --data-urlencode "courseid=2" \
-  --data-urlencode "section=0" \
-  --data-urlencode "name=Welcome" \
-  --data-urlencode "content=<h2>Hello from MCP</h2><p>It works.</p>"
-```
-
-Expected success response:
-
-```json
-{"cmid": 47, "instanceid": 12}
-```
-
-A Moodle error (still HTTP 200) looks like:
-
-```json
-{"exception":"required_capability_exception","errorcode":"nopermissions",
- "message":"Sorry, but you do not currently have permissions to do that (Manage activities)."}
-```
-
-The MCP server detects that `exception` field and surfaces it as a clean error.
-
----
-
-## Part C — Run the MCP server
+### 3. Run the MCP server
 
 ```bash
 cd moodle-mcp
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env      # then edit .env
+cp .env.example .env        # then edit .env with your URL + token
+python server.py
 ```
 
-Environment variables (`.env` or your shell):
-
-| Var | Meaning |
+| Env var | Meaning |
 |---|---|
 | `MOODLE_URL` | Base URL, no trailing slash |
-| `MOODLE_TOKEN` | The token from Part B (never logged) |
+| `MOODLE_TOKEN` | The token from step 2 (never logged) |
 | `MOODLE_ALLOW_WRITE` | `true` to enable write tools; anything else = read-only |
 
-Run it:
-
-```bash
-MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=xxxx MOODLE_ALLOW_WRITE=true \
-  python server.py
-```
-
-### Claude Desktop config
+### 4. Connect Claude Desktop
 
 Add to `claude_desktop_config.json`:
 
@@ -152,13 +137,15 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
+Restart Claude Desktop and the Moodle tools appear. 🎉
+
 ---
 
-## Tools
+## Tool reference
 
-### Read (always on)
+### 📖 Read (always on)
 
-| Tool | `wsfunction` |
+| Tool | Moodle function |
 |---|---|
 | `verify_connection` | `core_webservice_get_site_info` |
 | `list_courses` | `core_course_get_courses` |
@@ -168,9 +155,9 @@ Add to `claude_desktop_config.json`:
 | `list_quizzes` | `mod_quiz_get_quizzes_by_courses` |
 | `get_user_grades` | `gradereport_user_get_grade_items` |
 
-### Write (only when `MOODLE_ALLOW_WRITE=true`)
+### 🏗️ Write (only when `MOODLE_ALLOW_WRITE=true`)
 
-| Tool | `wsfunction` | Source |
+| Tool | Moodle function | Source |
 |---|---|---|
 | `create_course` | `core_course_create_courses` | core |
 | `create_category` | `core_course_create_categories` | core |
@@ -185,42 +172,71 @@ Add to `claude_desktop_config.json`:
 | `create_quiz` | `local_mcpbridge_create_quiz` | **plugin** |
 | `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
 
+> **Quizzes:** `create_quiz` makes the container; `add_quiz_question` (stretch goal)
+> uses Moodle's Question Bank API to add a multiple-choice question. That API is
+> version-sensitive — test it on your Moodle version first.
+
 ---
 
-## Testing from the shell (`test_rest.sh`)
+## Testing from the shell
 
-Before wiring the AI client, confirm the plugin + token work end to end:
+Confirm the plugin + token work before wiring up the AI:
 
 ```bash
 cd moodle-mcp
+
 # Read-only checks (site info + course list):
 MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=xxxx ./test_rest.sh
 
-# Full write test — creates a page, label, url, book, quiz, and a quiz question
-# in COURSEID (⚠️ modifies live data):
+# Full write test — creates a page, label, url, book, quiz + question in COURSEID:
 MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=xxxx COURSEID=2 ./test_rest.sh --write
 ```
 
-It reads a sibling `.env` if present, and pretty-prints with `jq` when installed.
-The `--write` run captures the new quiz's `cmid` and feeds it straight into
-`add_quiz_question`, so you see the whole activity-creation path in one pass.
+A successful create returns e.g. `{"cmid": 47, "instanceid": 12}`. A Moodle error
+(still HTTP 200) returns a JSON object with an `exception` field, which the server
+surfaces as a clean message.
 
 ---
 
-## ⚠️ Safety note — write mode
+## ⚠️ Safety & write mode
 
-- **Writes hit live Moodle data.** Every write tool creates or changes real records
-  (courses, users, enrolments, activities, files). There is no dry-run.
-- **Writes are gated.** If `MOODLE_ALLOW_WRITE` is not exactly `true`, the server
-  registers **read tools only** — write tools cannot be exposed by accident.
-- **The token is the blast radius.** Bind it to a dedicated service account with only
-  the capabilities you actually need, and restrict it to the intended courses. A token
-  with site-admin rights lets the AI do anything an admin can.
-- **The token is never logged.** It is read from the environment and sent only as a
-  POST field to Moodle over HTTPS.
-- Start read-only. Turn on write mode deliberately, on a test course, and confirm the
-  raw REST call from Part B works before letting an AI client drive it.
+- **Writes hit live data.** Every write tool creates or changes real records. There is no dry-run.
+- **Writes are gated.** If `MOODLE_ALLOW_WRITE` is not exactly `true`, the server registers **read tools only** — writes cannot be exposed by accident.
+- **The token is the blast radius.** Bind it to a dedicated service account with only the capabilities and courses you need. A site-admin token lets the AI do anything an admin can.
+- **The token is never logged** — read from the environment, sent only to Moodle over HTTPS.
+- **Start read-only.** Turn on write mode deliberately, on a test course, and confirm the shell test passes first.
+
+---
+
+## Extending it
+
+Adding a new capability (e.g. `create_assignment`, `create_forum`) is copy-paste-modify.
+Each plugin function follows the same three-method shape — see
+[`create_page.php`](local/mcpbridge/classes/external/create_page.php) as the template,
+and [CONTRIBUTING.md](CONTRIBUTING.md) for the full recipe.
+
+---
+
+## Contributing
+
+Contributions are very welcome — this is built to be extended! 🙌
+
+1. **Fork** the repo (top-right **Fork** button).
+2. Create a branch: `git checkout -b feature/my-thing`.
+3. Make your change and test it (`php -l`, `py_compile`, ideally against a real Moodle).
+4. Push and open a **Pull Request** to `main`.
+
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full workflow, coding standards,
+and the pattern for adding a new function. Please also read our
+[Code of Conduct](CODE_OF_CONDUCT.md). Found a bug or want a feature? Open an
+[issue](../../issues).
+
+---
 
 ## License
 
-MIT — see [`moodle-mcp/LICENSE`](moodle-mcp/LICENSE).
+[MIT](LICENSE) — free to use, modify, and distribute.
+
+<div align="center">
+<sub>Built for educators, admins, and anyone who wants to talk to Moodle instead of clicking through it.</sub>
+</div>
