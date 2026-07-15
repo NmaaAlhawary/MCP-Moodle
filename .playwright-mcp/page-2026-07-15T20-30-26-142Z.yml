@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - status
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#maincontent"
+    - generic [ref=e5]:
+      - complementary [ref=e6]:
+        - generic [ref=e7]:
+          - heading "Welcome to Moodle" [level=1] [ref=e8]
+          - generic [ref=e9]: Your learning journey starts here. Access courses, connect with peers, and achieve your goals.
+          - paragraph [ref=e10]: You're part of a global learning community
+          - generic [ref=e11]:
+            - generic [ref=e12]:
+              - strong [ref=e13]: 500M
+              - generic [ref=e14]: users
+            - generic [ref=e15]:
+              - strong [ref=e16]: 150K
+              - generic [ref=e17]: sites
+            - generic [ref=e18]:
+              - strong [ref=e19]: 200+
+              - generic [ref=e20]: countries
+        - text: AI-generated image
+      - main [ref=e24]:
+        - generic [ref=e26]:
+          - heading "Welcome back" [level=1] [ref=e27]
+          - paragraph [ref=e28]: Log in to Moodle Local
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - generic [ref=e31]: Username or email
+              - textbox "Username or email" [ref=e32]:
+                - /placeholder: Enter your username or email
+            - generic [ref=e33]:
+              - generic [ref=e34]: Password
+              - textbox "Password" [ref=e35]:
+                - /placeholder: Enter your password
+            - link "Forgot password?" [ref=e37] [cursor=pointer]:
+              - /url: http://localhost:8100/login/forgot_password.php
+            - button "Log in" [ref=e39] [cursor=pointer]
+          - button "Cookies notice" [ref=e41] [cursor=pointer]
+    - contentinfo:
+      - button "Show footer" [ref=e42] [cursor=pointer]:
+        - generic [ref=e43]: "?"

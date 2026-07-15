@@ -30,7 +30,17 @@ from mcp.server.fastmcp import FastMCP
 
 # --------------------------------------------------------------------------- #
 # Configuration (env vars only — never hard-code or log the token).
+# Load a .env sitting next to this file so the server works regardless of the
+# working directory it is launched from (e.g. by an MCP client). Real env vars
+# already set take precedence over the file.
 # --------------------------------------------------------------------------- #
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+except ImportError:
+    pass
 
 MOODLE_URL = os.environ.get("MOODLE_URL", "").rstrip("/")
 MOODLE_TOKEN = os.environ.get("MOODLE_TOKEN", "")

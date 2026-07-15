@@ -1,0 +1,7 @@
+[     202ms] [LOG] Starting Moodle session timeout warning. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:330
+[   14604ms] [LOG] Starting Moodle session timeout warning. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:330
+[   29648ms] [LOG] Starting Moodle session timeout warning. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:330
+[   32224ms] [LOG] Starting Moodle session timeout warning. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:330
+[   34260ms] [LOG] Starting Moodle session timeout warning. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:330
+[   34292ms] [WARNING] The core/event::notifyFilterContentUpdated() function has been moved to core_filters/events::notifyFilterContentUpdated. Please update your code to use the new module. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:175
+[   41025ms] [LOG] Starting Moodle session timeout warning. @ http://localhost:8100/lib/requirejs.php/1784146036/core/first.js:330

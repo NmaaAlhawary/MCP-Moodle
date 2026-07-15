@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MCP-Moodle — How to use it</title>
-<meta name="description" content="A step-by-step guide to using MCP-Moodle: install the plugin, connect your AI, and build Moodle courses by chatting. With video walkthroughs.">
+<meta name="description" content="A step-by-step guide to using MCP-Moodle: install the plugin, connect your AI, and build Moodle courses by chatting. With real screenshots.">
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,7 +122,7 @@
   <div class="wrap">
     <div class="logo"><img src="assets/logo.svg" alt="" width="28" height="28" style="display:block">MCP-Moodle</div>
     <div class="nav-links">
-      <a href="#watch">Watch</a>
+      <a href="#watch">See it</a>
       <a href="#setup">Setup</a>
       <a href="#can-do">What it can do</a>
       <a href="#prompts">Prompts</a>
@@ -131,6 +131,19 @@
   </div>
 </nav>
 
+<style>
+  .hero-chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+  .hero-chips .c{font-size:12.5px;font-weight:600;color:var(--muted);padding:6px 14px;border-radius:100px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .hero-chips .c b{color:#ffb877;font-weight:700}
+  .hero-preview{margin:60px auto 0;max-width:940px;position:relative}
+  .hero-preview::before{content:"";position:absolute;inset:-10% -6%;background:radial-gradient(ellipse at center,rgba(138,43,226,.28),rgba(249,128,18,.12) 40%,transparent 70%);filter:blur(20px);z-index:0}
+  .browser{position:relative;z-index:1;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 50px 120px -40px rgba(0,0,0,.95);background:#0b0d12}
+  .browser .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(255,255,255,.045);border-bottom:1px solid var(--line)}
+  .browser .bar i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .browser .bar .r{background:#ff5f57}.browser .bar .y{background:#febc2e}.browser .bar .g{background:#28c840}
+  .browser .bar .url{margin-left:14px;font-size:12px;color:var(--muted);font-family:"JetBrains Mono"}
+  .browser img{width:100%;display:block}
+</style>
 <header>
   <div class="wrap">
     <img src="assets/logo.svg" alt="MCP-Moodle" class="hero-logo" style="margin-bottom:22px">
@@ -139,27 +152,39 @@
     <h1>Build your Moodle<br><span class="grad-text">by talking to AI</span></h1>
     <p class="sub">Install once, connect your AI client, then create courses, pages, quizzes and enrolments in plain English. Here's exactly how.</p>
     <div class="cta">
-      <a class="btn btn-primary" href="#watch">▶ Watch the walkthrough</a>
+      <a class="btn btn-primary" href="#watch">See it in action</a>
       <a class="btn btn-ghost" href="#setup">Setup guide</a>
+    </div>
+    <div class="hero-chips">
+      <span class="c">Moodle plugin</span>
+      <span class="c">MCP server</span>
+      <span class="c"><b>40+</b> tools</span>
+      <span class="c">Open source · MIT</span>
+    </div>
+    <div class="hero-preview">
+      <div class="browser">
+        <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">localhost/moodle · built by AI</span></div>
+        <img src="images/moodle-courses.png" alt="A Moodle course category with four AI-created courses" loading="lazy">
+      </div>
     </div>
   </div>
 </header>
 
-<!-- ============ MAIN VIDEO ============ -->
-<!-- TO ADD YOUR VIDEO: replace the whole .video block below with:
-     <div class="video"><video controls poster="videos/poster.jpg"><source src="videos/demo.mp4" type="video/mp4"></video></div>
-     ...or a YouTube embed:
-     <div class="video"><iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe></div>
--->
+<!-- ============ SHOWCASE (real screenshots) ============ -->
 <section id="watch">
   <div class="wrap">
-    <span class="eyebrow">Full demo</span>
-    <h2>See it in action</h2>
-    <p class="lead">Watch a complete run: from a plain-English request to a finished course with real content inside Moodle.</p>
-    <div class="video">
-      <video autoplay muted loop playsinline controls poster="images/moodle-courses.png">
-        <source src="videos/demo.mp4" type="video/mp4">
-      </video>
+    <span class="eyebrow">See it in action</span>
+    <h2>Real courses, built by AI</h2>
+    <p class="lead">Not mock-ups — actual screenshots from Moodle. A full four-course program and its content, all created from plain-English prompts.</p>
+    <div style="margin-top:40px;display:grid;gap:28px">
+      <figure style="margin:0">
+        <img src="images/moodle-courses.png" alt="Web Development Bootcamp category with four AI-created courses in Moodle" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
+        <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">A whole “Web Development Bootcamp” category — 4 courses generated in seconds.</figcaption>
+      </figure>
+      <figure style="margin:0">
+        <img src="images/moodle-course.png" alt="An AI-created Moodle course with a welcome page, module label and topic pages" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
+        <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">Inside a course: welcome page, module divider, and topic pages with real content.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -169,14 +194,13 @@
   <div class="wrap">
     <span class="eyebrow">Setup</span>
     <h2>Four steps to get running</h2>
-    <p class="lead">Each step below has a slot for a short video clip. Drop your recording into the <code>videos/</code> folder to embed it.</p>
+    <p class="lead">From zero to building courses by chat. Full details are in the <a href="https://github.com/NmaaAlhawary/MCP-Moodle#quick-start" style="color:var(--blue)">README</a>.</p>
 
     <div class="step">
       <div class="num">1</div>
       <div class="body">
         <h3>Install the plugin</h3>
         <p>In Moodle: <b>Site administration → Plugins → Install plugins</b>, upload <code>mcpbridge.zip</code> from the latest release, and confirm the database upgrade. The <b>MCP Bridge</b> plugin appears under Local plugins.</p>
-        <div class="mini-video"><div class="p"></div><span>videos/01-install.mp4</span></div>
       </div>
     </div>
 
@@ -185,7 +209,6 @@
       <div class="body">
         <h3>Enable web services &amp; create a token</h3>
         <p>Turn on <b>web services</b> and the <b>REST</b> protocol, add the functions to the <b>MCP Bridge Service</b>, authorise a user, then create a token under <b>Manage tokens</b>. Copy it — the AI uses it to talk to Moodle.</p>
-        <div class="mini-video"><div class="p"></div><span>videos/02-token.mp4</span></div>
       </div>
     </div>
 
@@ -194,7 +217,6 @@
       <div class="body">
         <h3>Connect your AI client</h3>
         <p>Run the Python MCP server with your <code>MOODLE_URL</code> and <code>MOODLE_TOKEN</code>, then add it to <code>claude_desktop_config.json</code>. Restart Claude Desktop — a <b>moodle</b> connector appears, toggled on.</p>
-        <div class="mini-video"><div class="p"></div><span>videos/03-connect.mp4</span></div>
       </div>
     </div>
 
@@ -203,11 +225,8 @@
       <div class="body">
         <h3>Start building — just chat</h3>
         <p>Type what you want: “Create a course called Biology 101 and add a welcome page.” The AI calls the right tools and does it live. That's it.</p>
-        <div class="mini-video"><div class="p"></div><span>videos/04-build.mp4</span></div>
       </div>
     </div>
-
-    <div class="note">💡 <b>Adding videos:</b> put your screen recordings in <code>docs/videos/</code> (e.g. <code>01-install.mp4</code>), then replace a video slot's markup with a <code>&lt;video controls&gt;</code> tag — see the comments in <code>docs/index.html</code>. You can also embed YouTube links.</div>
   </div>
 </section>
 
@@ -255,25 +274,6 @@
         <p>Grades, deadlines, progress, and combined dashboards across courses.</p>
         <div class="ex">“What are my upcoming deadlines and overdue tasks?”</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ REAL SCREENSHOTS ============ -->
-<section id="proof">
-  <div class="wrap">
-    <span class="eyebrow">Real output</span>
-    <h2>Built by AI, live in Moodle</h2>
-    <p class="lead">Not mock-ups — actual screenshots. A full four-course program and its content, all created from plain-English prompts.</p>
-    <div style="margin-top:40px;display:grid;gap:28px">
-      <figure style="margin:0">
-        <img src="images/moodle-courses.png" alt="Web Development Bootcamp category with four AI-created courses in Moodle" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
-        <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">A whole “Web Development Bootcamp” category — 4 courses generated in seconds.</figcaption>
-      </figure>
-      <figure style="margin:0">
-        <img src="images/moodle-course.png" alt="An AI-created Moodle course with a welcome page, module label and topic pages" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
-        <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">Inside a course: welcome page, module divider, and topic pages with real content.</figcaption>
-      </figure>
     </div>
   </div>
 </section>

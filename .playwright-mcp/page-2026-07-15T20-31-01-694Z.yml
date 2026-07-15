@@ -1,0 +1,263 @@
+- generic [active] [ref=f3e1]:
+  - status
+  - generic [ref=f3e2]:
+    - link "Skip to main content" [ref=f3e3] [cursor=pointer]:
+      - /url: "#maincontent"
+    - navigation "Site navigation" [ref=f3e4]:
+      - generic [ref=f3e5]:
+        - link "MoodleLocal" [ref=f3e6] [cursor=pointer]:
+          - /url: http://localhost:8100/my/
+        - navigation [ref=f3e8]:
+          - menubar [ref=f3e9]:
+            - menuitem "Dashboard" [ref=f3e10] [cursor=pointer]
+            - menuitem "Site administration" [ref=f3e11] [cursor=pointer]
+            - text: 
+        - generic [ref=f3e12]:
+          - generic [ref=f3e14]:
+            - generic [ref=f3e15]: Edit mode
+            - checkbox "Edit mode" [ref=f3e17]
+          - button "Show notification window with no new notifications" [ref=f3e19] [cursor=pointer]:
+            - generic [ref=f3e20]: 
+          - button "Toggle messaging drawer" [ref=f3e22] [cursor=pointer]:
+            - generic [ref=f3e23]: 
+          - button "User menu" [ref=f3e29] [cursor=pointer]:
+            - img "MCP Service" [ref=f3e33]: MS
+            - text: 
+    - generic [ref=f3e34]:
+      - generic [ref=f3e35]:
+        - banner [ref=f3e36]:
+          - generic [ref=f3e37]:
+            - navigation "Breadcrumb" [ref=f3e40]:
+              - list [ref=f3e41]:
+                - listitem [ref=f3e42]:
+                  - link "Courses" [ref=f3e43] [cursor=pointer]:
+                    - /url: http://localhost:8100/course/index.php
+                - listitem [ref=f3e44]:
+                  - text: /
+                  - link "Web Development Bootcamp" [ref=f3e45] [cursor=pointer]:
+                    - /url: http://localhost:8100/course/index.php?categoryid=2
+                - listitem [ref=f3e46]: / Manage courses and categories
+            - heading "Web Development Bootcamp" [level=1] [ref=f3e52]
+        - navigation [ref=f3e54]:
+          - menubar [ref=f3e55]:
+            - menuitem "Category" [ref=f3e56] [cursor=pointer]
+            - menuitem "Settings" [ref=f3e57] [cursor=pointer]
+            - menuitem "Upload courses" [ref=f3e58] [cursor=pointer]
+            - menuitem "More " [ref=f3e59] [cursor=pointer]
+        - main [ref=f3e63]:
+          - generic [ref=f3e66]:
+            - generic [ref=f3e69]:
+              - generic [ref=f3e70]: "Viewing:"
+              - combobox "Viewing:" [ref=f3e71]:
+                - option "Course categories and courses" [selected]
+                - option "Course categories"
+                - option "Courses"
+            - generic [ref=f3e75]:
+              - textbox "Search courses" [ref=f3e76]
+              - generic: Search courses
+              - button "Search courses" [ref=f3e78] [cursor=pointer]:
+                - generic [ref=f3e79]: 
+          - heading "Manage course categories and courses" [level=2] [ref=f3e81]
+          - generic [ref=f3e82]:
+            - generic [ref=f3e83]:
+              - link "Skip to the category listings" [ref=f3e84] [cursor=pointer]:
+                - /url: http://localhost:8100/course/management.php?categoryid=2#category-listing
+              - link "Skip to the course listings" [ref=f3e85] [cursor=pointer]:
+                - /url: http://localhost:8100/course/management.php?categoryid=2#course-listing
+            - generic [ref=f3e86]:
+              - generic [ref=f3e88]:
+                - heading "Course categories" [level=3] [ref=f3e89]
+                - generic [ref=f3e90]:
+                  - link "Create new category" [ref=f3e92] [cursor=pointer]:
+                    - /url: http://localhost:8100/course/editcategory.php?parent=2
+                  - tree "Course categories" [ref=f3e93]:
+                    - treeitem "Category 1 bulk action selection Category 1 Courses" [ref=f3e94]:
+                      - generic [ref=f3e95]:
+                        - generic [ref=f3e97]:
+                          - checkbox "Category 1 bulk action selection" [ref=f3e98]
+                          - generic: Category 1 bulk action selection
+                        - link "Category 1" [ref=f3e101] [cursor=pointer]:
+                          - /url: http://localhost:8100/course/management.php?categoryid=1
+                        - generic [ref=f3e102]:
+                          - menubar [ref=f3e103]:
+                            - generic [ref=f3e104]:
+                              - menuitem [ref=f3e106] [cursor=pointer]:
+                                - img "Hide" [ref=f3e107]: 
+                              - generic: 
+                              - generic: 
+                              - menuitem [ref=f3e109] [cursor=pointer]:
+                                - img "Move down" [ref=f3e110]: 
+                              - generic [ref=f3e112]:
+                                - menuitem "Actions menu" [ref=f3e113] [cursor=pointer]:
+                                  - generic [ref=f3e114]: 
+                                - text:         
+                          - generic "Courses" [ref=f3e116]:
+                            - text: "6"
+                            - img "Courses" [ref=f3e118]: 
+                    - treeitem "Web Development Bootcamp bulk action selection Web Development Bootcamp Courses" [ref=f3e119]:
+                      - generic [ref=f3e120]:
+                        - generic [ref=f3e122]:
+                          - checkbox "Web Development Bootcamp bulk action selection" [ref=f3e123]
+                          - generic: Web Development Bootcamp bulk action selection
+                        - link "Web Development Bootcamp" [ref=f3e126] [cursor=pointer]:
+                          - /url: http://localhost:8100/course/management.php?categoryid=2
+                        - generic [ref=f3e127]:
+                          - menubar [ref=f3e128]:
+                            - generic [ref=f3e129]:
+                              - menuitem [ref=f3e131] [cursor=pointer]:
+                                - img "Hide" [ref=f3e132]: 
+                              - generic: 
+                              - menuitem [ref=f3e134] [cursor=pointer]:
+                                - img "Move up" [ref=f3e135]: 
+                              - generic: 
+                              - generic [ref=f3e137]:
+                                - menuitem "Actions menu" [ref=f3e138] [cursor=pointer]:
+                                  - generic [ref=f3e139]: 
+                                - text:         
+                          - generic "Courses" [ref=f3e141]:
+                            - text: "4"
+                            - img "Courses" [ref=f3e143]: 
+                  - generic [ref=f3e144]:
+                    - generic [ref=f3e145]: Bulk actions for selected categories
+                    - generic [ref=f3e146]:
+                      - generic [ref=f3e147]: Sorting
+                      - generic [ref=f3e150]:
+                        - combobox "Which categories would you like to sort?" [ref=f3e152]:
+                          - option "This category"
+                          - option "Selected categories" [selected]
+                          - option "All categories"
+                        - combobox "Select how you would like to sort categories" [disabled] [ref=f3e154]:
+                          - option "Sort by Category name ascending" [selected]
+                          - option "Sort by Category name descending"
+                          - option "Sort by Category ID number ascending"
+                          - option "Sort by Category ID number descending"
+                          - option "Don't sort categories"
+                        - combobox "Select how you would like to sort courses" [disabled] [ref=f3e156]:
+                          - option "Sort by Course full name ascending" [selected]
+                          - option "Sort by Course full name descending"
+                          - option "Sort by Course short name ascending"
+                          - option "Sort by Course short name descending"
+                          - option "Sort by Course ID number ascending"
+                          - option "Sort by Course ID number descending"
+                          - option "Sort by Course time created ascending"
+                          - option "Sort by Course time created descending"
+                          - option "Don't sort courses"
+                        - button "Sort" [ref=f3e157] [cursor=pointer]
+                    - generic [ref=f3e158]:
+                      - generic [ref=f3e159]: Move selected categories to
+                      - generic [ref=f3e163]:
+                        - combobox "Move selected categories to" [disabled] [ref=f3e164]:
+                          - option "Choose..." [selected]
+                          - option "Top"
+                          - option "Category 1"
+                          - option "Web Development Bootcamp"
+                        - button "Move" [ref=f3e165] [cursor=pointer]
+              - generic [ref=f3e167]:
+                - heading "Web Development Bootcamp" [level=3] [ref=f3e168]
+                - generic [ref=f3e169]:
+                  - generic [ref=f3e170]:
+                    - link "Create new course" [ref=f3e171] [cursor=pointer]:
+                      - /url: http://localhost:8100/course/edit.php?category=2&returnto=catmanage
+                    - button "Sort courses" [ref=f3e176] [cursor=pointer]: Sort courses 
+                    - 'button "Per page: 20" [ref=f3e181] [cursor=pointer]': "Per page: 20 "
+                  - list [ref=f3e182]:
+                    - listitem [ref=f3e183]:
+                      - generic [ref=f3e184]:
+                        - img "You can drag and drop this course to alter its sorting or to move it to another category." [ref=f3e186] [cursor=pointer]: 
+                        - generic [ref=f3e188]:
+                          - 'checkbox "Web Dev Bootcamp: Full-Stack & Deployment bulk action selection" [ref=f3e189]'
+                          - generic: "Web Dev Bootcamp: Full-Stack & Deployment bulk action selection"
+                        - 'link "Web Dev Bootcamp: Full-Stack & Deployment" [ref=f3e191] [cursor=pointer]':
+                          - /url: http://localhost:8100/course/management.php?categoryid=2&courseid=11
+                        - generic [ref=f3e193]:
+                          - button "Edit" [ref=f3e194] [cursor=pointer]:
+                            - generic [ref=f3e195]: 
+                          - button "Copy course" [ref=f3e196] [cursor=pointer]:
+                            - generic [ref=f3e197]: 
+                          - button "Delete" [ref=f3e198] [cursor=pointer]:
+                            - generic [ref=f3e199]: 
+                          - button "Hide" [ref=f3e200] [cursor=pointer]:
+                            - generic [ref=f3e201]: 
+                          - text:  
+                          - button "Move down" [ref=f3e202] [cursor=pointer]:
+                            - generic [ref=f3e203]: 
+                    - listitem [ref=f3e204]:
+                      - generic [ref=f3e205]:
+                        - img "You can drag and drop this course to alter its sorting or to move it to another category." [ref=f3e207] [cursor=pointer]: 
+                        - generic [ref=f3e209]:
+                          - 'checkbox "Web Dev Bootcamp: Backend with Python & APIs bulk action selection" [ref=f3e210]'
+                          - generic: "Web Dev Bootcamp: Backend with Python & APIs bulk action selection"
+                        - 'link "Web Dev Bootcamp: Backend with Python & APIs" [ref=f3e212] [cursor=pointer]':
+                          - /url: http://localhost:8100/course/management.php?categoryid=2&courseid=10
+                        - generic [ref=f3e214]:
+                          - button "Edit" [ref=f3e215] [cursor=pointer]:
+                            - generic [ref=f3e216]: 
+                          - button "Copy course" [ref=f3e217] [cursor=pointer]:
+                            - generic [ref=f3e218]: 
+                          - button "Delete" [ref=f3e219] [cursor=pointer]:
+                            - generic [ref=f3e220]: 
+                          - button "Hide" [ref=f3e221] [cursor=pointer]:
+                            - generic [ref=f3e222]: 
+                          - text: 
+                          - button "Move up" [ref=f3e223] [cursor=pointer]:
+                            - generic [ref=f3e224]: 
+                          - button "Move down" [ref=f3e225] [cursor=pointer]:
+                            - generic [ref=f3e226]: 
+                    - listitem [ref=f3e227]:
+                      - generic [ref=f3e228]:
+                        - img "You can drag and drop this course to alter its sorting or to move it to another category." [ref=f3e230] [cursor=pointer]: 
+                        - generic [ref=f3e232]:
+                          - 'checkbox "Web Dev Bootcamp: JavaScript Essentials bulk action selection" [ref=f3e233]'
+                          - generic: "Web Dev Bootcamp: JavaScript Essentials bulk action selection"
+                        - 'link "Web Dev Bootcamp: JavaScript Essentials" [ref=f3e235] [cursor=pointer]':
+                          - /url: http://localhost:8100/course/management.php?categoryid=2&courseid=9
+                        - generic [ref=f3e237]:
+                          - button "Edit" [ref=f3e238] [cursor=pointer]:
+                            - generic [ref=f3e239]: 
+                          - button "Copy course" [ref=f3e240] [cursor=pointer]:
+                            - generic [ref=f3e241]: 
+                          - button "Delete" [ref=f3e242] [cursor=pointer]:
+                            - generic [ref=f3e243]: 
+                          - button "Hide" [ref=f3e244] [cursor=pointer]:
+                            - generic [ref=f3e245]: 
+                          - text: 
+                          - button "Move up" [ref=f3e246] [cursor=pointer]:
+                            - generic [ref=f3e247]: 
+                          - button "Move down" [ref=f3e248] [cursor=pointer]:
+                            - generic [ref=f3e249]: 
+                    - listitem [ref=f3e250]:
+                      - generic [ref=f3e251]:
+                        - img "You can drag and drop this course to alter its sorting or to move it to another category." [ref=f3e253] [cursor=pointer]: 
+                        - generic [ref=f3e255]:
+                          - 'checkbox "Web Dev Bootcamp: HTML & CSS Foundations bulk action selection" [ref=f3e256]'
+                          - generic: "Web Dev Bootcamp: HTML & CSS Foundations bulk action selection"
+                        - 'link "Web Dev Bootcamp: HTML & CSS Foundations" [ref=f3e258] [cursor=pointer]':
+                          - /url: http://localhost:8100/course/management.php?categoryid=2&courseid=8
+                        - generic [ref=f3e260]:
+                          - button "Edit" [ref=f3e261] [cursor=pointer]:
+                            - generic [ref=f3e262]: 
+                          - button "Copy course" [ref=f3e263] [cursor=pointer]:
+                            - generic [ref=f3e264]: 
+                          - button "Delete" [ref=f3e265] [cursor=pointer]:
+                            - generic [ref=f3e266]: 
+                          - button "Hide" [ref=f3e267] [cursor=pointer]:
+                            - generic [ref=f3e268]: 
+                          - text: 
+                          - button "Move up" [ref=f3e269] [cursor=pointer]:
+                            - generic [ref=f3e270]: 
+                          - text: 
+                  - generic [ref=f3e271]: Showing all 4 courses
+                  - generic [ref=f3e272]:
+                    - generic [ref=f3e273]: Bulk actions for selected courses
+                    - generic [ref=f3e274]:
+                      - generic [ref=f3e275]: Move selected courses to...
+                      - generic [ref=f3e279]:
+                        - combobox "Move selected courses to..." [disabled] [ref=f3e280]:
+                          - option "Choose..." [selected]
+                          - option "Category 1"
+                          - option "Web Development Bootcamp"
+                        - button "Move" [ref=f3e281] [cursor=pointer]
+      - contentinfo:
+        - button "Show footer" [ref=f3e282] [cursor=pointer]:
+          - generic [ref=f3e283]: "?"
+        - text:  

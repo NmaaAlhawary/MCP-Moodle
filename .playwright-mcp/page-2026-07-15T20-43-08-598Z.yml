@@ -1,0 +1,104 @@
+- generic [active] [ref=f10e1]:
+  - status
+  - generic [ref=f10e2]:
+    - link "Skip to main content" [ref=f10e3] [cursor=pointer]:
+      - /url: "#maincontent"
+    - navigation "Site navigation" [ref=f10e4]:
+      - generic [ref=f10e5]:
+        - link "MoodleLocal" [ref=f10e6] [cursor=pointer]:
+          - /url: http://localhost:8100/my/
+        - navigation [ref=f10e8]:
+          - menubar [ref=f10e9]:
+            - menuitem "Dashboard" [ref=f10e10] [cursor=pointer]
+            - menuitem "Site administration" [ref=f10e11] [cursor=pointer]
+            - text: 
+        - generic [ref=f10e12]:
+          - generic [ref=f10e14]:
+            - generic [ref=f10e15]: Edit mode
+            - checkbox "Edit mode" [ref=f10e17]
+          - button "Show notification window with no new notifications" [ref=f10e19] [cursor=pointer]:
+            - generic [ref=f10e20]: 
+          - button "Toggle messaging drawer" [ref=f10e22] [cursor=pointer]:
+            - generic [ref=f10e23]: 
+          - button "User menu" [ref=f10e29] [cursor=pointer]:
+            - img "MCP Service" [ref=f10e33]: MS
+            - text: 
+    - generic [ref=f10e34]:
+      - generic [ref=f10e35]:
+        - 'button "Web Dev Bootcamp: JavaScript Essentials" [ref=f10e38] [cursor=pointer]'
+        - generic [ref=f10e39]:
+          - generic [ref=f10e41]:
+            - button "Course index options" [ref=f10e42] [cursor=pointer]:
+              - generic [ref=f10e43]: 
+            - text:   
+          - button "Close course index" [ref=f10e44] [cursor=pointer]
+      - navigation [ref=f10e48]:
+        - list [ref=f10e51]:
+          - listitem [ref=f10e52]
+          - listitem [ref=f10e56]
+          - listitem [ref=f10e60]
+          - listitem [ref=f10e64]
+    - generic [ref=f10e68]:
+      - generic [ref=f10e69]:
+        - banner [ref=f10e70]:
+          - 'heading "Web Dev Bootcamp: JavaScript Essentials" [level=1] [ref=f10e77]'
+        - navigation [ref=f10e79]:
+          - menubar [ref=f10e80]:
+            - menuitem "Course" [ref=f10e81] [cursor=pointer]
+            - menuitem "Settings" [ref=f10e82] [cursor=pointer]
+            - menuitem "Participants" [ref=f10e83] [cursor=pointer]
+            - menuitem "Grades" [ref=f10e84] [cursor=pointer]
+            - menuitem "Activities" [ref=f10e85] [cursor=pointer]
+            - menuitem "More " [ref=f10e86] [cursor=pointer]
+        - main [ref=f10e90]:
+          - generic [ref=f10e93]:
+            - heading "Section outline" [level=2] [ref=f10e94]
+            - list [ref=f10e95]:
+              - listitem [ref=f10e96]:
+                - generic [ref=f10e97]:
+                  - generic [ref=f10e98]:
+                    - generic [ref=f10e99]:
+                      - button "General" [expanded] [ref=f10e100] [cursor=pointer]:
+                        - generic "Collapse" [ref=f10e101]: 
+                        - text:  
+                      - heading [level=3] [ref=f10e104]:
+                        - link "General" [ref=f10e105] [cursor=pointer]:
+                          - /url: http://localhost:8100/course/section.php?id=25
+                    - button "Collapse all" [expanded] [ref=f10e107] [cursor=pointer]
+                  - list [ref=f10e110]:
+                    - listitem [ref=f10e111]:
+                      - link "Announcements Forum" [ref=f10e118] [cursor=pointer]:
+                        - /url: http://localhost:8100/mod/forum/view.php?id=59
+                        - generic [ref=f10e119]:
+                          - text: Announcements
+                          - generic [ref=f10e120]: Forum
+                    - listitem [ref=f10e123]:
+                      - link "Welcome & Overview Page" [ref=f10e130] [cursor=pointer]:
+                        - /url: http://localhost:8100/mod/page/view.php?id=60
+                        - generic [ref=f10e131]:
+                          - text: Welcome & Overview
+                          - generic [ref=f10e132]: Page
+                    - listitem [ref=f10e133]:
+                      - heading "📘 Module 1 — The Language" [level=4] [ref=f10e139]
+                    - listitem [ref=f10e140]:
+                      - link "Variables & Types Page" [ref=f10e147] [cursor=pointer]:
+                        - /url: http://localhost:8100/mod/page/view.php?id=62
+                        - generic [ref=f10e148]:
+                          - text: Variables & Types
+                          - generic [ref=f10e149]: Page
+                    - listitem [ref=f10e150]:
+                      - link "Functions & Scope Page" [ref=f10e157] [cursor=pointer]:
+                        - /url: http://localhost:8100/mod/page/view.php?id=63
+                        - generic [ref=f10e158]:
+                          - text: Functions & Scope
+                          - generic [ref=f10e159]: Page
+                    - listitem [ref=f10e160]:
+                      - link "The DOM & Events Page" [ref=f10e167] [cursor=pointer]:
+                        - /url: http://localhost:8100/mod/page/view.php?id=64
+                        - generic [ref=f10e168]:
+                          - text: The DOM & Events
+                          - generic [ref=f10e169]: Page
+      - contentinfo:
+        - button "Show footer" [ref=f10e170] [cursor=pointer]:
+          - generic [ref=f10e171]: "?"
+        - text:  
