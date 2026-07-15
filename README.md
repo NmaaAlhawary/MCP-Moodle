@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 MCP-Moodle
+# MCP-Moodle
 
 **Let an AI assistant read *and build* content in your Moodle site — in plain English.**
 
@@ -30,7 +30,7 @@
   - [4. Connect Claude Desktop](#4-connect-claude-desktop)
 - [Tool reference](#tool-reference)
 - [Testing from the shell](#testing-from-the-shell)
-- [Safety & write mode](#️-safety--write-mode)
+- [Safety & write mode](#safety--write-mode)
 - [Extending it](#extending-it)
 - [Contributing](#contributing)
 - [License](#license)
@@ -43,10 +43,10 @@ Moodle is the learning platform used by thousands of universities and schools.
 **MCP-Moodle** connects it to any [Model Context Protocol](https://modelcontextprotocol.io/)
 client (like Claude Desktop), so an AI can:
 
-- 📖 **Read** — list courses, inspect course contents, see enrolled students, quizzes, and grades.
-- 🏗️ **Build** — create courses, users, categories, groups, enrolments, and *actual content*:
+- **Read** — list courses, inspect course contents, see enrolled students, quizzes, and grades.
+- **Build** — create courses, users, categories, groups, enrolments, and *actual content*:
   pages, books, labels, URLs, quizzes, and quiz questions.
-- 🔐 **Safely** — every write operation is off by default and only enabled with an explicit flag.
+- **Safely** — every write operation is off by default and only enabled with an explicit flag.
 
 ## How it works (two pieces)
 
@@ -68,12 +68,12 @@ two parts that work together:
 
 ## Features
 
-- ✅ **40+ tools** — reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, and activity creation
-- ✅ **Read/write split** — read tools always on; write tools gated behind `MOODLE_ALLOW_WRITE=true`
-- ✅ **Upgrade-safe plugin** — uses Moodle's own `add_moduleinfo()`, never touches module tables directly
-- ✅ **Clean error handling** — detects Moodle's JSON-error-on-HTTP-200 quirk and surfaces readable messages
-- ✅ **Token never logged** — config from environment variables only
-- ✅ **One token for everything** — read, core writes, and the plugin functions in a single service
+- **40+ tools** — reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, and activity creation
+- **Read/write split** — read tools always on; write tools gated behind `MOODLE_ALLOW_WRITE=true`
+- **Upgrade-safe plugin** — uses Moodle's own `add_moduleinfo()`, never touches module tables directly
+- **Clean error handling** — detects Moodle's JSON-error-on-HTTP-200 quirk and surfaces readable messages
+- **Token never logged** — config from environment variables only
+- **One token for everything** — read, core writes, and the plugin functions in a single service
 
 ---
 
@@ -99,7 +99,7 @@ In Moodle as an admin:
 5. **Create a token** — *Server → Web services → Manage tokens* → pick the user and
    the **MCP Bridge Service**. Copy it.
 
-> 💡 **Verify before you wire up the AI:** run the [test script](#testing-from-the-shell)
+> **Verify before you wire up the AI:** run the [test script](#testing-from-the-shell)
 > to confirm the plugin and token work end to end.
 
 ### 3. Run the MCP server
@@ -138,13 +138,13 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
-Restart Claude Desktop and the Moodle tools appear. 🎉
+Restart Claude Desktop and the Moodle tools appear.
 
 ---
 
 ## Tool reference
 
-### 📖 Read (always on)
+### Read (always on)
 
 | Tool | Moodle function |
 |---|---|
@@ -156,7 +156,7 @@ Restart Claude Desktop and the Moodle tools appear. 🎉
 | `list_quizzes` | `mod_quiz_get_quizzes_by_courses` |
 | `get_user_grades` | `gradereport_user_get_grade_items` |
 
-### 🎓 Student & analysis (always on)
+### Student & analysis (always on)
 
 Higher-level tools that combine the raw functions above into a student's-eye
 view. The **analysis** tools (`analyze_assignment`, `decompose_task`,
@@ -198,7 +198,7 @@ the calling AI does the natural-language reasoning over it.
 > **MCP Bridge Service** (a tool that needs a missing function returns a clean
 > "access control exception" you can act on).
 
-### 🏗️ Write (only when `MOODLE_ALLOW_WRITE=true`)
+### Write (only when `MOODLE_ALLOW_WRITE=true`)
 
 | Tool | Moodle function | Source |
 |---|---|---|
@@ -241,7 +241,7 @@ surfaces as a clean message.
 
 ---
 
-## ⚠️ Safety & write mode
+## Safety & write mode
 
 - **Writes hit live data.** Every write tool creates or changes real records. There is no dry-run.
 - **Writes are gated.** If `MOODLE_ALLOW_WRITE` is not exactly `true`, the server registers **read tools only** — writes cannot be exposed by accident.
@@ -262,7 +262,7 @@ and [CONTRIBUTING.md](CONTRIBUTING.md) for the full recipe.
 
 ## Contributing
 
-Contributions are very welcome — this is built to be extended! 🙌
+Contributions are very welcome — this is built to be extended!
 
 1. **Fork** the repo (top-right **Fork** button).
 2. Create a branch: `git checkout -b feature/my-thing`.
