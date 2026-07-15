@@ -17,7 +17,12 @@ All calls hit:
 
 from __future__ import annotations
 
+import asyncio
+import html as _htmllib
 import os
+import re
+import time as _time
+from datetime import datetime, timezone
 from typing import Any
 
 import httpx
@@ -183,6 +188,709 @@ async def get_user_grades(courseid: int, userid: int = 0) -> dict:
     if userid:
         params["userid"] = userid
     return await _call("gradereport_user_get_grade_items", params)
+
+
+# --------------------------------------------------------------------------- #
+# STUDENT / ANALYSIS READ TOOLS (always registered).
+#
+# These build on the raw web service functions above to give an AI assistant a
+# student's-eye view: courses, assignments, deadlines, grades, progress, and
+# combined dashboards. The "analysis" tools gather and structure the relevant
+# Moodle data; the calling AI does the natural-language reasoning over it.
+#
+# They rely on extra web service functions being present in the token's service:
+#   core_enrol_get_users_courses, mod_assign_get_assignments,
+#   mod_assign_get_submission_status, gradereport_overview_get_course_grades,
+#   core_calendar_get_action_events_by_timesort, mod_forum_get_forums_by_courses,
+#   mod_forum_get_forum_discussions, core_completion_get_activities_completion_status
+# --------------------------------------------------------------------------- #
+
+_STOPWORDS = {
+    "the", "and", "for", "you", "your", "this", "that", "with", "from", "have",
+    "will", "are", "was", "not", "but", "all", "can", "our", "out", "use", "any",
+    "how", "who", "why", "what", "when", "which", "into", "than", "then", "them",
+    "should", "must", "may", "shall", "each", "also", "using", "used", "one", "two",
+    "assignment", "assignments", "task", "please", "student", "students", "submit",
+}
+
+
+def _now() -> int:
+    return int(_time.time())
+
+
+def _iso(ts: int | None) -> str | None:
+    if not ts:
+        return None
+    return datetime.fromtimestamp(ts, timezone.utc).isoformat()
+
+
+def _week_label(ts: int) -> str:
+    iso = datetime.fromtimestamp(ts, timezone.utc).isocalendar()
+    return f"{iso[0]}-W{iso[1]:02d}"
+
+
+def _strip_html(text: str | None) -> str:
+    if not text:
+        return ""
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = _htmllib.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _keywords(text: str, limit: int = 12) -> list[str]:
+    words = re.findall(r"[a-zA-Z][a-zA-Z0-9_-]{2,}", (text or "").lower())
+    result: list[str] = []
+    for w in words:
+        if w not in _STOPWORDS and w not in result:
+            result.append(w)
+    return result[:limit]
+
+
+_USERID_CACHE: dict[str, int] = {}
+
+
+async def _get_userid() -> int:
+    if "id" not in _USERID_CACHE:
+        info = await _call("core_webservice_get_site_info")
+        _USERID_CACHE["id"] = int(info.get("userid", 0))
+    return _USERID_CACHE["id"]
+
+
+async def _my_courses_raw() -> list:
+    uid = await _get_userid()
+    return await _call("core_enrol_get_users_courses", {"userid": uid}) or []
+
+
+async def _assignments_raw(courseids: list[int] | None = None) -> list:
+    if not courseids:
+        courseids = [c["id"] for c in await _my_courses_raw()]
+    data = await _call("mod_assign_get_assignments", {"courseids": courseids})
+    out = []
+    for c in data.get("courses", []):
+        for a in c.get("assignments", []):
+            a["coursename"] = c.get("fullname") or c.get("shortname")
+            out.append(a)
+    return out
+
+
+def _is_submitted(status: dict) -> bool:
+    last = (status or {}).get("lastattempt") or {}
+    sub = last.get("submission") or {}
+    return sub.get("status") == "submitted"
+
+
+def _grading_status(status: dict) -> str | None:
+    last = (status or {}).get("lastattempt") or {}
+    return last.get("gradingstatus")
+
+
+async def _enriched_assignments(courseids: list[int] | None = None) -> list:
+    """All assignments that have a due date, enriched with submission status."""
+    uid = await _get_userid()
+    assigns = [a for a in await _assignments_raw(courseids) if a.get("duedate")]
+
+    async def enrich(a: dict) -> dict:
+        submitted, grading = False, None
+        try:
+            st = await _call(
+                "mod_assign_get_submission_status",
+                {"assignid": a["id"], "userid": uid},
+            )
+            submitted = _is_submitted(st)
+            grading = _grading_status(st)
+        except MoodleError:
+            pass  # Some assignments do not expose status; treat as unknown.
+        due = a.get("duedate") or 0
+        return {
+            "assignid": a["id"],
+            "cmid": a.get("cmid"),
+            "name": a.get("name"),
+            "courseid": a.get("course"),
+            "coursename": a.get("coursename"),
+            "duedate": due,
+            "due_iso": _iso(due),
+            "days_left": round((due - _now()) / 86400, 1) if due else None,
+            "submitted": submitted,
+            "gradingstatus": grading,
+        }
+
+    return list(await asyncio.gather(*[enrich(a) for a in assigns]))
+
+
+async def _course_materials(courseid: int) -> list:
+    contents = await _call("core_course_get_contents", {"courseid": courseid})
+    mats = []
+    for sec in contents or []:
+        for m in sec.get("modules", []):
+            mats.append({
+                "courseid": courseid,
+                "section": sec.get("name"),
+                "cmid": m.get("id"),
+                "name": m.get("name"),
+                "modname": m.get("modname"),
+                "url": m.get("url"),
+                "description": _strip_html(m.get("description", "")),
+            })
+    return mats
+
+
+async def _course_progress(courseid: int, uid: int) -> dict:
+    try:
+        data = await _call(
+            "core_completion_get_activities_completion_status",
+            {"courseid": courseid, "userid": uid},
+        )
+        statuses = data.get("statuses", [])
+        total = len(statuses)
+        done = sum(1 for s in statuses if s.get("state") == 1)
+        return {
+            "courseid": courseid,
+            "activities_total": total,
+            "activities_completed": done,
+            "percent": round(100 * done / total, 1) if total else None,
+        }
+    except MoodleError:
+        return {"courseid": courseid, "percent": None, "note": "completion tracking not available"}
+
+
+async def _find_assignment(assignid: int) -> dict | None:
+    for a in await _assignments_raw():
+        if a["id"] == assignid:
+            return a
+    return None
+
+
+# --- Course & content ------------------------------------------------------ #
+
+@mcp.tool()
+async def get_my_courses() -> list:
+    """Get all courses the current user (the token's user) is enrolled in.
+
+    Read-only. Returns id, fullname, shortname, and progress where available.
+    """
+    courses = await _my_courses_raw()
+    return [
+        {
+            "id": c.get("id"),
+            "fullname": c.get("fullname"),
+            "shortname": c.get("shortname"),
+            "progress": c.get("progress"),
+            "startdate": _iso(c.get("startdate")),
+            "enddate": _iso(c.get("enddate")),
+        }
+        for c in courses
+    ]
+
+
+@mcp.tool()
+async def search_course_materials(query: str, courseid: int = 0) -> list:
+    """Search across course materials by a text query.
+
+    Read-only. Matches the query (case-insensitive) against activity names,
+    descriptions, and section names. Searches one course if courseid is given,
+    otherwise all of the user's courses. Returns matching materials.
+    """
+    q = query.lower().strip()
+    course_ids = [courseid] if courseid else [c["id"] for c in await _my_courses_raw()]
+    lists = await asyncio.gather(*[_course_materials(cid) for cid in course_ids])
+    hits = []
+    for mats in lists:
+        for m in mats:
+            haystack = f"{m['name']} {m['description']} {m['section'] or ''}".lower()
+            if q in haystack:
+                hits.append(m)
+    return hits
+
+
+@mcp.tool()
+async def get_course_announcements(courseid: int = 0) -> list:
+    """Get announcements from course news forums.
+
+    Read-only. Reads each course's Announcements (news) forum. Filtered to one
+    course if courseid is given, otherwise all of the user's courses. Returns
+    the most recent discussions (subject, message, author, time).
+    """
+    course_ids = [courseid] if courseid else [c["id"] for c in await _my_courses_raw()]
+    forums = await _call("mod_forum_get_forums_by_courses", {"courseids": course_ids})
+    news = [f for f in (forums or []) if f.get("type") == "news"]
+    out = []
+    for f in news:
+        try:
+            disc = await _call("mod_forum_get_forum_discussions", {"forumid": f["id"]})
+        except MoodleError:
+            continue
+        for d in disc.get("discussions", []):
+            out.append({
+                "courseid": f.get("course"),
+                "subject": d.get("subject"),
+                "message": _strip_html(d.get("message", "")),
+                "author": d.get("userfullname"),
+                "modified": _iso(d.get("timemodified")),
+                "timemodified": d.get("timemodified"),
+            })
+    out.sort(key=lambda x: x.get("timemodified") or 0, reverse=True)
+    return out
+
+
+@mcp.tool()
+async def get_recent_activity(since: int = 0) -> list:
+    """Get recent activity across courses since a given time.
+
+    Read-only. `since` is a unix timestamp; defaults to the last 7 days.
+    Aggregates recent announcements and recently updated assignments.
+    """
+    if not since:
+        since = _now() - 7 * 86400
+    events: list[dict] = []
+    for a in await _assignments_raw():
+        tm = a.get("timemodified") or 0
+        if tm >= since:
+            events.append({
+                "type": "assignment",
+                "title": a.get("name"),
+                "courseid": a.get("course"),
+                "coursename": a.get("coursename"),
+                "time": _iso(tm),
+                "timestamp": tm,
+            })
+    for ann in await get_course_announcements():
+        if (ann.get("timemodified") or 0) >= since:
+            events.append({
+                "type": "announcement",
+                "title": ann.get("subject"),
+                "courseid": ann.get("courseid"),
+                "time": ann.get("modified"),
+                "timestamp": ann.get("timemodified"),
+            })
+    events.sort(key=lambda x: x.get("timestamp") or 0, reverse=True)
+    return events
+
+
+# --- Assignments & deadlines ----------------------------------------------- #
+
+@mcp.tool()
+async def get_assignments(courseids: list[int] | None = None) -> list:
+    """Get assignments for courses.
+
+    Read-only. Pass a list of course IDs, or omit to use all enrolled courses.
+    Returns id, cmid, name, course, due date, and open/cutoff dates.
+    """
+    return [
+        {
+            "assignid": a.get("id"),
+            "cmid": a.get("cmid"),
+            "name": a.get("name"),
+            "courseid": a.get("course"),
+            "coursename": a.get("coursename"),
+            "duedate": a.get("duedate"),
+            "due_iso": _iso(a.get("duedate")),
+            "allowsubmissionsfromdate": _iso(a.get("allowsubmissionsfromdate")),
+            "cutoffdate": _iso(a.get("cutoffdate")),
+        }
+        for a in await _assignments_raw(courseids)
+    ]
+
+
+@mcp.tool()
+async def get_assignment_status(assignid: int) -> dict:
+    """Get submission and grading status for a specific assignment.
+
+    Read-only. Returns whether the current user has submitted, the grading
+    status, and the grade if one has been released.
+    """
+    uid = await _get_userid()
+    st = await _call("mod_assign_get_submission_status", {"assignid": assignid, "userid": uid})
+    last = st.get("lastattempt") or {}
+    feedback = st.get("feedback") or {}
+    return {
+        "assignid": assignid,
+        "submitted": _is_submitted(st),
+        "gradingstatus": _grading_status(st),
+        "grade": (feedback.get("grade") or {}).get("grade"),
+        "cansubmit": last.get("cansubmit"),
+        "graded": bool(feedback.get("grade")),
+    }
+
+
+@mcp.tool()
+async def get_upcoming_deadlines(within_days: int = 0) -> list:
+    """Get upcoming assignment deadlines across all courses, soonest first.
+
+    Read-only. If within_days > 0, only deadlines within that many days are
+    returned. Each item includes days_left and whether it is already submitted.
+    """
+    now = _now()
+    tasks = [t for t in await _enriched_assignments() if t["duedate"] >= now]
+    if within_days:
+        cutoff = now + within_days * 86400
+        tasks = [t for t in tasks if t["duedate"] <= cutoff]
+    tasks.sort(key=lambda t: t["duedate"])
+    return tasks
+
+
+@mcp.tool()
+async def get_overdue_assignments() -> list:
+    """Get unsubmitted assignments past their due date, most overdue first.
+
+    Read-only. Only assignments with a due date in the past that the user has
+    not submitted are returned.
+    """
+    now = _now()
+    tasks = [
+        t for t in await _enriched_assignments()
+        if 0 < t["duedate"] < now and not t["submitted"]
+    ]
+    tasks.sort(key=lambda t: t["duedate"])
+    return tasks
+
+
+@mcp.tool()
+async def get_actionable_tasks() -> list:
+    """Get a prioritized list of tasks needing action, most urgent first.
+
+    Read-only. Includes any unsubmitted assignment with a due date. Each task is
+    tagged with an urgency level (overdue / due_soon / upcoming).
+    """
+    now = _now()
+    tasks = [t for t in await _enriched_assignments() if t["duedate"] and not t["submitted"]]
+    for t in tasks:
+        days = t["days_left"]
+        if days is not None and days < 0:
+            t["urgency"] = "overdue"
+        elif days is not None and days <= 3:
+            t["urgency"] = "due_soon"
+        else:
+            t["urgency"] = "upcoming"
+    tasks.sort(key=lambda t: t["duedate"])
+    return tasks
+
+
+@mcp.tool()
+async def analyze_assignment(assignid: int) -> dict:
+    """Analyze an assignment: status, requirements, materials, progress, deadline.
+
+    Read-only. Gathers the assignment's description, submission/grading status,
+    deadline math, and the course materials most relevant to it, so the AI can
+    reason about what to do next. Does not itself write anything.
+    """
+    a = await _find_assignment(assignid)
+    if not a:
+        raise MoodleError(f"Assignment {assignid} not found in the user's courses.")
+    uid = await _get_userid()
+    submitted, grading = False, None
+    try:
+        st = await _call("mod_assign_get_submission_status", {"assignid": assignid, "userid": uid})
+        submitted, grading = _is_submitted(st), _grading_status(st)
+    except MoodleError:
+        pass
+    due = a.get("duedate") or 0
+    return {
+        "assignid": assignid,
+        "name": a.get("name"),
+        "courseid": a.get("course"),
+        "coursename": a.get("coursename"),
+        "description": _strip_html(a.get("intro", "")),
+        "attachments": [f.get("filename") for f in a.get("introattachments", [])],
+        "duedate": due,
+        "due_iso": _iso(due),
+        "days_left": round((due - _now()) / 86400, 1) if due else None,
+        "submitted": submitted,
+        "gradingstatus": grading,
+        "relevant_materials": await find_relevant_materials(assignid),
+    }
+
+
+@mcp.tool()
+async def extract_assignment_requirements(assignid: int) -> dict:
+    """Extract the source text of an assignment for requirement analysis.
+
+    Read-only. Returns the assignment's full description text and attachments so
+    the calling AI can identify requirements, deliverables, constraints, and
+    evaluation criteria. The `sentences` list is a convenience splitting of the
+    description; the AI should interpret them into structured requirements.
+    """
+    a = await _find_assignment(assignid)
+    if not a:
+        raise MoodleError(f"Assignment {assignid} not found in the user's courses.")
+    text = _strip_html(a.get("intro", ""))
+    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
+    return {
+        "assignid": assignid,
+        "name": a.get("name"),
+        "description": text,
+        "sentences": sentences,
+        "attachments": [f.get("filename") for f in a.get("introattachments", [])],
+    }
+
+
+@mcp.tool()
+async def find_relevant_materials(assignid: int) -> list:
+    """Find course materials relevant to an assignment, ranked by relevance.
+
+    Read-only. Pulls keywords from the assignment title and description, then
+    scores the materials in the same course by keyword overlap. Returns the
+    matches sorted by score (most relevant first).
+    """
+    a = await _find_assignment(assignid)
+    if not a:
+        raise MoodleError(f"Assignment {assignid} not found in the user's courses.")
+    keywords = _keywords(f"{a.get('name', '')} {_strip_html(a.get('intro', ''))}")
+    mats = await _course_materials(a.get("course"))
+    scored = []
+    for m in mats:
+        blob = f"{m['name']} {m['description']}".lower()
+        score = sum(1 for kw in keywords if kw in blob)
+        if score:
+            scored.append({**m, "score": score})
+    scored.sort(key=lambda m: m["score"], reverse=True)
+    return scored
+
+
+@mcp.tool()
+async def decompose_task(assignid: int) -> dict:
+    """Break an assignment into subtasks with effort, dependencies, timeline.
+
+    Read-only. Returns the assignment context plus the number of days available
+    before the deadline, as a scaffold. The calling AI should populate the
+    subtasks, effort estimates, dependencies, and critical path from this data.
+    """
+    ctx = await analyze_assignment(assignid)
+    days = ctx.get("days_left")
+    return {
+        "assignment": ctx,
+        "days_available": days,
+        "guidance": (
+            "Break this assignment into ordered subtasks. For each, estimate "
+            "effort (hours), list dependencies, and flag those on the critical "
+            "path. Fit the total effort within days_available before the deadline."
+        ),
+        "subtasks": [],  # To be filled in by the AI from the context above.
+    }
+
+
+@mcp.tool()
+async def create_implementation_plan(assignid: int) -> dict:
+    """Build a step-by-step plan with timeline, milestones, and risks.
+
+    Read-only. Returns the assignment context and four evenly spaced milestone
+    dates between now and the deadline, as a scaffold for the AI to turn into a
+    concrete plan (steps, resources, milestones, risks).
+    """
+    ctx = await analyze_assignment(assignid)
+    now = _now()
+    due = ctx.get("duedate") or 0
+    milestones = []
+    if due > now:
+        span = due - now
+        for i in range(1, 5):
+            milestones.append({"milestone": i, "target_date": _iso(now + span * i // 4)})
+    return {
+        "assignment": ctx,
+        "suggested_milestones": milestones,
+        "guidance": (
+            "Produce a step-by-step plan: for each step give a title, the "
+            "resources/materials needed (use relevant_materials), the milestone "
+            "it maps to, and any risks. Keep it within the suggested_milestones."
+        ),
+        "steps": [],  # To be filled in by the AI.
+    }
+
+
+# --- Grades & progress ----------------------------------------------------- #
+
+@mcp.tool()
+async def get_grades(courseid: int = 0) -> Any:
+    """Get a grade overview for all courses, or detailed grades for one course.
+
+    Read-only. With no courseid, returns the cross-course grade overview. With a
+    courseid, returns the detailed grade items for that course.
+    """
+    if courseid:
+        uid = await _get_userid()
+        return await _call("gradereport_user_get_grade_items", {"courseid": courseid, "userid": uid})
+    return await _call("gradereport_overview_get_course_grades")
+
+
+@mcp.tool()
+async def get_course_progress(courseid: int = 0) -> Any:
+    """Get progress/completion for one course or all courses.
+
+    Read-only. Requires completion tracking to be enabled on the course(s).
+    Returns activities completed vs total and a percentage.
+    """
+    uid = await _get_userid()
+    if courseid:
+        return await _course_progress(courseid, uid)
+    course_ids = [c["id"] for c in await _my_courses_raw()]
+    return list(await asyncio.gather(*[_course_progress(cid, uid) for cid in course_ids]))
+
+
+@mcp.tool()
+async def get_course_health(courseid: int) -> dict:
+    """Health check for a course: progress, grade, unsubmitted and overdue counts.
+
+    Read-only. Combines completion, the overview grade, and assignment status
+    into a single snapshot for one course.
+    """
+    now = _now()
+    uid = await _get_userid()
+    prog = await _course_progress(courseid, uid)
+    enriched = await _enriched_assignments([courseid])
+    unsubmitted = [t for t in enriched if not t["submitted"]]
+    overdue = [t for t in enriched if 0 < t["duedate"] < now and not t["submitted"]]
+    grade = None
+    try:
+        overview = await _call("gradereport_overview_get_course_grades")
+        row = next((g for g in overview.get("grades", []) if g.get("courseid") == courseid), None)
+        grade = row.get("grade") if row else None
+    except MoodleError:
+        pass
+    return {
+        "courseid": courseid,
+        "percent_complete": prog.get("percent"),
+        "grade": grade,
+        "unsubmitted_count": len(unsubmitted),
+        "overdue_count": len(overdue),
+    }
+
+
+@mcp.tool()
+async def get_study_load() -> list:
+    """Analyze assignment distribution by week to spot heavy weeks.
+
+    Read-only. Buckets upcoming assignments by ISO week and counts them, so the
+    AI can flag weeks with an unusually heavy workload.
+    """
+    buckets: dict[str, dict] = {}
+    for t in await _enriched_assignments():
+        if not t["duedate"]:
+            continue
+        label = _week_label(t["duedate"])
+        b = buckets.setdefault(label, {"week": label, "count": 0, "assignments": []})
+        b["count"] += 1
+        b["assignments"].append(t["name"])
+    return sorted(buckets.values(), key=lambda b: b["week"])
+
+
+# --- Aggregated overviews -------------------------------------------------- #
+
+@mcp.tool()
+async def get_upcoming_events(limit: int = 20) -> list:
+    """Get upcoming calendar events from Moodle, soonest first.
+
+    Read-only. Uses Moodle's action-events calendar view from now onward.
+    """
+    data = await _call(
+        "core_calendar_get_action_events_by_timesort",
+        {"timesortfrom": _now(), "limitnum": limit},
+    )
+    events = data.get("events", []) if isinstance(data, dict) else []
+    return [
+        {
+            "name": e.get("name"),
+            "timestart": _iso(e.get("timestart")),
+            "timesort": e.get("timesort"),
+            "courseid": (e.get("course") or {}).get("id"),
+            "url": (e.get("action") or {}).get("url") or e.get("url"),
+        }
+        for e in events
+    ]
+
+
+@mcp.tool()
+async def semester_dashboard() -> dict:
+    """Combined overview of courses, upcoming deadlines, and grades.
+
+    Read-only. A one-call snapshot for a "how is my semester going?" question.
+    """
+    courses, deadlines, grades = await asyncio.gather(
+        get_my_courses(),
+        get_upcoming_deadlines(),
+        get_grades(),
+    )
+    return {
+        "courses": courses,
+        "upcoming_deadlines": deadlines[:10],
+        "grades": grades,
+    }
+
+
+@mcp.tool()
+async def daily_briefing() -> dict:
+    """Daily summary: overdue count, today's deadlines, recent grades, events, tasks.
+
+    Read-only. A compact "what do I need to know today?" digest.
+    """
+    now = _now()
+    overdue, tasks, events, grades = await asyncio.gather(
+        get_overdue_assignments(),
+        get_actionable_tasks(),
+        get_upcoming_events(5),
+        get_grades(),
+    )
+    todays = [t for t in tasks if t["days_left"] is not None and 0 <= t["days_left"] < 1]
+    return {
+        "date": _iso(now),
+        "overdue_count": len(overdue),
+        "todays_deadlines": todays,
+        "recent_grades": grades,
+        "upcoming_events": events,
+        "top_tasks": tasks[:5],
+    }
+
+
+@mcp.tool()
+async def weekly_review() -> dict:
+    """Weekly summary: submitted/graded counts, deadlines, overdue count, progress.
+
+    Read-only. A "how did this week go and what's next?" digest.
+    """
+    enriched = await _enriched_assignments()
+    now = _now()
+    submitted = [t for t in enriched if t["submitted"]]
+    graded = [t for t in enriched if t["gradingstatus"] == "graded"]
+    overdue = [t for t in enriched if 0 < t["duedate"] < now and not t["submitted"]]
+    this_week = [t for t in enriched if t["days_left"] is not None and 0 <= t["days_left"] <= 7]
+    progress = await get_course_progress()
+    percents = [p.get("percent") for p in progress if p.get("percent") is not None]
+    avg = round(sum(percents) / len(percents), 1) if percents else None
+    return {
+        "submitted_count": len(submitted),
+        "graded_count": len(graded),
+        "deadlines_this_week": sorted(this_week, key=lambda t: t["duedate"]),
+        "overdue_count": len(overdue),
+        "average_progress_percent": avg,
+    }
+
+
+@mcp.tool()
+async def ask_moodle(question: str) -> dict:
+    """Ask a natural-language question and have it routed to the right data.
+
+    Read-only. Picks the most relevant data source based on the question's
+    wording and returns that data under `data`, tagged with `routed_to`. The
+    calling AI then answers the question from the returned data.
+    """
+    q = question.lower()
+    if any(w in q for w in ("overdue", "late", "missed", "missing")):
+        source, data = "get_overdue_assignments", await get_overdue_assignments()
+    elif any(w in q for w in ("deadline", "due", "upcoming assignment", "soon")):
+        source, data = "get_upcoming_deadlines", await get_upcoming_deadlines()
+    elif any(w in q for w in ("grade", "mark", "score", "result")):
+        source, data = "get_grades", await get_grades()
+    elif any(w in q for w in ("progress", "complete", "completion")):
+        source, data = "get_course_progress", await get_course_progress()
+    elif any(w in q for w in ("announce", "news")):
+        source, data = "get_course_announcements", await get_course_announcements()
+    elif any(w in q for w in ("event", "calendar")):
+        source, data = "get_upcoming_events", await get_upcoming_events()
+    elif any(w in q for w in ("task", "todo", "to-do", "action", "do next")):
+        source, data = "get_actionable_tasks", await get_actionable_tasks()
+    elif any(w in q for w in ("course", "class", "enrol", "enroll")):
+        source, data = "get_my_courses", await get_my_courses()
+    else:
+        source, data = "daily_briefing", await daily_briefing()
+    return {"question": question, "routed_to": source, "data": data}
 
 
 # --------------------------------------------------------------------------- #

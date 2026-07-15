@@ -67,7 +67,7 @@ two parts that work together:
 
 ## Features
 
-- ✅ **18+ tools** covering read, core writes, and activity creation
+- ✅ **40+ tools** — reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, and activity creation
 - ✅ **Read/write split** — read tools always on; write tools gated behind `MOODLE_ALLOW_WRITE=true`
 - ✅ **Upgrade-safe plugin** — uses Moodle's own `add_moduleinfo()`, never touches module tables directly
 - ✅ **Clean error handling** — detects Moodle's JSON-error-on-HTTP-200 quirk and surfaces readable messages
@@ -154,6 +154,48 @@ Restart Claude Desktop and the Moodle tools appear. 🎉
 | `get_enrolled_users` | `core_enrol_get_enrolled_users` |
 | `list_quizzes` | `mod_quiz_get_quizzes_by_courses` |
 | `get_user_grades` | `gradereport_user_get_grade_items` |
+
+### 🎓 Student & analysis (always on)
+
+Higher-level tools that combine the raw functions above into a student's-eye
+view. The **analysis** tools (`analyze_assignment`, `decompose_task`,
+`create_implementation_plan`, …) gather and structure the relevant Moodle data;
+the calling AI does the natural-language reasoning over it.
+
+| Tool | Description |
+|---|---|
+| `get_my_courses` | All courses the current user is enrolled in |
+| `search_course_materials` | Search across all course materials by query |
+| `get_course_announcements` | Announcements from course news forums (optional course filter) |
+| `get_recent_activity` | Recent activity/updates across courses since a given time |
+| `get_assignments` | Assignments for courses (optional course filter) |
+| `get_assignment_status` | Submission and grading status for one assignment |
+| `get_upcoming_deadlines` | Upcoming deadlines across courses, soonest first |
+| `get_overdue_assignments` | Unsubmitted assignments past due, most overdue first |
+| `get_actionable_tasks` | Prioritized list of tasks needing action, by urgency |
+| `analyze_assignment` | Status, requirements, materials, progress, deadline for one assignment |
+| `extract_assignment_requirements` | Source text + attachments for requirement analysis |
+| `find_relevant_materials` | Course content relevant to an assignment, ranked |
+| `decompose_task` | Assignment context + days available (scaffold for subtasks) |
+| `create_implementation_plan` | Context + milestone dates (scaffold for a step-by-step plan) |
+| `get_grades` | Grade overview for all courses, or detailed grades for one |
+| `get_course_progress` | Progress/completion for one course or all |
+| `get_course_health` | Progress, grade, unsubmitted & overdue counts for a course |
+| `get_study_load` | Assignment distribution by week to spot heavy weeks |
+| `get_upcoming_events` | Upcoming calendar events |
+| `semester_dashboard` | Combined courses + deadlines + grades snapshot |
+| `daily_briefing` | Overdue count, today's deadlines, recent grades, events, tasks |
+| `weekly_review` | Submitted/graded counts, deadlines, overdue, progress |
+| `ask_moodle` | Route a natural-language question to the right data source |
+
+> These need extra web service functions in the token's service:
+> `core_enrol_get_users_courses`, `mod_assign_get_assignments`,
+> `mod_assign_get_submission_status`, `gradereport_overview_get_course_grades`,
+> `core_calendar_get_action_events_by_timesort`, `mod_forum_get_forums_by_courses`,
+> `mod_forum_get_forum_discussions`, and
+> `core_completion_get_activities_completion_status`. Add the ones you need to
+> **MCP Bridge Service** (a tool that needs a missing function returns a clean
+> "access control exception" you can act on).
 
 ### 🏗️ Write (only when `MOODLE_ALLOW_WRITE=true`)
 
