@@ -1,0 +1,7 @@
+# Secrets
+.env
+
+# Python
+moodle-mcp/.venv/
+__pycache__/
+*.pyc
