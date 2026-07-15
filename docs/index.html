@@ -143,6 +143,8 @@
   .browser .bar .r{background:#ff5f57}.browser .bar .y{background:#febc2e}.browser .bar .g{background:#28c840}
   .browser .bar .url{margin-left:14px;font-size:12px;color:var(--muted);font-family:"JetBrains Mono"}
   .browser img{width:100%;display:block}
+  /* render light Moodle screenshots in a dark mood to match the theme */
+  .dark-shot{filter:invert(.93) hue-rotate(180deg) brightness(1.04) contrast(.92);border-radius:inherit}
 </style>
 <header>
   <div class="wrap">
@@ -164,7 +166,7 @@
     <div class="hero-preview">
       <div class="browser">
         <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">localhost/moodle · built by AI</span></div>
-        <img src="images/moodle-courses.png" alt="A Moodle course category with four AI-created courses" loading="lazy">
+        <img src="images/moodle-courses.png" class="dark-shot" alt="A Moodle course category with four AI-created courses" loading="lazy">
       </div>
     </div>
   </div>
@@ -178,11 +180,11 @@
     <p class="lead">Not mock-ups — actual screenshots from Moodle. A full four-course program and its content, all created from plain-English prompts.</p>
     <div style="margin-top:40px;display:grid;gap:28px">
       <figure style="margin:0">
-        <img src="images/moodle-courses.png" alt="Web Development Bootcamp category with four AI-created courses in Moodle" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
+        <img src="images/moodle-courses.png" class="dark-shot" alt="Web Development Bootcamp category with four AI-created courses in Moodle" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
         <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">A whole “Web Development Bootcamp” category — 4 courses generated in seconds.</figcaption>
       </figure>
       <figure style="margin:0">
-        <img src="images/moodle-course.png" alt="An AI-created Moodle course with a welcome page, module label and topic pages" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
+        <img src="images/moodle-course.png" class="dark-shot" alt="An AI-created Moodle course with a welcome page, module label and topic pages" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
         <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">Inside a course: welcome page, module divider, and topic pages with real content.</figcaption>
       </figure>
     </div>
