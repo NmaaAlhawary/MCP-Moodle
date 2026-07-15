@@ -38,11 +38,17 @@ use context_course;
  * Uses Moodle's official add_moduleinfo() helper (the same path the web UI
  * uses) so the course module, module instance and section link are all created
  * correctly and remain upgrade-safe.
+ *
+ * @package    local_mcpbridge
+ * @copyright  2026 Namaa Alhawary <namaa.alhawary@htu.edu.jo>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class create_page extends external_api {
 
     /**
      * Describe the input parameters.
+     *
+     * @return external_function_parameters
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
@@ -58,7 +64,13 @@ class create_page extends external_api {
     /**
      * Create the page.
      *
-     * @return array{cmid:int, instanceid:int}
+     * @param int $courseid ID of the course to add the page to.
+     * @param int $section Section number (0 = top).
+     * @param string $name Name of the page activity.
+     * @param string $content HTML body content of the page.
+     * @param string $intro Optional description/intro (HTML).
+     * @param int $visible Visible to students (1) or hidden (0).
+     * @return array cmid and instance id of the new page.
      */
     public static function execute($courseid, $section, $name, $content, $intro = '', $visible = 1) {
         global $CFG, $DB;
@@ -107,6 +119,8 @@ class create_page extends external_api {
 
     /**
      * Describe the return value.
+     *
+     * @return external_single_structure
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([

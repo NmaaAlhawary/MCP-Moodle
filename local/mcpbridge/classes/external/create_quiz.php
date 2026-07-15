@@ -56,7 +56,17 @@ class create_quiz extends external_api {
     }
 
     /**
-     * @return array{cmid:int, instanceid:int}
+     * @param int $courseid ID of the course.
+     * @param int $section Section number (0 = top).
+     * @param string $name Name of the quiz.
+     * @param string $intro Quiz description/intro (HTML).
+     * @param int $timeopen Open time (unix ts, 0 = none).
+     * @param int $timeclose Close time (unix ts, 0 = none).
+     * @param int $timelimit Time limit in seconds (0 = none).
+     * @param float $grade Maximum grade.
+     * @param int $attempts Attempts allowed (0 = unlimited).
+     * @param int $visible Visible (1) or hidden (0).
+     * @return array cmid and instance id of the new quiz.
      */
     public static function execute($courseid, $section, $name, $intro = '', $timeopen = 0, $timeclose = 0,
             $timelimit = 0, $grade = 100.0, $attempts = 0, $visible = 1) {

@@ -68,7 +68,13 @@ class add_quiz_question extends external_api {
     }
 
     /**
-     * @return array{questionid:int, slot:int}
+     * @param int $quizcmid Course module ID (cmid) of the target quiz.
+     * @param string $name Question name (bank label).
+     * @param string $questiontext The question text shown to students (HTML).
+     * @param array $answers The answer options (each: text, fraction, feedback).
+     * @param int $single Single correct answer (1) or multiple correct (0).
+     * @param float $defaultmark Marks this question is worth.
+     * @return array question id and its slot number in the quiz.
      */
     public static function execute($quizcmid, $name, $questiontext, $answers, $single = 1, $defaultmark = 1.0) {
         global $CFG, $DB, $USER;

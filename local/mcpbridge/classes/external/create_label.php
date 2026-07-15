@@ -50,7 +50,12 @@ class create_label extends external_api {
     }
 
     /**
-     * @return array{cmid:int, instanceid:int}
+     * @param int $courseid ID of the course.
+     * @param int $section Section number (0 = top).
+     * @param string $content HTML content shown inline on the course page.
+     * @param string $name Optional short name for the label.
+     * @param int $visible Visible (1) or hidden (0).
+     * @return array cmid and instance id of the new label.
      */
     public static function execute($courseid, $section, $content, $name = '', $visible = 1) {
         global $CFG, $DB;

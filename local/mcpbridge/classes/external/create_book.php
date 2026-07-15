@@ -54,7 +54,14 @@ class create_book extends external_api {
     }
 
     /**
-     * @return array{cmid:int, instanceid:int, chapterid:int}
+     * @param int $courseid ID of the course.
+     * @param int $section Section number (0 = top).
+     * @param string $name Name of the book activity.
+     * @param string $intro Book description/intro (HTML).
+     * @param string $chaptertitle Title of the first chapter.
+     * @param string $chaptercontent HTML content of the first chapter.
+     * @param int $visible Visible (1) or hidden (0).
+     * @return array cmid, instance id and first chapter id of the new book.
      */
     public static function execute($courseid, $section, $name, $intro, $chaptertitle, $chaptercontent, $visible = 1) {
         global $CFG, $DB;

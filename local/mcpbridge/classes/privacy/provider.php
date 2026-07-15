@@ -15,17 +15,33 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Version details for the MCP Bridge plugin.
+ * Privacy provider for the MCP Bridge plugin.
  *
  * @package    local_mcpbridge
  * @copyright  2026 Namaa Alhawary <namaa.alhawary@htu.edu.jo>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_mcpbridge\privacy;
 
-$plugin->component = 'local_mcpbridge';   // Full name of the plugin (used for diagnostics).
-$plugin->version   = 2026071502;          // The current plugin version (YYYYMMDDXX).
-$plugin->requires  = 2023042400;          // Requires Moodle 4.2+ (namespaced external API).
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.1';
+/**
+ * Privacy Subsystem implementation for local_mcpbridge.
+ *
+ * The plugin only exposes web service functions that create course content; it
+ * stores no personal data of its own, so it declares the null provider.
+ *
+ * @package    local_mcpbridge
+ * @copyright  2026 Namaa Alhawary <namaa.alhawary@htu.edu.jo>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier explaining why this plugin stores no data.
+     *
+     * @return string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

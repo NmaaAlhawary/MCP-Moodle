@@ -50,7 +50,14 @@ class create_url extends external_api {
     }
 
     /**
-     * @return array{cmid:int, instanceid:int}
+     * @param int $courseid ID of the course.
+     * @param int $section Section number (0 = top).
+     * @param string $name Name of the URL resource.
+     * @param string $externalurl The external URL to link to.
+     * @param string $intro Optional description (HTML).
+     * @param int $display Display mode (0=auto, 1=embed, 5=open, 6=popup).
+     * @param int $visible Visible (1) or hidden (0).
+     * @return array cmid and instance id of the new URL.
      */
     public static function execute($courseid, $section, $name, $externalurl, $intro = '', $display = 0, $visible = 1) {
         global $CFG, $DB;
