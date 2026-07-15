@@ -551,7 +551,6 @@ async def get_actionable_tasks() -> list:
     Read-only. Includes any unsubmitted assignment with a due date. Each task is
     tagged with an urgency level (overdue / due_soon / upcoming).
     """
-    now = _now()
     tasks = [t for t in await _enriched_assignments() if t["duedate"] and not t["submitted"]]
     for t in tasks:
         days = t["days_left"]

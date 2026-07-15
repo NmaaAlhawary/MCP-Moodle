@@ -4,6 +4,7 @@
 
 **Let an AI assistant read *and build* content in your Moodle site — in plain English.**
 
+[![CI](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml/badge.svg)](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![Moodle 4.2+](https://img.shields.io/badge/Moodle-4.2%2B-orange.svg)](https://moodle.org/)

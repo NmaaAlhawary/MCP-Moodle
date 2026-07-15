@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  php-lint:
+    name: Lint PHP plugin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: none
+
+      - name: php -l on all plugin files
+        run: |
+          set -e
+          find local -name '*.php' -print0 | while IFS= read -r -d '' f; do
+            echo "Linting $f"
+            php -l "$f"
+          done
+
+  python-lint:
+    name: Lint & compile MCP server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r moodle-mcp/requirements.txt
+          pip install ruff
+
+      - name: Compile check
+        run: python -m py_compile moodle-mcp/server.py
+
+      - name: Ruff (lint)
+        run: ruff check moodle-mcp/server.py
+
+      - name: Import & tool-registration smoke test
+        env:
+          MOODLE_URL: https://example.invalid
+          MOODLE_TOKEN: dummy
+          MOODLE_ALLOW_WRITE: 'true'
+        run: |
+          python - <<'PY'
+          import asyncio, server
+          tools = asyncio.run(server.mcp.list_tools())
+          names = sorted(t.name for t in tools)
+          print(f"{len(names)} tools registered")
+          assert "verify_connection" in names, "read tools missing"
+          assert "create_page" in names, "write tools missing in write mode"
+          print("OK")
+          PY
+        working-directory: moodle-mcp
+
+  shellcheck:
+    name: Check test script
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ShellCheck
+        run: shellcheck moodle-mcp/test_rest.sh
