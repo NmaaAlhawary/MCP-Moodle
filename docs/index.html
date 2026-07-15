@@ -125,7 +125,6 @@
       <a href="#watch">See it</a>
       <a href="#setup">Setup</a>
       <a href="#can-do">What it can do</a>
-      <a href="#prompts">Prompts</a>
       <a class="btn btn-ghost" href="https://github.com/NmaaAlhawary/MCP-Moodle">★ GitHub</a>
     </div>
   </div>
@@ -182,10 +181,6 @@
       <figure style="margin:0">
         <img src="images/moodle-courses.png" class="dark-shot" alt="Web Development Bootcamp category with four AI-created courses in Moodle" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
         <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">A whole “Web Development Bootcamp” category — 4 courses generated in seconds.</figcaption>
-      </figure>
-      <figure style="margin:0">
-        <img src="images/moodle-course.png" class="dark-shot" alt="An AI-created Moodle course with a welcome page, module label and topic pages" loading="lazy" style="width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)">
-        <figcaption style="color:var(--muted);font-size:14px;margin-top:14px;text-align:center">Inside a course: welcome page, module divider, and topic pages with real content.</figcaption>
       </figure>
     </div>
   </div>
@@ -280,48 +275,6 @@
   </div>
 </section>
 
-<!-- ============ EXAMPLE PROMPTS ============ -->
-<style>
-  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:38px}
-  @media(max-width:720px){.pgrid{grid-template-columns:1fr}}
-  .pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;backdrop-filter:blur(12px);transition:.2s;overflow:hidden}
-  .pcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad);opacity:.7}
-  .pcard:hover{border-color:rgba(255,255,255,.18);transform:translateY(-2px)}
-  .pcard .who{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-  .pcard .who .dot{width:8px;height:8px;border-radius:50%;background:var(--grad)}
-  .pcard .who span{font-family:"Space Grotesk";font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
-  .pcard .ptext{font-size:15px;color:var(--text);line-height:1.55}
-  .pcard .copy{margin-top:16px;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:.15s;font-family:inherit}
-  .pcard .copy:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
-  .pcard .copy.done{color:var(--green);border-color:rgba(63,185,80,.4)}
-  .pcard .copy svg{width:14px;height:14px}
-</style>
-<section id="prompts">
-  <div class="wrap">
-    <span class="eyebrow">Try these</span>
-    <h2>Copy-paste prompts</h2>
-    <p class="lead">Paste any of these into your AI client once the <b>moodle</b> connector is on.</p>
-    <div class="pgrid">
-      <div class="pcard"><div class="who"><span class="dot"></span><span>You</span></div><p class="ptext">Verify my Moodle connection and list all my courses.</p><button class="copy" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-      <div class="pcard"><div class="who"><span class="dot"></span><span>You</span></div><p class="ptext">Create a course called ‘Intro to Python’ and add three pages: Variables, Loops, and Functions — each with a short explanation.</p><button class="copy" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-      <div class="pcard"><div class="who"><span class="dot"></span><span>You</span></div><p class="ptext">In course 7, build a book called ‘Course Handbook’ with chapters for Syllabus, Grading, and Schedule.</p><button class="copy" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-      <div class="pcard"><div class="who"><span class="dot"></span><span>You</span></div><p class="ptext">Create an empty quiz called ‘Week 1 Check’ in course 9, then add a multiple-choice question about JavaScript variables.</p><button class="copy" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-      <div class="pcard"><div class="who"><span class="dot"></span><span>You</span></div><p class="ptext">Enrol me as a teacher in every course in the Web Development Bootcamp category.</p><button class="copy" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-      <div class="pcard"><div class="who"><span class="dot"></span><span>You</span></div><p class="ptext">Give me a semester dashboard: courses, upcoming deadlines, and recent grades.</p><button class="copy" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
-    </div>
-  </div>
-</section>
-<script>
-  function copyPrompt(btn){
-    var txt = btn.parentElement.querySelector('.ptext').textContent.trim();
-    navigator.clipboard.writeText(txt).then(function(){
-      btn.classList.add('done');
-      var label = btn.childNodes[btn.childNodes.length-1];
-      label.textContent = ' Copied!';
-      setTimeout(function(){ btn.classList.remove('done'); label.textContent = 'Copy'; }, 1600);
-    });
-  }
-</script>
 
 <footer>
   <div class="wrap">
