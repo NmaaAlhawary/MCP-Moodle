@@ -73,4 +73,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: ShellCheck
-        run: shellcheck moodle-mcp/test_rest.sh
+        # SC1091: cannot follow the optional `.env` sourced at runtime — expected.
+        run: shellcheck -e SC1091 moodle-mcp/test_rest.sh
