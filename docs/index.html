@@ -8,73 +8,100 @@
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --orange:#f98012; --orange-d:#e06f00;
-    --text:#e7e8ea; --muted:#8b9099; --dim:#5f646d;
-    --bg:#0b0b0d; --panel:#111114; --line:#232327;
+    --orange:#f98012; --orange-d:#e06f00; --orange-soft:rgba(249,128,18,.12);
+    --text:#e8e9ec; --muted:#8b9099; --dim:#61656e;
+    --bg:#0a0a0c; --panel:#101013; --panel2:#141417; --line:#212127; --line2:#2c2c33;
+    --green:#4bbe8a; --blue:#6ea8ff;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
   a{color:inherit;text-decoration:none}
   h1,h2,h3{font-family:"Poppins",sans-serif;color:#fff;letter-spacing:-.02em}
-  code{font-family:"SF Mono",SFMono-Regular,Consolas,monospace;font-size:.85em;background:#17171b;border:1px solid var(--line);padding:2px 6px;border-radius:5px;color:#f0a55e}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 24px}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:7px;font-weight:600;font-size:15px;transition:.15s;border:1px solid transparent;cursor:pointer}
-  .btn-primary{background:var(--orange);color:#111}
+  ::selection{background:rgba(249,128,18,.28)}
+  code{font-family:"JetBrains Mono",SFMono-Regular,Consolas,monospace;font-size:.85em;background:#17171b;border:1px solid var(--line);padding:2px 6px;border-radius:5px;color:#f0a55e}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:8px;font-weight:600;font-size:15px;transition:.15s;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--orange);color:#151109}
   .btn-primary:hover{background:var(--orange-d);color:#fff}
-  .btn-ghost{border-color:var(--line);color:var(--text)}
-  .btn-ghost:hover{border-color:#3a3a40}
+  .btn-ghost{border-color:var(--line2);color:var(--text)}
+  .btn-ghost:hover{border-color:#43434c}
   .kicker{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
   .accent{color:var(--orange)}
 
-  nav{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(10,10,12,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
   nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
   .logo{font-family:"Poppins";font-weight:700;font-size:17px;display:flex;align-items:center;gap:10px;color:#fff}
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{color:var(--muted);font-size:14.5px;font-weight:500}
   .nav-links a:hover{color:#fff}
-  @media(max-width:800px){.nav-links a:not(.btn){display:none}}
+  @media(max-width:860px){.nav-links a:not(.btn){display:none}}
 
-  header{padding:100px 0 40px;border-bottom:1px solid var(--line)}
-  header .kicker{margin-bottom:20px}
-  h1{font-size:clamp(36px,5.6vw,58px);font-weight:700;line-height:1.08;max-width:16ch}
+  /* hero */
+  header{padding:88px 0 76px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  header::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.035) 1px,transparent 0);background-size:26px 26px;mask-image:linear-gradient(180deg,#000,transparent 75%);pointer-events:none}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:52px;align-items:center;position:relative}
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+  .hero-copy .kicker{margin-bottom:18px}
+  h1{font-size:clamp(38px,5.2vw,56px);font-weight:700;line-height:1.07}
   h1 .accent{color:var(--orange)}
-  .sub{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:62ch;margin-top:20px}
-  .cta{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
-  .meta{margin-top:26px;font-size:13.5px;color:var(--dim)}
+  .sub{font-size:clamp(16.5px,1.6vw,18.5px);color:var(--muted);max-width:52ch;margin-top:20px}
+  .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+  .meta{margin-top:24px;font-size:13px;color:var(--dim)}
   .meta b{color:var(--muted);font-weight:600}
 
-  section{padding:76px 0;border-bottom:1px solid var(--line)}
+  /* conversation panel */
+  .term{background:var(--panel);border:1px solid var(--line2);border-radius:12px;overflow:hidden;box-shadow:0 30px 70px -40px rgba(0,0,0,.9)}
+  .term-bar{display:flex;align-items:center;gap:9px;padding:11px 16px;background:var(--panel2);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted);font-weight:500}
+  .term-bar .d{width:9px;height:9px;border-radius:50%;background:var(--orange)}
+  .term-body{padding:20px;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.85}
+  .term-body .you{color:#dfe2e6}
+  .term-body .you b{color:var(--orange);font-weight:500;margin-right:8px}
+  .term-body .call{color:var(--muted)}
+  .term-body .call .fn{color:var(--orange)}
+  .term-body .call .ok{color:var(--green)}
+  .term-body .done{color:var(--green);margin-top:6px}
+  .term-body .sp{height:12px}
+
+  section{padding:78px 0;border-bottom:1px solid var(--line)}
   .eyebrow{color:var(--orange);font-weight:600;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase}
-  h2{font-size:clamp(26px,3.4vw,34px);font-weight:700;margin:10px 0 10px;line-height:1.2}
+  h2{font-size:clamp(26px,3.2vw,33px);font-weight:700;margin:10px 0 10px;line-height:1.2}
   .lead{color:var(--muted);font-size:17px;max-width:64ch}
 
-  .shot{margin-top:36px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:14px;margin-top:44px;flex-wrap:wrap}
+  .flow .node{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:22px 24px}
+  .flow .node b{display:block;font-family:"Poppins";font-weight:600;color:#fff;font-size:16px;margin-bottom:3px}
+  .flow .node span{color:var(--muted);font-size:13.5px}
+  .flow .arrow{display:flex;align-items:center;color:var(--dim);font-size:20px}
+  @media(max-width:760px){.flow .arrow{transform:rotate(90deg);justify-content:center;width:100%}}
+
+  .shot{margin-top:36px;border-radius:11px;overflow:hidden;border:1px solid var(--line2)}
   .shot img{width:100%;display:block}
-  .shot-cap{margin-top:12px;font-size:13.5px;color:var(--dim)}
+  .shot-cap{margin-top:13px;font-size:13.5px;color:var(--dim)}
 
   .grid{display:grid;gap:1px;margin-top:44px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .g3{grid-template-columns:repeat(3,1fr)}
   @media(max-width:760px){.g3{grid-template-columns:1fr}}
-  .cell{background:var(--bg);padding:30px 28px;transition:background .15s}
+  .cell{background:var(--bg);padding:30px 28px;transition:background .16s}
   .cell:hover{background:var(--panel)}
-  .cell .ico{color:var(--orange);margin-bottom:16px}
-  .cell .ico svg{width:24px;height:24px}
+  .cell .ico{width:40px;height:40px;border-radius:10px;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;color:var(--orange);margin-bottom:16px}
+  .cell .ico svg{width:21px;height:21px}
   .cell h3{font-size:17px;font-weight:600;margin-bottom:7px}
   .cell p{color:var(--muted);font-size:14.5px}
   .cell .ex{margin-top:12px;font-size:13px;color:var(--dim);font-style:italic}
 
-  .steps{margin-top:40px;display:grid;gap:0}
+  .steps{margin-top:40px}
   .step{display:grid;grid-template-columns:auto 1fr;gap:20px;padding:24px 0;border-top:1px solid var(--line);align-items:baseline}
   .step:last-child{border-bottom:1px solid var(--line)}
-  .step .n{font-family:"Poppins";font-weight:700;font-size:15px;color:var(--orange);width:28px}
+  .step .n{font-family:"JetBrains Mono";font-weight:500;font-size:14px;color:var(--orange)}
   .step h3{font-size:17px;font-weight:600;margin-bottom:4px}
   .step p{color:var(--muted);font-size:14.5px}
 
-  footer{padding:46px 0;color:var(--dim)}
+  footer{padding:44px 0;color:var(--dim)}
   footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
   .foot-l{display:flex;align-items:center;gap:10px;font-family:"Poppins";font-weight:700;color:#fff;font-size:15px}
   .foot-links{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}
@@ -88,7 +115,7 @@
   <div class="wrap">
     <div class="logo"><img src="assets/logo.svg" alt="" width="26" height="26" style="display:block">MCP-Moodle</div>
     <div class="nav-links">
-      <a href="#see">Overview</a>
+      <a href="#how">How it works</a>
       <a href="#features">Features</a>
       <a href="#setup">Setup</a>
       <a href="#compat">Compatibility</a>
@@ -98,28 +125,58 @@
 </nav>
 
 <header>
-  <div class="wrap">
-    <p class="kicker">Open-source · Moodle plugin + MCP server</p>
-    <h1>Build your Moodle <span class="accent">by talking to AI.</span></h1>
-    <p class="sub">A plugin and MCP server that let an AI assistant read your courses and build real content — pages, quizzes, forums, assignments — from plain-English instructions. No clicking through admin menus.</p>
-    <div class="cta">
-      <a class="btn btn-primary" href="#setup">Get started</a>
-      <a class="btn btn-ghost" href="https://github.com/NmaaAlhawary/MCP-Moodle">View source</a>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="kicker">Open-source · Moodle plugin + MCP server</p>
+      <h1>Build your Moodle <span class="accent">by talking to AI.</span></h1>
+      <p class="sub">Let an AI assistant read your courses and build real content — pages, quizzes, forums, assignments — from plain-English instructions. No clicking through admin menus.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#setup">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/NmaaAlhawary/MCP-Moodle">View source</a>
+      </div>
+      <p class="meta"><b>17</b> plugin functions · <b>58</b> AI tools · Moodle 4.2–5.3 · MIT / GPLv3</p>
     </div>
-    <p class="meta"><b>17</b> plugin functions · <b>58</b> AI tools · Tested on Moodle 4.2–5.3 · MIT / GPLv3</p>
+    <div class="term">
+      <div class="term-bar"><span class="d"></span> conversation</div>
+      <div class="term-body">
+        <p class="you"><b>You</b>Add a quiz to Biology 101 with a true/false question.</p>
+        <div class="sp"></div>
+        <p class="call">→ <span class="fn">create_quiz</span> <span class="ok">{ cmid: 42, instanceid: 8 }</span></p>
+        <p class="call">→ <span class="fn">add_truefalse_question</span> <span class="ok">{ questionid: 17, slot: 1 }</span></p>
+        <p class="done">✓ Quiz created in Biology 101 with 1 question.</p>
+      </div>
+    </div>
   </div>
 </header>
 
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <span class="eyebrow">How it works</span>
+    <h2>Two pieces, one token</h2>
+    <p class="lead">The plugin adds the activity-creation functions Moodle's core API is missing. The server exposes everything as typed tools for the AI. One web service token connects them.</p>
+    <div class="flow">
+      <div class="node"><b>AI client</b><span>Claude Desktop or any MCP client</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>MCP server</b><span>Python · 58 tools over REST</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Moodle</b><span>+ the local_mcpbridge plugin</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW SHOT -->
 <section id="see">
   <div class="wrap">
     <span class="eyebrow">Overview</span>
     <h2>Real courses, built from a sentence</h2>
-    <p class="lead">The screenshot below is an actual result — a four-course program with its content, created from plain-English prompts. Not a mock-up.</p>
+    <p class="lead">The screenshot below is an actual result — a four-course program with its content, created from plain-English prompts.</p>
     <div class="shot"><img src="images/moodle-courses.png" alt="A Moodle course category with four AI-created courses" loading="lazy"></div>
-    <p class="shot-cap">“Create a Web Development Bootcamp category with four courses.” → done in seconds.</p>
+    <p class="shot-cap">“Create a Web Development Bootcamp category with four courses.” — done in seconds.</p>
   </div>
 </section>
 
+<!-- FEATURES -->
 <section id="features">
   <div class="wrap">
     <span class="eyebrow">Capabilities</span>
@@ -166,6 +223,7 @@
   </div>
 </section>
 
+<!-- SETUP -->
 <section id="setup">
   <div class="wrap">
     <span class="eyebrow">Setup</span>
@@ -180,6 +238,7 @@
   </div>
 </section>
 
+<!-- COMPATIBILITY -->
 <section id="compat">
   <div class="wrap">
     <span class="eyebrow">Compatibility &amp; authentication</span>
