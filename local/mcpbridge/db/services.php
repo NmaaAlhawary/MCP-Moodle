@@ -123,13 +123,41 @@ $functions = [
     ],
 ];
 
+// Core Moodle functions bundled into the service so a single token covers
+// reading, core writes (courses/users/enrolment/files) and activity creation.
+$corefunctions = [
+    // Read.
+    'core_webservice_get_site_info',
+    'core_course_get_courses',
+    'core_course_get_courses_by_field',
+    'core_course_get_contents',
+    'core_enrol_get_enrolled_users',
+    'core_enrol_get_users_courses',
+    'mod_quiz_get_quizzes_by_courses',
+    'gradereport_user_get_grade_items',
+    'gradereport_overview_get_course_grades',
+    'mod_assign_get_assignments',
+    'mod_assign_get_submission_status',
+    'core_calendar_get_action_events_by_timesort',
+    'mod_forum_get_forums_by_courses',
+    'mod_forum_get_forum_discussions',
+    'core_completion_get_activities_completion_status',
+    // Write.
+    'core_course_create_courses',
+    'core_course_create_categories',
+    'core_user_create_users',
+    'enrol_manual_enrol_users',
+    'core_group_create_groups',
+    'core_files_upload',
+];
+
 $services = [
     'MCP Bridge Service' => [
-        'functions'       => array_keys($functions),
+        'functions'       => array_merge(array_keys($functions), $corefunctions),
         'restrictedusers' => 1,
         'enabled'         => 1,
         'shortname'       => 'local_mcpbridge_service',
         'downloadfiles'   => 0,
-        'uploadfiles'     => 0,
+        'uploadfiles'     => 1,
     ],
 ];
