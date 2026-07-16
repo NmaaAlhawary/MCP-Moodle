@@ -212,6 +212,8 @@ the calling AI does the natural-language reasoning over it.
 | `create_category` | `core_course_create_categories` | core |
 | `create_user` | `core_user_create_users` | core |
 | `enrol_user` | `enrol_manual_enrol_users` | core |
+| `enrol_users` (bulk) | `enrol_manual_enrol_users` | core |
+| `add_group_members` | `core_group_add_group_members` | core |
 | `create_group` | `core_group_create_groups` | core |
 | `upload_file` | `core_files_upload` | core |
 | `create_page` | `local_mcpbridge_create_page` | **plugin** |
@@ -226,6 +228,8 @@ the calling AI does the natural-language reasoning over it.
 | `update_activity` | `local_mcpbridge_update_activity` | **plugin** |
 | `delete_activity` | `local_mcpbridge_delete_activity` | **plugin** |
 | `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
+| `add_truefalse_question` | `local_mcpbridge_add_truefalse_question` | **plugin** |
+| `add_shortanswer_question` | `local_mcpbridge_add_shortanswer_question` | **plugin** |
 
 > **Quizzes:** `create_quiz` makes the container; `add_quiz_question` (stretch goal)
 > uses Moodle's Question Bank API to add a multiple-choice question. That API is

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * External function to add a multiple-choice question to a quiz.
+ * External function to add a short-answer question to a quiz.
  *
  * @package    local_mcpbridge
  * @copyright  2026 Namaa Alhawary <namaa.alhawary@htu.edu.jo>
@@ -32,18 +32,13 @@ use core_external\external_single_structure;
 use context_module;
 
 /**
- * External function: add a multiple-choice question to an existing quiz.
+ * External function: add a short-answer question to an existing quiz.
  *
- * This is the "stretch goal" — it uses Moodle's Question Bank API, which is
- * considerably heavier and more version-sensitive than activity creation:
- *   1. find/create a default question category in the quiz's module context,
- *   2. build a multichoice question via its qtype and save it, then
- *   3. attach it to the quiz as a slot and recompute the quiz's max grade.
- *
- * Only single/multi-answer multiple-choice is supported here. Other qtypes
- * (essay, matching, cloze, ...) each need their own form-data shape.
+ * @package    local_mcpbridge
+ * @copyright  2026 Namaa Alhawary <namaa.alhawary@htu.edu.jo>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class add_quiz_question extends external_api {
+class add_shortanswer_question extends external_api {
     /**
      * Describe the input parameters.
      *
@@ -53,40 +48,28 @@ class add_quiz_question extends external_api {
         return new external_function_parameters([
             'quizcmid'     => new external_value(PARAM_INT, 'Course module ID (cmid) of the target quiz'),
             'name'         => new external_value(PARAM_TEXT, 'Question name (bank label)'),
-            'questiontext' => new external_value(PARAM_RAW, 'The question text shown to students (HTML)'),
+            'questiontext' => new external_value(PARAM_RAW, 'The question shown to students (HTML)'),
             'answers'      => new external_multiple_structure(
-                new external_single_structure([
-                    'text'     => new external_value(PARAM_RAW, 'Answer option text (HTML)'),
-                    'fraction' => new external_value(
-                        PARAM_FLOAT,
-                        'Grade fraction: 1.0 = fully correct, 0 = wrong, negatives penalise'
-                    ),
-                    'feedback' => new external_value(PARAM_RAW, 'Optional per-answer feedback', VALUE_DEFAULT, ''),
-                ]),
-                'The answer options (at least two)'
+                new external_value(PARAM_TEXT, 'An accepted answer (first is the model answer)'),
+                'Accepted answers; the first one is treated as fully correct'
             ),
-            'single'      => new external_value(
-                PARAM_INT,
-                'Single correct answer (1) or multiple correct (0)',
-                VALUE_DEFAULT,
-                1
-            ),
-            'defaultmark' => new external_value(PARAM_FLOAT, 'Marks this question is worth', VALUE_DEFAULT, 1.0),
+            'usecase'      => new external_value(PARAM_INT, 'Case sensitive matching (1) or not (0)', VALUE_DEFAULT, 0),
+            'defaultmark'  => new external_value(PARAM_FLOAT, 'Marks this question is worth', VALUE_DEFAULT, 1.0),
         ]);
     }
 
     /**
-     * Add the multiple-choice question to the quiz.
+     * Add the short-answer question to the quiz.
      *
      * @param int $quizcmid Course module ID (cmid) of the target quiz.
      * @param string $name Question name (bank label).
-     * @param string $questiontext The question text shown to students (HTML).
-     * @param array $answers The answer options (each: text, fraction, feedback).
-     * @param int $single Single correct answer (1) or multiple correct (0).
+     * @param string $questiontext The question shown to students (HTML).
+     * @param array $answers Accepted answers (first is fully correct).
+     * @param int $usecase Case sensitive matching (1) or not (0).
      * @param float $defaultmark Marks this question is worth.
      * @return array question id and its slot number in the quiz.
      */
-    public static function execute($quizcmid, $name, $questiontext, $answers, $single = 1, $defaultmark = 1.0) {
+    public static function execute($quizcmid, $name, $questiontext, $answers, $usecase = 0, $defaultmark = 1.0) {
         global $CFG, $DB, $USER;
         require_once($CFG->dirroot . '/question/editlib.php');
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');
@@ -97,38 +80,34 @@ class add_quiz_question extends external_api {
             'name'         => $name,
             'questiontext' => $questiontext,
             'answers'      => $answers,
-            'single'       => $single,
+            'usecase'      => $usecase,
             'defaultmark'  => $defaultmark,
         ]);
 
-        if (count($params['answers']) < 2) {
-            throw new \invalid_parameter_exception('A multiple-choice question needs at least two answers.');
+        if (count($params['answers']) < 1) {
+            throw new \invalid_parameter_exception('A short-answer question needs at least one accepted answer.');
         }
 
-        // Resolve the quiz, its course and module context; check capabilities.
         $cm = get_coursemodule_from_id('quiz', $params['quizcmid'], 0, false, MUST_EXIST);
-        $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
         $context = context_module::instance($cm->id);
         self::validate_context($context);
         require_capability('mod/quiz:manage', $context);
         require_capability('moodle/question:add', $context);
         $quiz = $DB->get_record('quiz', ['id' => $cm->instance], '*', MUST_EXIST);
 
-        // Find (or create) a question category living in this quiz's context.
         $qcategory = question_get_default_category($context->id);
         if (!$qcategory) {
             $qcategory = question_make_default_categories([$context]);
         }
 
-        // Build the multichoice question the way the edit form would submit it.
-        $qtypeobj = \question_bank::get_qtype('multichoice');
+        $qtypeobj = \question_bank::get_qtype('shortanswer');
 
         $question = new \stdClass();
-        $question->id        = 0;
-        $question->category  = $qcategory->id;
-        $question->qtype     = 'multichoice';
-        $question->contextid = $context->id;
-        $question->createdby = $USER->id;
+        $question->id         = 0;
+        $question->category   = $qcategory->id;
+        $question->qtype      = 'shortanswer';
+        $question->contextid  = $context->id;
+        $question->createdby  = $USER->id;
         $question->modifiedby = $USER->id;
 
         $form = new \stdClass();
@@ -139,40 +118,20 @@ class add_quiz_question extends external_api {
         $form->defaultmark     = $params['defaultmark'];
         $form->penalty         = 0.3333333;
         $form->status          = 'ready';
+        $form->usecase         = $params['usecase'] ? 1 : 0;
 
-        // Multichoice-specific options.
-        $form->single                = $params['single'] ? 1 : 0;
-        $form->shuffleanswers        = 1;
-        $form->answernumbering       = 'abc';
-        $form->showstandardinstruction = 1;
-        $form->correctfeedback = [
-            'text' => get_string('correctfeedbackdefault', 'qtype_multichoice'),
-            'format' => FORMAT_HTML,
-        ];
-        $form->partiallycorrectfeedback = [
-            'text' => get_string('partiallycorrectfeedbackdefault', 'qtype_multichoice'),
-            'format' => FORMAT_HTML,
-        ];
-        $form->incorrectfeedback = [
-            'text' => get_string('incorrectfeedbackdefault', 'qtype_multichoice'),
-            'format' => FORMAT_HTML,
-        ];
-        $form->shownumcorrect          = 1;
-
-        // Answer options.
+        // Every accepted answer is fully correct (fraction 1.0).
         $form->answer   = [];
         $form->fraction = [];
         $form->feedback = [];
-        foreach ($params['answers'] as $i => $a) {
-            $form->answer[$i]   = ['text' => $a['text'], 'format' => FORMAT_HTML];
-            $form->fraction[$i] = $a['fraction'];
-            $form->feedback[$i] = ['text' => $a['feedback'] ?? '', 'format' => FORMAT_HTML];
+        foreach (array_values($params['answers']) as $i => $ans) {
+            $form->answer[$i]   = $ans;
+            $form->fraction[$i] = '1.0';
+            $form->feedback[$i] = ['text' => '', 'format' => FORMAT_HTML];
         }
 
-        // Save the question into the bank.
         $question = $qtypeobj->save_question($question, $form);
 
-        // Attach the question to the quiz and recompute grades.
         quiz_add_quiz_question($question->id, $quiz, 0, $params['defaultmark']);
         // Recompute the quiz total (API changed across Moodle versions).
         if (class_exists('\\mod_quiz\\grade_calculator')) {
@@ -182,10 +141,8 @@ class add_quiz_question extends external_api {
             quiz_update_sumgrades($quiz);
         }
 
-        // Report the slot number this question landed in. In Moodle 4.0+ the
-        // quiz_slots table no longer has a questionid column (questions are
-        // referenced indirectly via question_references), and the question was
-        // just appended, so the highest slot for this quiz is the one we added.
+        // In Moodle 4.0+ quiz_slots has no questionid column; the question was
+        // just appended, so the highest slot is the one we added.
         $slot = (int) $DB->get_field('quiz_slots', 'MAX(slot)', ['quizid' => $quiz->id]);
 
         return [

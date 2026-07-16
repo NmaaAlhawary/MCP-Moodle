@@ -1198,6 +1198,79 @@ def _register_write_tools() -> None:
         )
 
     @mcp.tool()
+    async def add_truefalse_question(
+        quizcmid: int,
+        name: str,
+        questiontext: str,
+        correctanswer: int,
+        defaultmark: float = 1.0,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Add a true/false question to a quiz.
+
+        Requires the local_mcpbridge plugin. `quizcmid` is the quiz's course
+        module id. `correctanswer` = 1 for true, 0 for false. Returns the new
+        question id and its slot.
+        """
+        return await _call(
+            "local_mcpbridge_add_truefalse_question",
+            {
+                "quizcmid": quizcmid,
+                "name": name,
+                "questiontext": questiontext,
+                "correctanswer": correctanswer,
+                "defaultmark": defaultmark,
+            },
+        )
+
+    @mcp.tool()
+    async def add_shortanswer_question(
+        quizcmid: int,
+        name: str,
+        questiontext: str,
+        answers: list[str],
+        usecase: int = 0,
+        defaultmark: float = 1.0,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Add a short-answer question to a quiz.
+
+        Requires the local_mcpbridge plugin. `answers` is a list of accepted
+        answer strings (all treated as fully correct). `usecase` = 1 for
+        case-sensitive matching. Returns the new question id and its slot.
+        """
+        return await _call(
+            "local_mcpbridge_add_shortanswer_question",
+            {
+                "quizcmid": quizcmid,
+                "name": name,
+                "questiontext": questiontext,
+                "answers": answers,
+                "usecase": usecase,
+                "defaultmark": defaultmark,
+            },
+        )
+
+    @mcp.tool()
+    async def enrol_users(enrolments: list[dict]) -> None:
+        """⚠️ WRITES LIVE DATA. Enrol many users at once (bulk).
+
+        `enrolments` is a list of dicts, each: {"userid": int, "courseid": int,
+        "roleid": int}. roleid 5 = Student, 3 = Teacher, 4 = Non-editing teacher.
+        Requires the manual enrolment method enabled on each course. Returns null
+        on success.
+        """
+        return await _call("enrol_manual_enrol_users", {"enrolments": enrolments})
+
+    @mcp.tool()
+    async def add_group_members(members: list[dict]) -> None:
+        """⚠️ WRITES LIVE DATA. Add users to groups.
+
+        `members` is a list of dicts, each: {"groupid": int, "userid": int}.
+        The users must already be enrolled in the group's course. Returns null
+        on success.
+        """
+        return await _call("core_group_add_group_members", {"members": members})
+
+    @mcp.tool()
     async def create_forum(
         courseid: int,
         name: str,

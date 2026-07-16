@@ -121,6 +121,22 @@ $functions = [
         'capabilities' => 'moodle/course:manageactivities',
         'ajax'         => false,
     ],
+    'local_mcpbridge_add_truefalse_question' => [
+        'classname'    => 'local_mcpbridge\external\add_truefalse_question',
+        'methodname'   => 'execute',
+        'description'  => 'Add a true/false question to an existing quiz',
+        'type'         => 'write',
+        'capabilities' => 'mod/quiz:manage, moodle/question:add',
+        'ajax'         => false,
+    ],
+    'local_mcpbridge_add_shortanswer_question' => [
+        'classname'    => 'local_mcpbridge\external\add_shortanswer_question',
+        'methodname'   => 'execute',
+        'description'  => 'Add a short-answer question to an existing quiz',
+        'type'         => 'write',
+        'capabilities' => 'mod/quiz:manage, moodle/question:add',
+        'ajax'         => false,
+    ],
 ];
 
 // Core Moodle functions bundled into the service so a single token covers
@@ -148,6 +164,7 @@ $corefunctions = [
     'core_user_create_users',
     'enrol_manual_enrol_users',
     'core_group_create_groups',
+    'core_group_add_group_members',
     'core_files_upload',
 ];
 
