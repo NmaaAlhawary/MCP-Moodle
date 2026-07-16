@@ -58,7 +58,8 @@ final class delete_activity_test extends advanced_testcase {
         $this->assertTrue($updated['renamed']);
         $this->assertEquals('Renamed', $DB->get_field('page', 'name', ['id' => $created['instanceid']]));
 
-        // Delete it.
+        // Delete directly, bypassing the recycle bin (no pre-delete backup).
+        set_config('coursebinenable', 0, 'tool_recyclebin');
         $deleted = delete_activity::execute($cmid);
         $deleted = external_api::clean_returnvalue(delete_activity::execute_returns(), $deleted);
         $this->assertTrue($deleted['deleted']);
