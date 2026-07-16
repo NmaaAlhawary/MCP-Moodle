@@ -96,5 +96,4 @@ jobs:
 
       - name: PHPUnit tests
         if: ${{ always() }}
-        continue-on-error: true
         run: moodle-plugin-ci phpunit

@@ -1280,6 +1280,51 @@ def _register_write_tools() -> None:
             },
         )
 
+    @mcp.tool()
+    async def create_section(
+        courseid: int,
+        name: str,
+        summary: str = "",
+        position: int = 0,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Create a new section (topic) in a course.
+
+        Requires the local_mcpbridge plugin. `position` 0 appends to the end.
+        Returns the new section id and its number within the course.
+        """
+        return await _call(
+            "local_mcpbridge_create_section",
+            {
+                "courseid": courseid,
+                "name": name,
+                "summary": summary,
+                "position": position,
+            },
+        )
+
+    @mcp.tool()
+    async def update_activity(cmid: int, name: str = "", visible: int = -1) -> dict:
+        """⚠️ WRITES LIVE DATA. Rename and/or show/hide an existing activity.
+
+        Requires the local_mcpbridge plugin. `cmid` is the activity's course
+        module id. Leave `name` empty to keep it; `visible` = 1 show, 0 hide,
+        -1 leave unchanged. Returns what was changed.
+        """
+        return await _call(
+            "local_mcpbridge_update_activity",
+            {"cmid": cmid, "name": name, "visible": visible},
+        )
+
+    @mcp.tool()
+    async def delete_activity(cmid: int) -> dict:
+        """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete an activity from a course.
+
+        Requires the local_mcpbridge plugin. `cmid` is the activity's course
+        module id. This permanently removes the activity and its data. Returns
+        the deleted cmid and a success flag.
+        """
+        return await _call("local_mcpbridge_delete_activity", {"cmid": cmid})
+
 
 if ALLOW_WRITE:
     _register_write_tools()

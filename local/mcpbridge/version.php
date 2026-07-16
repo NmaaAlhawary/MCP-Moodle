@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_mcpbridge';   // Full name of the plugin (used for diagnostics).
-$plugin->version   = 2026071504;          // The current plugin version (YYYYMMDDXX).
+$plugin->version   = 2026071505;          // The current plugin version (YYYYMMDDXX).
 $plugin->requires  = 2023042400;          // Requires Moodle 4.2+ (namespaced external API).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.1.0';
+$plugin->release   = '1.2.0';

@@ -97,6 +97,30 @@ $functions = [
         'capabilities' => 'moodle/course:manageactivities',
         'ajax'         => false,
     ],
+    'local_mcpbridge_create_section' => [
+        'classname'    => 'local_mcpbridge\external\create_section',
+        'methodname'   => 'execute',
+        'description'  => 'Create a new section (topic) in a course',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update',
+        'ajax'         => false,
+    ],
+    'local_mcpbridge_update_activity' => [
+        'classname'    => 'local_mcpbridge\external\update_activity',
+        'methodname'   => 'execute',
+        'description'  => 'Rename and/or show/hide an existing activity',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
+    'local_mcpbridge_delete_activity' => [
+        'classname'    => 'local_mcpbridge\external\delete_activity',
+        'methodname'   => 'execute',
+        'description'  => 'Delete an activity (course module) from a course',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
 ];
 
 $services = [

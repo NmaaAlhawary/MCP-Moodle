@@ -222,6 +222,9 @@ the calling AI does the natural-language reasoning over it.
 | `create_forum` | `local_mcpbridge_create_forum` | **plugin** |
 | `create_choice` | `local_mcpbridge_create_choice` | **plugin** |
 | `create_assignment` | `local_mcpbridge_create_assignment` | **plugin** |
+| `create_section` | `local_mcpbridge_create_section` | **plugin** |
+| `update_activity` | `local_mcpbridge_update_activity` | **plugin** |
+| `delete_activity` | `local_mcpbridge_delete_activity` | **plugin** |
 | `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
 
 > **Quizzes:** `create_quiz` makes the container; `add_quiz_question` (stretch goal)
