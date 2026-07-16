@@ -137,6 +137,22 @@ $functions = [
         'capabilities' => 'mod/quiz:manage, moodle/question:add',
         'ajax'         => false,
     ],
+    'local_mcpbridge_update_page' => [
+        'classname'    => 'local_mcpbridge\external\update_page',
+        'methodname'   => 'execute',
+        'description'  => 'Replace the content of an existing Page activity',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
+    'local_mcpbridge_move_activity' => [
+        'classname'    => 'local_mcpbridge\external\move_activity',
+        'methodname'   => 'execute',
+        'description'  => 'Move an activity to a different course section',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
 ];
 
 // Core Moodle functions bundled into the service so a single token covers
@@ -161,6 +177,7 @@ $corefunctions = [
     // Write.
     'core_course_create_courses',
     'core_course_create_categories',
+    'core_course_update_courses',
     'core_user_create_users',
     'enrol_manual_enrol_users',
     'core_group_create_groups',

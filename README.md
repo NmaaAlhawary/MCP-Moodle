@@ -209,6 +209,7 @@ the calling AI does the natural-language reasoning over it.
 | Tool | Moodle function | Source |
 |---|---|---|
 | `create_course` | `core_course_create_courses` | core |
+| `update_course` | `core_course_update_courses` | core |
 | `create_category` | `core_course_create_categories` | core |
 | `create_user` | `core_user_create_users` | core |
 | `enrol_user` | `enrol_manual_enrol_users` | core |
@@ -226,6 +227,8 @@ the calling AI does the natural-language reasoning over it.
 | `create_assignment` | `local_mcpbridge_create_assignment` | **plugin** |
 | `create_section` | `local_mcpbridge_create_section` | **plugin** |
 | `update_activity` | `local_mcpbridge_update_activity` | **plugin** |
+| `update_page` | `local_mcpbridge_update_page` | **plugin** |
+| `move_activity` | `local_mcpbridge_move_activity` | **plugin** |
 | `delete_activity` | `local_mcpbridge_delete_activity` | **plugin** |
 | `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
 | `add_truefalse_question` | `local_mcpbridge_add_truefalse_question` | **plugin** |

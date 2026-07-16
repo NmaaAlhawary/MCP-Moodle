@@ -1389,6 +1389,58 @@ def _register_write_tools() -> None:
         )
 
     @mcp.tool()
+    async def update_page(cmid: int, content: str, intro: str = "") -> dict:
+        """⚠️ WRITES LIVE DATA. Replace the content of an existing Page activity.
+
+        Requires the local_mcpbridge plugin. `cmid` is the page's course module
+        id; `content` is the new HTML body. Leave `intro` empty to keep the
+        current description. Returns the cmid and a success flag.
+        """
+        return await _call(
+            "local_mcpbridge_update_page",
+            {"cmid": cmid, "content": content, "intro": intro},
+        )
+
+    @mcp.tool()
+    async def move_activity(cmid: int, section: int) -> dict:
+        """⚠️ WRITES LIVE DATA. Move an activity to a different course section.
+
+        Requires the local_mcpbridge plugin. `cmid` is the activity's course
+        module id; `section` is the target section number. Returns the cmid and
+        the section it now lives in.
+        """
+        return await _call(
+            "local_mcpbridge_move_activity",
+            {"cmid": cmid, "section": section},
+        )
+
+    @mcp.tool()
+    async def update_course(
+        courseid: int,
+        fullname: str = "",
+        shortname: str = "",
+        summary: str = "",
+        visible: int = -1,
+    ) -> list:
+        """⚠️ WRITES LIVE DATA. Edit a course's settings.
+
+        Only the fields you provide are changed: leave `fullname`/`shortname`/
+        `summary` empty to keep them, and `visible` = 1 show, 0 hide, -1 leave.
+        Returns the update result.
+        """
+        course: dict[str, Any] = {"id": courseid}
+        if fullname:
+            course["fullname"] = fullname
+        if shortname:
+            course["shortname"] = shortname
+        if summary:
+            course["summary"] = summary
+            course["summaryformat"] = 1
+        if visible in (0, 1):
+            course["visible"] = visible
+        return await _call("core_course_update_courses", {"courses": [course]})
+
+    @mcp.tool()
     async def delete_activity(cmid: int) -> dict:
         """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete an activity from a course.
 
