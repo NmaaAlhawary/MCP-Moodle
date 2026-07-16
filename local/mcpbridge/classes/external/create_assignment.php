@@ -92,6 +92,7 @@ class create_assignment extends external_api {
         $moduleinfo = new \stdClass();
         $moduleinfo->modulename = 'assign';
         $moduleinfo->module = $DB->get_field('modules', 'id', ['name' => 'assign'], MUST_EXIST);
+        $moduleinfo->cmidnumber = '';
         $moduleinfo->course = $course->id;
         $moduleinfo->section = $params['section'];
         $moduleinfo->visible = $params['visible'];

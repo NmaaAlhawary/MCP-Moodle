@@ -97,6 +97,7 @@ class create_choice extends external_api {
         $moduleinfo = new \stdClass();
         $moduleinfo->modulename = 'choice';
         $moduleinfo->module = $DB->get_field('modules', 'id', ['name' => 'choice'], MUST_EXIST);
+        $moduleinfo->cmidnumber = '';
         $moduleinfo->course = $course->id;
         $moduleinfo->section = $params['section'];
         $moduleinfo->visible = $params['visible'];

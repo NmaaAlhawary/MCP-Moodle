@@ -174,19 +174,14 @@ class add_quiz_question extends external_api {
 
         // Attach the question to the quiz and recompute grades.
         quiz_add_quiz_question($question->id, $quiz, 0, $params['defaultmark']);
-        quiz_update_sumgrades($quiz);
+        // quiz_update_sumgrades() was removed in Moodle 4.x; use the grade calculator.
+        \mod_quiz\quiz_settings::create($quiz->id)->get_grade_calculator()->recompute_quiz_sumgrades();
 
-        // Report the slot number this question landed in.
-        $slot = (int) $DB->get_field(
-            'quiz_slots',
-            'slot',
-            ['quizid' => $quiz->id, 'questionid' => $question->id],
-            IGNORE_MULTIPLE
-        );
-        if (!$slot) {
-            // Moodle 4.1+ stores the question reference indirectly; fall back to the max slot.
-            $slot = (int) $DB->get_field('quiz_slots', 'MAX(slot)', ['quizid' => $quiz->id]);
-        }
+        // Report the slot number this question landed in. In Moodle 4.0+ the
+        // quiz_slots table no longer has a questionid column (questions are
+        // referenced indirectly via question_references), and the question was
+        // just appended, so the highest slot for this quiz is the one we added.
+        $slot = (int) $DB->get_field('quiz_slots', 'MAX(slot)', ['quizid' => $quiz->id]);
 
         return [
             'questionid' => (int) $question->id,
