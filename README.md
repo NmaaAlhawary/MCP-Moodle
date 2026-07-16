@@ -72,6 +72,36 @@ two parts that work together:
 | **Moodle plugin** | [`local/mcpbridge/`](local/mcpbridge) | Adds the activity-creation web service functions Moodle core is missing — using Moodle's official `add_moduleinfo()` helper, so it's upgrade-safe (no raw DB writes). |
 | **MCP server** | [`moodle-mcp/`](moodle-mcp) | Wraps Moodle's read/write API — core *and* the plugin's new functions — as typed MCP tools for an AI client. |
 
+## Compatibility & authentication
+
+**Works with any Moodle 4.2 or newer** — self-hosted or institutional. There is
+nothing site-specific in the code.
+
+**Authentication uses a web service token, not a password.** The MCP server never
+sends a username or password — it sends a **token** (a long random string) that an
+admin generates in Moodle. The token is tied to one user account and one service
+(a fixed list of allowed functions), and it can only do what **that user's
+capabilities** permit.
+
+Because the token is a separate auth channel, **it works regardless of how your
+users log in** — Manual, LDAP, SAML/SSO (Shibboleth, ADFS), Google/Microsoft
+OAuth, CAS, etc. all make no difference. A university Moodle behind SSO works
+exactly the same: an admin just creates a token.
+
+**What you need**
+
+| Requirement | Why |
+|---|---|
+| Admin access (yours or an admin's) | To install the plugin, enable web services, and create the token |
+| Web services + REST enabled | The authentication mechanism |
+| A user account for the token | The token inherits that user's capabilities |
+
+**Caveats (be honest with yourself here)**
+
+- You must be able to **install a plugin** — full control on self-hosted/institutional Moodle; a locked-down managed host may require the admin to do it.
+- Some managed clouds (e.g. **MoodleCloud free tier**) block custom plugins and full web services — activity creation won't work there.
+- **Without the plugin**, the MCP server's *core* tools (list/create courses, users, enrolment, grades) still work with a token; you only lose the plugin's activity-creation tools.
+
 ## Features
 
 - **40+ tools** — reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, and activity creation
