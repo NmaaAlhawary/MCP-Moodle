@@ -73,6 +73,30 @@ $functions = [
         'capabilities' => 'mod/quiz:manage, moodle/question:add',
         'ajax'         => false,
     ],
+    'local_mcpbridge_create_forum' => [
+        'classname'    => 'local_mcpbridge\external\create_forum',
+        'methodname'   => 'execute',
+        'description'  => 'Create a Forum activity in a course',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
+    'local_mcpbridge_create_choice' => [
+        'classname'    => 'local_mcpbridge\external\create_choice',
+        'methodname'   => 'execute',
+        'description'  => 'Create a Choice (poll) activity in a course',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
+    'local_mcpbridge_create_assignment' => [
+        'classname'    => 'local_mcpbridge\external\create_assignment',
+        'methodname'   => 'execute',
+        'description'  => 'Create an Assignment activity in a course',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+        'ajax'         => false,
+    ],
 ];
 
 $services = [

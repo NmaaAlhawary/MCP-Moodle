@@ -1197,6 +1197,89 @@ def _register_write_tools() -> None:
             },
         )
 
+    @mcp.tool()
+    async def create_forum(
+        courseid: int,
+        name: str,
+        section: int = 0,
+        intro: str = "",
+        type: str = "general",
+        visible: int = 1,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Create a Forum activity in a course.
+
+        Requires the local_mcpbridge plugin. `type` is one of: general,
+        eachuser, single, qanda, blog. Returns the new cmid and instance id.
+        """
+        return await _call(
+            "local_mcpbridge_create_forum",
+            {
+                "courseid": courseid,
+                "section": section,
+                "name": name,
+                "intro": intro,
+                "type": type,
+                "visible": visible,
+            },
+        )
+
+    @mcp.tool()
+    async def create_choice(
+        courseid: int,
+        name: str,
+        question: str,
+        options: list[str],
+        section: int = 0,
+        allowupdate: int = 1,
+        visible: int = 1,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Create a Choice (poll) activity in a course.
+
+        Requires the local_mcpbridge plugin. `options` is a list of at least two
+        answer strings students pick from. Returns the new cmid and instance id.
+        """
+        return await _call(
+            "local_mcpbridge_create_choice",
+            {
+                "courseid": courseid,
+                "section": section,
+                "name": name,
+                "question": question,
+                "options": options,
+                "allowupdate": allowupdate,
+                "visible": visible,
+            },
+        )
+
+    @mcp.tool()
+    async def create_assignment(
+        courseid: int,
+        name: str,
+        section: int = 0,
+        intro: str = "",
+        duedate: int = 0,
+        grade: int = 100,
+        visible: int = 1,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Create an Assignment activity in a course.
+
+        Requires the local_mcpbridge plugin. Enables online-text and file
+        submissions with feedback comments. `duedate` is a unix timestamp
+        (0 = no due date). Returns the new cmid and instance id.
+        """
+        return await _call(
+            "local_mcpbridge_create_assignment",
+            {
+                "courseid": courseid,
+                "section": section,
+                "name": name,
+                "intro": intro,
+                "duedate": duedate,
+                "grade": grade,
+                "visible": visible,
+            },
+        )
+
 
 if ALLOW_WRITE:
     _register_write_tools()
