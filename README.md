@@ -213,6 +213,8 @@ the calling AI does the natural-language reasoning over it.
 | `create_category` | `core_course_create_categories` | core |
 | `create_user` | `core_user_create_users` | core |
 | `enrol_user` | `enrol_manual_enrol_users` | core |
+| `unenrol_user` | `enrol_manual_unenrol_users` | core |
+| `grade_assignment` | `mod_assign_save_grade` | core |
 | `enrol_users` (bulk) | `enrol_manual_enrol_users` | core |
 | `add_group_members` | `core_group_add_group_members` | core |
 | `create_group` | `core_group_create_groups` | core |
@@ -229,6 +231,7 @@ the calling AI does the natural-language reasoning over it.
 | `update_activity` | `local_mcpbridge_update_activity` | **plugin** |
 | `update_page` | `local_mcpbridge_update_page` | **plugin** |
 | `move_activity` | `local_mcpbridge_move_activity` | **plugin** |
+| `delete_section` | `local_mcpbridge_delete_section` | **plugin** |
 | `delete_activity` | `local_mcpbridge_delete_activity` | **plugin** |
 | `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
 | `add_truefalse_question` | `local_mcpbridge_add_truefalse_question` | **plugin** |

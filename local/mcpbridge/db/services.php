@@ -153,6 +153,14 @@ $functions = [
         'capabilities' => 'moodle/course:manageactivities',
         'ajax'         => false,
     ],
+    'local_mcpbridge_delete_section' => [
+        'classname'    => 'local_mcpbridge\external\delete_section',
+        'methodname'   => 'execute',
+        'description'  => 'Delete a section (and its activities) from a course',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update',
+        'ajax'         => false,
+    ],
 ];
 
 // Core Moodle functions bundled into the service so a single token covers
@@ -180,9 +188,11 @@ $corefunctions = [
     'core_course_update_courses',
     'core_user_create_users',
     'enrol_manual_enrol_users',
+    'enrol_manual_unenrol_users',
     'core_group_create_groups',
     'core_group_add_group_members',
     'core_files_upload',
+    'mod_assign_save_grade',
 ];
 
 $services = [

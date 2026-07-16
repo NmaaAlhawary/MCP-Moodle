@@ -1450,6 +1450,73 @@ def _register_write_tools() -> None:
         """
         return await _call("local_mcpbridge_delete_activity", {"cmid": cmid})
 
+    @mcp.tool()
+    async def grade_assignment(
+        assignmentid: int,
+        userid: int,
+        grade: float,
+        feedback: str = "",
+        attemptnumber: int = -1,
+        applytoall: int = 1,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Grade a student's assignment submission.
+
+        Uses Moodle's core mod_assign_save_grade. `assignmentid` is the assign
+        instance id (NOT the cmid — get it from get_assignments/get_course_content).
+        `grade` is the numeric mark (e.g. 85 for 85/100); pass -1 for "no grade".
+        `feedback` is optional HTML shown to the student as a feedback comment.
+        `attemptnumber` -1 targets the latest attempt. The grade flows straight
+        to the gradebook. Returns a summary of what was written.
+        """
+        params: dict[str, Any] = {
+            "assignmentid": assignmentid,
+            "userid": userid,
+            "grade": grade,
+            "attemptnumber": attemptnumber,
+            "addattempt": 0,
+            "workflowstate": "",
+            "applytoall": applytoall,
+        }
+        if feedback:
+            params["plugindata"] = {
+                "assignfeedbackcomments_editor": {"text": feedback, "format": 1}
+            }
+        # mod_assign_save_grade returns null on success.
+        await _call("mod_assign_save_grade", params)
+        return {
+            "status": "graded",
+            "assignmentid": assignmentid,
+            "userid": userid,
+            "grade": grade,
+            "feedback": feedback or None,
+        }
+
+    @mcp.tool()
+    async def unenrol_user(userid: int, courseid: int) -> None:
+        """⚠️ WRITES LIVE DATA. Remove a user's manual enrolment from a course.
+
+        Uses Moodle's core enrol_manual_unenrol_users. Only removes the manual
+        enrolment (other enrolment methods are untouched). Returns null on
+        success.
+        """
+        return await _call(
+            "enrol_manual_unenrol_users",
+            {"enrolments": [{"userid": userid, "courseid": courseid}]},
+        )
+
+    @mcp.tool()
+    async def delete_section(courseid: int, sectionnum: int) -> dict:
+        """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete a course section.
+
+        Requires the local_mcpbridge plugin. `sectionnum` is the section number
+        (1 or higher — the general section 0 cannot be deleted). This removes the
+        section AND every activity inside it. Returns a success flag.
+        """
+        return await _call(
+            "local_mcpbridge_delete_section",
+            {"courseid": courseid, "sectionnum": sectionnum},
+        )
+
 
 if ALLOW_WRITE:
     _register_write_tools()
