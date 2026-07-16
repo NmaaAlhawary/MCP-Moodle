@@ -48,8 +48,7 @@ final class add_shortanswer_question_test extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
 
-        $result = add_shortanswer_question::execute(
-            $quiz->cmid, 'Capital', 'Capital of France?', ['Paris', 'paris']);
+        $result = add_shortanswer_question::execute($quiz->cmid, 'Q', 'Capital of France?', ['Paris', 'paris']);
         $result = external_api::clean_returnvalue(add_shortanswer_question::execute_returns(), $result);
 
         $this->assertGreaterThan(0, $result['questionid']);
