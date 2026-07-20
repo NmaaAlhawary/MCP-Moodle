@@ -1,39 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="MCP-Moodle logo">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Moodle logo">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffa53f"/>
       <stop offset="1" stop-color="#f26a00"/>
     </linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3a3a"/>
+      <stop offset="1" stop-color="#141414"/>
+    </linearGradient>
   </defs>
 
-  <!-- speech bubble = "talk", with a tail at the bottom-left -->
-  <path fill="url(#g)" d="
-    M156 60
-    h200
-    a96 96 0 0 1 96 96
-    v160
-    a96 96 0 0 1 -96 96
-    H210
-    l-58 56
-    a10 10 0 0 1 -17 -7
-    v-49
-    h-3
-    a96 96 0 0 1 -76 -96
-    V156
-    a96 96 0 0 1 96 -96
-    z"/>
+  <!-- orange rounded-square badge -->
+  <rect x="32" y="32" width="448" height="448" rx="104" fill="url(#g)"/>
 
-  <!-- graduation cap = "Moodle / education", in white -->
-  <g transform="translate(0,-10)" fill="#ffffff">
-    <!-- board (diamond) -->
-    <polygon points="252,150 372,203 252,256 132,203"/>
-    <!-- head / cap base -->
-    <path d="M184 219 L252 249 L320 219 L320 272 C320 300 184 300 184 272 Z"/>
+  <!-- lowercase "m" (white) -->
+  <path d="M176 396 L176 272 A56 56 0 0 1 288 272 L288 396 M288 272 A56 56 0 0 1 400 272 L400 396"
+        fill="none" stroke="#ffffff" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- graduation cap (black), tilted over the left of the m -->
+  <g transform="rotate(-11 232 150)">
+    <!-- cap base / head band -->
+    <path d="M182 158 L232 182 L282 158 L282 196 C282 226 182 226 182 196 Z" fill="#141414"/>
+    <!-- mortarboard -->
+    <polygon points="232,96 360,150 232,204 104,150" fill="url(#cap)"/>
+    <!-- centre button -->
+    <circle cx="232" cy="150" r="11" fill="#0d0d0d"/>
+    <!-- tassel -->
+    <path d="M138 150 C126 184 134 206 134 232" fill="none" stroke="#141414" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="134" cy="238" r="12" fill="#141414"/>
+    <circle cx="134" cy="238" r="5" fill="#f7931e"/>
   </g>
-
-  <!-- tassel + node -->
-  <path d="M372 193 L372 262" transform="translate(0,-10)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
-  <circle cx="372" cy="264" r="16" fill="#ffffff"/>
-  <circle cx="372" cy="264" r="7" fill="#f26a00"/>
-  <circle cx="252" cy="193" r="13" fill="#f26a00"/>
 </svg>
