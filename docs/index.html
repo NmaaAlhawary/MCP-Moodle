@@ -4,8 +4,8 @@
 <script>document.documentElement.className+=' js'</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCP-Moodle — Build your Moodle by talking to AI</title>
-<meta name="description" content="An open-source Moodle plugin and MCP server that let an AI assistant read your courses and build content — pages, quizzes, forums, assignments — in plain English.">
+<title>MCP-Moodle · Build your Moodle by talking to AI</title>
+<meta name="description" content="An open-source Moodle plugin and MCP server that let an AI assistant read your courses and build content like pages, quizzes, forums and assignments, in plain English.">
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
   code{font-family:"JetBrains Mono",SFMono-Regular,Consolas,monospace;font-size:.85em;background:#17171b;border:1px solid var(--line);padding:2px 6px;border-radius:5px;color:#f0a55e}
   .wrap{width:100%;max-width:none;margin:0;padding:0 clamp(20px,4.5vw,72px)}
   .hero-copy .sub{max-width:52ch}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:8px;font-weight:600;font-size:15px;transition:.15s;border:1px solid transparent;cursor:pointer}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:999px;font-weight:600;font-size:15px;transition:.15s;border:1px solid transparent;cursor:pointer}
   .btn-primary{background:var(--orange);color:#151109}
   .btn-primary:hover{background:var(--orange-d);color:#fff}
   .btn-ghost{border-color:var(--line2);color:var(--text)}
@@ -40,17 +40,23 @@
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{color:var(--muted);font-size:14.5px;font-weight:500}
   .nav-links a:hover{color:#fff}
-  @media(max-width:860px){.nav-links a:not(.btn){display:none}}
+  .gh-link{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;color:var(--muted);border:1px solid var(--line2);transition:color .15s,border-color .15s,background .15s,transform .15s}
+  .gh-link:hover{color:#fff;border-color:#43434c;background:var(--panel);transform:translateY(-2px)}
+  @media(max-width:860px){.nav-links a:not(.btn):not(.gh-link){display:none}}
 
   /* hero */
   header{padding:88px 0 76px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
   header::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.035) 1px,transparent 0);background-size:26px 26px;mask-image:linear-gradient(180deg,#000,transparent 75%);pointer-events:none}
-  .hero-grid{display:grid;grid-template-columns:1fr minmax(480px,760px);gap:clamp(40px,6vw,96px);align-items:center;position:relative}
+  header::after{content:"";position:absolute;top:-160px;right:-120px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(249,128,18,.11),transparent 62%);pointer-events:none;z-index:0}
+  header .wrap{position:relative;z-index:1}
+  .hero-grid{display:grid;grid-template-columns:1fr minmax(440px,660px);gap:clamp(40px,6vw,96px);align-items:center;position:relative}
   @media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+  .hero-copy{padding-left:clamp(8px,3vw,64px)}
   .hero-copy .kicker{margin-bottom:18px}
-  h1{font-size:clamp(38px,5.2vw,56px);font-weight:700;line-height:1.07}
-  h1 .accent{color:var(--orange)}
-  .sub{font-size:clamp(16.5px,1.6vw,18.5px);color:var(--muted);max-width:52ch;margin-top:20px}
+  h1{font-size:clamp(46px,6.6vw,80px);font-weight:700;line-height:1.05}
+  h1 .accent{background:linear-gradient(90deg,#f98012,#ffc07a,#f98012);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 4s linear infinite}
+  @keyframes shimmer{to{background-position:-200% 0}}
+  .sub{font-size:clamp(17px,1.8vw,21px);color:var(--muted);max-width:52ch;margin-top:22px}
   .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
   .meta{margin-top:24px;font-size:13px;color:var(--dim)}
   .meta b{color:var(--muted);font-weight:600}
@@ -76,7 +82,10 @@
   .term-input button:hover{background:var(--orange-d);color:#fff}
   .term-input button svg{width:18px;height:18px}
 
-  section{padding:78px 0;border-bottom:1px solid var(--line)}
+  section{padding:96px 0;border-bottom:1px solid var(--line);position:relative}
+  section::before{content:"";position:absolute;top:-1px;left:50%;width:min(620px,55%);height:2px;background:linear-gradient(90deg,transparent,var(--orange) 50%,transparent);transform:translateX(-50%) scaleX(0);transform-origin:center;transition:transform .85s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+  section.line-in::before{transform:translateX(-50%) scaleX(1)}
+  @media(prefers-reduced-motion:reduce){section::before{display:none}}
   .eyebrow{display:block;text-align:center;color:var(--orange);font-weight:600;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase}
   h2{text-align:center;font-size:clamp(34px,4.8vw,50px);font-weight:700;margin:12px 0 12px;line-height:1.15}
   .lead{text-align:center;color:var(--muted);font-size:17px;max-width:64ch;margin:0 auto}
@@ -123,16 +132,91 @@
   .shot img{width:100%;display:block}
   .shot-cap{margin-top:14px;font-size:13.5px;color:var(--dim);text-align:center}
 
-  .grid{display:grid;gap:1px;margin-top:44px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .grid{display:grid;gap:18px;margin-top:56px}
   .g3{grid-template-columns:repeat(3,1fr)}
+  .g-auto{grid-template-columns:repeat(auto-fit,minmax(258px,1fr))}
   @media(max-width:760px){.g3{grid-template-columns:1fr}}
-  .cell{background:var(--bg);padding:30px 28px;transition:background .16s;display:grid;grid-template-columns:auto 1fr;column-gap:15px;align-items:center}
-  .cell:hover{background:var(--panel)}
-  .cell .ico{width:40px;height:40px;border-radius:10px;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;color:var(--orange);margin-bottom:0}
+  .cell{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line2);border-radius:18px;padding:30px 28px;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:center}
+  .cell p,.cell .ex{grid-column:1 / -1}
+  .cell::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--orange),transparent);opacity:0;transition:opacity .25s}
+  .cell:hover{transform:translateY(-4px);border-color:rgba(249,128,18,.4);box-shadow:0 28px 60px -35px rgba(0,0,0,.95)}
+  .cell:hover::before{opacity:.7}
+  .cell .ico{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(249,128,18,.22),rgba(249,128,18,.05));border:1px solid rgba(249,128,18,.3);display:flex;align-items:center;justify-content:center;color:var(--orange);margin-bottom:0}
   .cell .ico svg{width:21px;height:21px}
   .cell h3{font-size:17px;font-weight:600;margin-bottom:0}
   .cell p{grid-column:1 / -1;color:var(--muted);font-size:14.5px;margin-top:14px}
   .cell .ex{grid-column:1 / -1;margin-top:12px;font-size:13px;color:var(--dim);font-style:italic}
+
+  /* full functionality list */
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:40px;max-width:760px;margin-left:auto;margin-right:auto}
+  .chip{font-size:14.5px;font-weight:500;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:10px 22px;transition:.18s}
+  .chip:hover{border-color:rgba(249,128,18,.55);color:#fff;transform:translateY(-2px);background:var(--panel2)}
+  .chips-note{text-align:center;margin-top:26px;font-size:14px;color:var(--dim)}
+  .chips-note a{color:var(--orange)}
+
+  /* tools marquee */
+  .marquee{overflow:hidden;border-bottom:1px solid var(--line);padding:20px 0;background:var(--panel);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .marquee-track{display:flex;gap:14px;width:max-content;animation:scrollx 30s linear infinite}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .marquee .chip{white-space:nowrap;flex:none}
+  .chip-cta{color:var(--orange);border-color:rgba(249,128,18,.45)}
+  .marquee .chip:nth-child(3n){color:var(--orange);border-color:rgba(249,128,18,.5);background:rgba(249,128,18,.07)}
+  @keyframes scrollx{to{transform:translateX(-50%)}}
+  @media(prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+
+
+  /* install section */
+  .tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:40px}
+  .tab{font-size:14px;font-weight:500;color:var(--muted);background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:9px 20px;cursor:pointer;transition:.15s}
+  .tab:hover{color:#fff;border-color:#3a3a44}
+  .tab.on{background:var(--orange);color:#151109;border-color:var(--orange)}
+  .term-box{max-width:820px;margin:24px auto 0;border-radius:14px;overflow:hidden;border:1px solid var(--line2);background:#0c0c0f;box-shadow:0 40px 90px -50px rgba(0,0,0,.95)}
+  .tb-bar{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:#141417;border-bottom:1px solid var(--line)}
+  .tb-l{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--muted)}
+  .tb-l .bd{width:11px;height:11px;border-radius:50%}
+  .tb-l .r{background:#ff5f57}.tb-l .y{background:#febc2e}.tb-l .g{background:#28c840}
+  .tb-copy{display:flex;align-items:center;gap:7px;background:none;border:0;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;transition:.15s}
+  .tb-copy:hover{color:#fff}
+  .tb-copy.done{color:var(--green)}
+  .tb-body{padding:22px 22px;font-family:"JetBrains Mono",monospace;font-size:14px;color:#d8dade;overflow-x:auto;white-space:pre}
+  .tb-body .dl{color:var(--orange)}
+
+  /* video / demo split */
+  .vsplit{display:grid;grid-template-columns:1fr 1.12fr;gap:clamp(40px,6vw,88px);align-items:center;text-align:left}
+  @media(max-width:860px){.vsplit{grid-template-columns:1fr;gap:44px}}
+  .vsplit .eyebrow,.vsplit h2,.vsplit .lead{text-align:left;margin-left:0;margin-right:0}
+  .vsplit h2{margin:10px 0 0}
+  .vsplit .lead{margin-top:16px;max-width:44ch}
+  .vsplit .cta{margin-top:28px}
+  .btn-pill{border-radius:999px;padding:13px 28px}
+  /* layered demo scene */
+  .scene{position:relative;border-radius:26px;padding:clamp(14px,1.8vw,24px);overflow:hidden;border:1px solid rgba(249,128,18,.16);
+    background:
+      radial-gradient(120% 95% at 82% 8%,rgba(249,128,18,.55),transparent 52%),
+      radial-gradient(95% 90% at 8% 96%,rgba(226,90,0,.45),transparent 55%),
+      radial-gradient(60% 55% at 50% 50%,rgba(255,166,77,.14),transparent 70%),
+      linear-gradient(150deg,#2e1d10,#1b120a 55%,#120c08)}
+  .scene::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 0);background-size:24px 24px;mask-image:linear-gradient(160deg,#000,transparent 70%);pointer-events:none}
+  .browser{position:relative;z-index:1;max-width:96%;margin-left:auto;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.09);box-shadow:0 40px 90px -40px rgba(0,0,0,.95);background:#101013}
+  .browser-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#17171b;border-bottom:1px solid var(--line)}
+  .bd{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .bd.r{background:#ff5f57}.bd.y{background:#febc2e}.bd.g{background:#28c840}
+  .browser-bar .url{margin-left:10px;font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted);background:#101013;border:1px solid var(--line);border-radius:999px;padding:4px 14px}
+  .browser img{width:100%;display:block}
+  .mini-term{position:absolute;z-index:2;left:clamp(8px,2vw,26px);bottom:clamp(14px,2.6vw,30px);width:min(340px,60%);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:#0c0c0f;box-shadow:0 30px 70px -30px rgba(0,0,0,.95)}
+  .mt-bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#141417;border-bottom:1px solid var(--line);font-size:11.5px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+  .mt-bar .bd{width:8px;height:8px}
+  .mt-body{padding:15px 17px 17px;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.9}
+  .mt-cmd{color:#e8e9ec;white-space:nowrap;overflow:hidden}
+  .mt-cursor{color:var(--orange);animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .mt-prev{color:var(--dim);white-space:nowrap;overflow:hidden}
+  .mt-ok{color:var(--green)}
+  .toast{position:absolute;z-index:3;right:clamp(14px,4vw,52px);top:clamp(46px,9vw,96px);background:#fff;color:#17181c;font-weight:600;font-size:13.5px;border-radius:999px;padding:10px 20px;box-shadow:0 18px 45px -15px rgba(0,0,0,.75);opacity:0;transform:translateY(8px);transition:.45s ease}
+  .toast.show{opacity:1;transform:none}
+  @media(max-width:860px){.browser{max-width:100%}.mini-term{position:relative;left:0;bottom:0;width:100%;margin-top:14px}.toast{display:none}}
+  @media(prefers-reduced-motion:reduce){.mt-cursor{animation:none}.toast{opacity:1;transform:none}}
 
   .steps{margin-top:40px}
   .step{display:grid;grid-template-columns:auto 1fr;gap:20px;padding:24px 0;border-top:1px solid var(--line);align-items:baseline}
@@ -141,12 +225,24 @@
   .step h3{font-size:17px;font-weight:600;margin-bottom:4px}
   .step p{color:var(--muted);font-size:14.5px}
 
-  footer{padding:44px 0;color:var(--dim)}
-  footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-  .foot-l{display:flex;align-items:center;gap:10px;font-family:"Poppins";font-weight:700;color:#fff;font-size:15px}
-  .foot-links{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}
-  .foot-links a{color:var(--muted)}
-  .foot-links a:hover{color:var(--orange)}
+  footer{padding:64px 0 30px;border-top:1px solid var(--line);color:var(--dim)}
+  .foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:44px}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1 / -1}}
+  .foot-l{display:flex;align-items:center;gap:14px;font-family:"Poppins";font-weight:700;color:#fff;font-size:22px;margin-bottom:14px}
+  .foot-brand>p{color:var(--muted);font-size:14.5px;max-width:34ch}
+  .foot-news{margin-top:24px}
+  .foot-h{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+  .foot-sub{color:var(--muted);font-size:14px;margin-bottom:12px}
+  .news-row{display:flex;gap:10px;max-width:430px}
+  .news-row input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:11px 18px;color:var(--text);font-size:14px;outline:none}
+  .news-row input::placeholder{color:var(--dim)}
+  .news-row input:focus{border-color:rgba(249,128,18,.5)}
+  .news-row button{flex:none;background:var(--orange);color:#151109;border:none;border-radius:999px;padding:11px 24px;font-weight:600;font-size:14px;cursor:pointer;transition:.15s}
+  .news-row button:hover{background:var(--orange-d);color:#fff}
+  .foot-col a{display:block;color:var(--muted);font-size:14px;padding:5px 0;transition:color .15s}
+  .foot-col a:hover{color:var(--orange)}
+  .foot-bottom{text-align:center;margin-top:52px;padding-top:24px;border-top:1px solid var(--line);font-size:13.5px;color:var(--dim)}
+  .foot-bottom a{color:var(--orange);font-weight:500}
 
   /* ===== motion ===== */
   @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
@@ -157,7 +253,7 @@
   .js .hero-copy .sub{animation-delay:.26s}
   .js .hero-copy .cta{animation-delay:.38s}
   .js .hero-copy .meta{animation-delay:.48s}
-  .js .term{opacity:0;animation:rise .85s cubic-bezier(.2,.7,.2,1) .3s forwards}
+  .js .hero-scene{opacity:0;animation:rise .9s cubic-bezier(.2,.7,.2,1) .3s forwards}
   /* scroll reveal for everything below the fold */
   .js .reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1)}
   .js .reveal.is-in{opacity:1;transform:none}
@@ -169,8 +265,9 @@
   .btn{transition:transform .15s ease,background .15s,border-color .15s,color .15s}
   .btn:hover{transform:translateY(-2px)}
   .btn-primary:hover{box-shadow:0 12px 26px -12px rgba(249,128,18,.7)}
-  .logo img{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
-  .logo:hover img{transform:rotate(-6deg) scale(1.06)}
+  .logo img{animation:logojump 1.5s ease-in-out infinite}
+  .logo:hover img{animation-duration:.8s}
+  @keyframes logojump{0%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}50%{transform:translateY(-2px)}70%{transform:translateY(-5px)}}
   /* card / step hover polish */
   .cell{position:relative}
   .cell .ico{transition:transform .2s ease,background .2s}
@@ -184,6 +281,7 @@
   @media(prefers-reduced-motion:reduce){
     .js .hero-copy>*,.js .term,.js .reveal{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
     .btn:hover,.shot:hover,.step:hover{transform:none}
+    .logo img{animation:none}
   }
 </style>
 </head>
@@ -193,11 +291,11 @@
   <div class="wrap">
     <div class="logo"><img src="assets/logo.svg" alt="" width="40" height="40" style="display:block">MCP-Moodle</div>
     <div class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#features">Features</a>
-      <a href="#setup">Setup</a>
       <a href="#compat">Compatibility</a>
-      <a class="btn btn-ghost" href="https://github.com/NmaaAlhawary/MCP-Moodle" style="padding:8px 16px">GitHub</a>
+      <a href="docs/">Docs</a>
+      <a class="gh-link" href="https://github.com/NmaaAlhawary/MCP-Moodle" aria-label="View on GitHub" title="GitHub">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.2 11.16.6.11.82-.25.82-.56 0-.28-.01-1.02-.02-2-3.34.71-4.04-1.6-4.04-1.6-.55-1.36-1.33-1.72-1.33-1.72-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.57-2.67-.3-5.47-1.31-5.47-5.83 0-1.29.47-2.34 1.24-3.17-.12-.3-.54-1.52.12-3.16 0 0 1.01-.32 3.3 1.21.96-.26 1.98-.39 3-.4 1.02.01 2.04.14 3 .4 2.29-1.53 3.3-1.21 3.3-1.21.66 1.64.24 2.86.12 3.16.77.83 1.24 1.88 1.24 3.17 0 4.53-2.81 5.53-5.49 5.82.43.36.81 1.09.81 2.2 0 1.59-.01 2.87-.01 3.26 0 .31.22.68.83.56C20.57 21.88 24 17.48 24 12.29 24 5.78 18.63.5 12 .5z"/></svg>
+      </a>
     </div>
   </div>
 </nav>
@@ -207,132 +305,95 @@
     <div class="hero-copy">
       <p class="kicker">Open-source · Moodle plugin + MCP server</p>
       <h1>Build your Moodle <span class="accent">by talking to AI.</span></h1>
-      <p class="sub">AI reads your courses and builds real content — pages, quizzes, forums, assignments — from plain English. No admin menus.</p>
+      <p class="sub">One sentence in, a whole course out. Your words become quizzes, forums and pages, live in Moodle before you finish your coffee.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="#setup">Get started</a>
+        <a class="btn btn-primary" href="docs/">Get started</a>
         <a class="btn btn-ghost" href="https://github.com/NmaaAlhawary/MCP-Moodle">View source</a>
       </div>
-      <p class="meta"><b>17</b> plugin functions · <b>58</b> AI tools · Moodle 4.2–5.3 · MIT / GPLv3</p>
     </div>
-    <div class="term-wrap">
-      <div class="term">
-      <div class="term-bar"><span class="d"></span> conversation</div>
-      <div class="term-body">
-        <p class="you"><b>You</b>Add a quiz to Biology 101 with a true/false question.</p>
-        <div class="sp"></div>
-        <p class="call">→ <span class="fn">create_quiz</span> <span class="ok">{ cmid: 42, instanceid: 8 }</span></p>
-        <p class="call">→ <span class="fn">add_truefalse_question</span> <span class="ok">{ questionid: 17, slot: 1 }</span></p>
-        <p class="done">✓ Quiz created in Biology 101 with 1 question.</p>
+    <div class="scene hero-scene">
+      <div class="browser">
+        <div class="browser-bar">
+          <span class="bd r"></span><span class="bd y"></span><span class="bd g"></span>
+          <span class="url">localhost:8100 / Web Development Bootcamp</span>
+        </div>
+        <img src="images/moodle-courses.png" alt="A Moodle course category built by the AI">
       </div>
-      <div class="term-input">
-        <span class="pmt">›</span>
-        <input id="ask" type="text" placeholder="Ask your Moodle…" aria-label="Message your Moodle" autocomplete="off">
-        <button type="button" id="send" aria-label="Send">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-        </button>
+      <div class="mini-term">
+        <div class="mt-bar"><span class="bd r"></span><span class="bd y"></span><span class="bd g"></span> moodle-mcp</div>
+        <div class="mt-body" id="scene-body">
+          <p class="mt-cmd"><span id="scene-type">&gt; add a quiz to Biology 101</span><span class="mt-cursor">▌</span></p>
+        </div>
       </div>
-      </div>
+      <div class="toast">✓ Quiz added to Biology 101</div>
     </div>
   </div>
 </header>
 
-<!-- HOW IT WORKS -->
-<section id="how">
+<!-- TOOLS MARQUEE -->
+<div class="marquee" aria-label="Everything it can do">
+  <div class="marquee-track">
+    <span class="chip">Courses &amp; structure</span><span class="chip">Content &amp; activities</span><span class="chip">Quizzes &amp; questions</span><span class="chip">Users &amp; groups</span><span class="chip">Grading</span><span class="chip">Grades &amp; progress</span><span class="chip">Planning &amp; insights</span><span class="chip">Search &amp; assist</span><span class="chip chip-stat">17 plugin functions</span><span class="chip chip-stat">58 AI tools</span><span class="chip chip-stat">Moodle 4.2–5.3</span><span class="chip chip-stat">MIT / GPLv3</span><a class="chip chip-cta" href="docs/tools.html">58 tools · full list →</a>
+    <span class="chip">Courses &amp; structure</span><span class="chip">Content &amp; activities</span><span class="chip">Quizzes &amp; questions</span><span class="chip">Users &amp; groups</span><span class="chip">Grading</span><span class="chip">Grades &amp; progress</span><span class="chip">Planning &amp; insights</span><span class="chip">Search &amp; assist</span><span class="chip chip-stat">17 plugin functions</span><span class="chip chip-stat">58 AI tools</span><span class="chip chip-stat">Moodle 4.2–5.3</span><span class="chip chip-stat">MIT / GPLv3</span><a class="chip chip-cta" href="docs/tools.html">58 tools · full list →</a>
+  </div>
+</div>
+
+
+<!-- INSTALL -->
+<section id="install">
   <div class="wrap">
-    <span class="eyebrow">How it works</span>
-    <h2>Two pieces, one token</h2>
-    <p class="lead">The plugin adds what Moodle's API is missing. The server exposes it as typed AI tools. One token connects them.</p>
-    <div class="flow">
-      <div class="node">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></div>
-        <b>AI client</b><span>Claude Desktop or any MCP-capable client.</span>
-        <span class="tag">natural language</span>
-      </div>
-      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
-      <div class="node">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01"/><path d="M7 16.5h.01"/></svg></div>
-        <b>MCP server</b><span>Python bridge — 58 typed tools over Moodle REST.</span>
-        <span class="tag">58 tools</span>
-      </div>
-      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
-      <div class="node">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.5 3 6 3s6-2 6-3v-5"/></svg></div>
-        <b>Moodle</b><span>Your live site, plus the <code>local_mcpbridge</code> plugin.</span>
-        <span class="tag">17 functions</span>
-      </div>
+    <span class="eyebrow">Quick start</span>
+    <h2>Install once.</h2>
+    <p class="lead">Two steps: the Moodle plugin, then the MCP server.</p>
+    <div class="tabs">
+      <button class="tab on" data-cmd="git">Clone &amp; run</button>
+      <button class="tab" data-cmd="pip">pip</button>
+      <button class="tab" data-cmd="plugin">Moodle plugin</button>
+      <button class="tab" data-cmd="claude">Claude config</button>
     </div>
-  </div>
-</section>
-
-<!-- OVERVIEW SHOT -->
-<section id="see">
-  <div class="wrap">
-    <span class="eyebrow">Overview</span>
-    <h2>Real courses, built from a sentence</h2>
-    <p class="lead">The screenshot below is an actual result — a four-course program with its content, created from plain-English prompts.</p>
-    <div class="shot"><img src="images/moodle-courses.png" alt="A Moodle course category with four AI-created courses" loading="lazy"></div>
-    <p class="shot-cap">“Create a Web Development Bootcamp category with four courses.” — done in seconds.</p>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="wrap">
-    <span class="eyebrow">Capabilities</span>
-    <h2>A full course lifecycle</h2>
-    <p class="lead">Everything runs directly against your Moodle through official APIs — real records, not simulations.</p>
-    <div class="grid g3">
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/></svg></div>
-        <h3>Courses &amp; sections</h3>
-        <p>Create single courses or whole programs, organised into categories and sections.</p>
-        <div class="ex">“Create a bootcamp with 4 courses.”</div>
+    <div class="term-box">
+      <div class="tb-bar">
+        <span class="tb-l"><span class="bd r"></span><span class="bd y"></span><span class="bd g"></span> bash</span>
+        <button class="tb-copy" id="tb-copy"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="tb-copy-t">Click to copy</span></button>
       </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v5h5"/><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M8 13h8"/><path d="M8 17h6"/></svg></div>
-        <h3>Content activities</h3>
-        <p>Pages, books, labels, URLs, forums, choices and assignments with rich HTML.</p>
-        <div class="ex">“Add a Week 1 page and a Q&amp;A forum.”</div>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg></div>
-        <h3>Quizzes &amp; questions</h3>
-        <p>Build quizzes with multiple-choice, true/false and short-answer questions.</p>
-        <div class="ex">“Add a 5-question quiz.”</div>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
-        <h3>Users &amp; groups</h3>
-        <p>Create users, enrol (single or bulk), unenrol, and manage group membership.</p>
-        <div class="ex">“Enrol these five students.”</div>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-        <h3>Edit &amp; grade</h3>
-        <p>Rewrite page content, move activities, and grade submissions with feedback.</p>
-        <div class="ex">“Grade this 85 with feedback.”</div>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7" rx="1"/><rect x="12.5" y="7" width="3" height="11" rx="1"/><rect x="18" y="4" width="3" height="14" rx="1"/></svg></div>
-        <h3>Read &amp; analyse</h3>
-        <p>Grades, deadlines, progress and combined dashboards across courses.</p>
-        <div class="ex">“Show my upcoming deadlines.”</div>
-      </div>
+      <div class="tb-body" id="tb-body"><span class="dl">$</span> git clone https://github.com/NmaaAlhawary/MCP-Moodle
+<span class="dl">$</span> cd MCP-Moodle/moodle-mcp
+<span class="dl">$</span> python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+<span class="dl">$</span> pip install -r requirements.txt
+<span class="dl">$</span> cp .env.example .env   <span style="color:var(--dim)"># add MOODLE_URL + token</span>
+<span class="dl">$</span> python server.py</div>
     </div>
+    <p class="chips-note">Full guide in the <a href="docs/">docs</a>.</p>
   </div>
 </section>
 
-<!-- SETUP -->
-<section id="setup">
+<!-- WHO IT'S FOR -->
+<section id="who-for">
   <div class="wrap">
-    <span class="eyebrow">Setup</span>
-    <h2>Four steps to get running</h2>
-    <p class="lead">Full instructions are in the <a href="https://github.com/NmaaAlhawary/MCP-Moodle#quick-start" class="accent">README</a>.</p>
-    <div class="steps">
-      <div class="step"><div class="n">01</div><div><h3>Install the plugin</h3><p>Site administration → Plugins → Install plugins → upload <code>mcpbridge.zip</code> and confirm the upgrade.</p></div></div>
-      <div class="step"><div class="n">02</div><div><h3>Enable web services and create a token</h3><p>Turn on web services and the REST protocol, then create a token. This is how the AI authenticates — no password required.</p></div></div>
-      <div class="step"><div class="n">03</div><div><h3>Connect the AI client</h3><p>Run the Python MCP server with your Moodle URL and token, then register it in <code>claude_desktop_config.json</code>.</p></div></div>
-      <div class="step"><div class="n">04</div><div><h3>Work by chatting</h3><p>Describe what you want and the assistant calls the right tools against your live Moodle.</p></div></div>
+    <span class="eyebrow">Who it's for</span>
+    <h2>Built for everyone who runs a course</h2>
+    <p class="lead">If you work in Moodle, you can drive it by chat.</p>
+    <div class="grid g-auto">
+      <div class="cell">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 10v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></div>
+        <h3>Educators &amp; teachers</h3>
+        <p>Describe a lesson. Get pages, quizzes and forums.</p>
+      </div>
+      <div class="cell">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h3>Instructional designers</h3>
+        <p>Whole programs in minutes, not weeks.</p>
+      </div>
+      <div class="cell">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Moodle administrators</h3>
+        <p>Bulk users, enrolments, groups, site health.</p>
+      </div>
+      <div class="cell">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/></svg></div>
+        <h3>Developers</h3>
+        <p>58 typed tools, any MCP client, fully open source.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -342,22 +403,22 @@
   <div class="wrap">
     <span class="eyebrow">Compatibility &amp; authentication</span>
     <h2>Any Moodle, any login</h2>
-    <p class="lead">Runs on any Moodle 4.2+, self-hosted or institutional. It authenticates with a web service token — not a password — so it is independent of how your users sign in.</p>
+    <p class="lead">Any Moodle 4.2+. Token auth, independent of how users sign in.</p>
     <div class="grid g3">
       <div class="cell">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         <h3>Token-based auth</h3>
-        <p>The AI sends a token an admin generates — never a password. It can only do what that user's capabilities allow.</p>
+        <p>A token, never a password. Scoped to that user's permissions.</p>
       </div>
       <div class="cell">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <h3>Any login method</h3>
-        <p>SSO/SAML, LDAP, Google/Microsoft OAuth, CAS or manual — all identical. Tokens are a separate channel.</p>
+        <p>SSO, LDAP, OAuth, CAS or manual. All identical.</p>
       </div>
       <div class="cell">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
         <h3>Requirements</h3>
-        <p>Admin access to install the plugin and enable web services. Some managed clouds may not allow custom plugins.</p>
+        <p>Admin access to install the plugin. Some managed clouds block plugins.</p>
       </div>
     </div>
   </div>
@@ -365,13 +426,33 @@
 
 <footer>
   <div class="wrap">
-    <div class="foot-l"><img src="assets/logo.svg" alt="" width="32" height="32">MCP-Moodle</div>
-    <div class="foot-links">
-      <a href="https://github.com/NmaaAlhawary/MCP-Moodle">GitHub</a>
-      <a href="https://github.com/NmaaAlhawary/MCP-Moodle#readme">Docs</a>
-      <a href="https://github.com/NmaaAlhawary/MCP-Moodle/blob/main/SECURITY.md">Security</a>
-      <a href="https://github.com/NmaaAlhawary/MCP-Moodle/releases">Releases</a>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-l"><img src="assets/logo.svg" alt="" width="40" height="40">MCP-Moodle</div>
+        <p>Build your Moodle by talking to AI.</p>
+        <div class="foot-news">
+          <div class="foot-h">Get updates</div>
+          <div class="foot-sub">New tools and releases. No spam.</div>
+          <form class="news-row" id="news-form">
+            <input type="email" placeholder="you@email.com" aria-label="Email">
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="foot-col">
+        <div class="foot-h">Resources</div>
+        <a href="docs/">Docs</a>
+        <a href="https://github.com/NmaaAlhawary/MCP-Moodle#readme">README</a>
+        <a href="https://github.com/NmaaAlhawary/MCP-Moodle/blob/main/SECURITY.md">Security</a>
+      </div>
+      <div class="foot-col">
+        <div class="foot-h">Project</div>
+        <a href="https://github.com/NmaaAlhawary/MCP-Moodle">GitHub</a>
+        <a href="https://github.com/NmaaAlhawary/MCP-Moodle/releases">Releases</a>
+        <a href="https://github.com/NmaaAlhawary/MCP-Moodle/issues">Issues</a>
+      </div>
     </div>
+    <div class="foot-bottom">MCP-Moodle © 2026 · Done by <a href="https://github.com/NmaaAlhawary">Nma'a Hawary</a></div>
   </div>
 </footer>
 
@@ -388,6 +469,65 @@
   const flow = document.querySelector('.flow');
   if (flow) io.observe(flow);
 
+
+  // ---- hero scene: create course then add quiz ----
+  const st = document.getElementById('scene-type');
+  const sceneBody = document.getElementById('scene-body');
+  const toast = document.querySelector('.toast');
+  if (st && sceneBody && !reduce) {
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const SEQ = [
+      ['> create course Biology 101', '\u2713 Course created'],
+      ['> add a quiz to Biology 101', '\u2713 Quiz created \u00b7 1 question']
+    ];
+    (async () => { for (;;) {
+      sceneBody.querySelectorAll('.mt-prev,.mt-ok').forEach((e) => e.remove());
+      if (toast) toast.classList.remove('show');
+      st.textContent = '';
+      await sleep(700);
+      for (const [cmd, ok] of SEQ) {
+        for (let i = 0; i <= cmd.length; i++) { st.textContent = cmd.slice(0, i); await sleep(30 + Math.random() * 38); }
+        await sleep(480);
+        const prev = document.createElement('p'); prev.className = 'mt-prev'; prev.textContent = cmd;
+        const okEl = document.createElement('p'); okEl.className = 'mt-ok'; okEl.textContent = ok;
+        st.textContent = '';
+        sceneBody.appendChild(prev); sceneBody.appendChild(okEl);
+        await sleep(850);
+      }
+      if (toast) toast.classList.add('show');
+      await sleep(3400);
+    }})();
+  }
+
+  // ---- install tabs + copy ----
+  const TB = {
+    git: '$ git clone https://github.com/NmaaAlhawary/MCP-Moodle\n$ cd MCP-Moodle/moodle-mcp\n$ python3 -m venv .venv && source .venv/bin/activate\n$ pip install -r requirements.txt\n$ cp .env.example .env   # add MOODLE_URL + token\n$ python server.py',
+    pip: '$ pip install -r requirements.txt\n$ cp .env.example .env   # add MOODLE_URL + token\n$ python server.py',
+    plugin: '# Moodle: Site administration -> Plugins -> Install plugins\n# Upload mcpbridge.zip and confirm the upgrade',
+    claude: '{\n  "mcpServers": {\n    "moodle": {\n      "command": "/path/to/moodle-mcp/.venv/bin/python",\n      "args": ["/path/to/moodle-mcp/server.py"],\n      "env": { "MOODLE_URL": "https://moodle.example.edu", "MOODLE_TOKEN": "your_token", "MOODLE_ALLOW_WRITE": "true" }\n    }\n  }\n}'
+  };
+  const tbBody = document.getElementById('tb-body');
+  const tabs = document.querySelectorAll('.tab');
+  function render(cmd){
+    tbBody.innerHTML = TB[cmd].split('\n').map(l => l.replace(/^\$/, '<span class="dl">$</span>')).join('\n');
+  }
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('on')); t.classList.add('on'); render(t.dataset.cmd);
+  }));
+  const cpBtn = document.getElementById('tb-copy'), cpT = document.getElementById('tb-copy-t');
+  if (cpBtn) cpBtn.addEventListener('click', async () => {
+    const active = document.querySelector('.tab.on');
+    try { await navigator.clipboard.writeText(TB[active.dataset.cmd].replace(/^\$ /gm,'').replace(/^# .*/gm,m=>m)); cpBtn.classList.add('done'); cpT.textContent='Copied'; setTimeout(()=>{cpBtn.classList.remove('done');cpT.textContent='Click to copy';},1600); } catch(e){}
+  });
+
+  // animated orange divider line per section (draws from centre on scroll)
+  const lineIo = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('line-in'); lineIo.unobserve(e.target); }
+    });
+  }, { threshold: 0, rootMargin: '0px 0px -20% 0px' });
+  document.querySelectorAll('section').forEach((s) => lineIo.observe(s));
+
   if (!reduce) {
     const tag = (els, step, base) => els.forEach((el, i) => {
       el.classList.add('reveal');
@@ -397,61 +537,56 @@
     document.querySelectorAll('section').forEach((sec) => {
       tag(sec.querySelectorAll(':scope > .wrap > .eyebrow, :scope > .wrap > h2, :scope > .wrap > .lead'), 80, 0);
       tag(sec.querySelectorAll('.cell'), 65, 120);
+      tag(sec.querySelectorAll('.chip'), 45, 120);
       tag(sec.querySelectorAll('.step'), 65, 120);
       const shot = sec.querySelector('.shot');
       if (shot) { shot.classList.add('reveal'); io.observe(shot); }
     });
   }
 
-  // ---- conversation panel: auto-typing demo + still manually writable ----
-  const ask = document.getElementById('ask');
-  const send = document.getElementById('send');
-  const body = document.querySelector('.term-body');
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  let userTook = false;
 
-  function addLine(cls, html, spacer) {
-    if (spacer) { const sp = document.createElement('div'); sp.className = 'sp'; body.appendChild(sp); }
-    const p = document.createElement('p'); p.className = cls; p.innerHTML = html;
-    p.style.opacity = '0'; p.style.transition = 'opacity .35s ease';
-    body.appendChild(p); requestAnimationFrame(() => { p.style.opacity = '1'; });
-    body.scrollTop = body.scrollHeight;
-    return p;
-  }
-  function submit() {
-    const v = ask.value.trim(); if (!v) return;
-    addLine('you', '<b>You</b>' + esc(v), true);
-    ask.value = '';
-  }
-  if (send) send.addEventListener('click', () => { userTook = true; submit(); });
-  if (ask) {
-    ask.addEventListener('keydown', (e) => { if (e.key === 'Enter') { userTook = true; submit(); } });
-    ask.addEventListener('focus', () => { userTook = true; });
+  if (!reduce) {
+    const tag = (els, step, base) => els.forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = ((base || 0) + i * step) + 'ms';
+      io.observe(el);
+    });
+    document.querySelectorAll('section').forEach((sec) => {
+      tag(sec.querySelectorAll(':scope > .wrap > .eyebrow, :scope > .wrap > h2, :scope > .wrap > .lead'), 80, 0);
+      tag(sec.querySelectorAll('.cell'), 65, 120);
+      tag(sec.querySelectorAll('.chip'), 45, 120);
+      tag(sec.querySelectorAll('.step'), 65, 120);
+      const shot = sec.querySelector('.shot');
+      if (shot) { shot.classList.add('reveal'); io.observe(shot); }
+    });
   }
 
-  if (!reduce && ask && body) {
-    const YOU = 'Add a quiz to Biology 101 with a true/false question.';
-    const STEPS = [
-      { cls: 'call', html: '→ <span class="fn">create_quiz</span> <span class="ok">{ cmid: 42, instanceid: 8 }</span>' },
-      { cls: 'call', html: '→ <span class="fn">add_truefalse_question</span> <span class="ok">{ questionid: 17, slot: 1 }</span>' },
-      { cls: 'done', html: '✓ Quiz created in Biology 101 with 1 question.' }
-    ];
-    (async () => {
-      while (!userTook) {
-        body.innerHTML = '';
-        await sleep(600); if (userTook) break;
-        for (let i = 0; i <= YOU.length && !userTook; i++) { ask.value = YOU.slice(0, i) + '▌'; await sleep(32 + Math.random() * 46); }
-        if (userTook) break;
-        ask.value = YOU; await sleep(430); ask.value = '';
-        addLine('you', '<b>You</b>' + esc(YOU));
-        await sleep(580);
-        for (let j = 0; j < STEPS.length && !userTook; j++) { addLine(STEPS[j].cls, STEPS[j].html, j === 0); await sleep(760); }
-        await sleep(3600);
-      }
-      ask.value = '';
-    })();
+  // ---- count-up hero stats ----
+  if (!reduce) {
+    document.querySelectorAll('.meta b').forEach((el) => {
+      const target = parseInt(el.textContent, 10);
+      if (!target) return;
+      const dur = 1500, t0 = performance.now();
+      const tick = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
   }
+  // ---- newsletter subscribe (mailto) ----
+  const nf = document.getElementById('news-form');
+  if (nf) nf.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = nf.querySelector('input').value.trim();
+    if (!email) return;
+    const to = 'Nmaaalhawary@gmail.com';
+    const subj = encodeURIComponent('MCP-Moodle: subscribe me');
+    const body = encodeURIComponent('Please add me to MCP-Moodle updates:\n' + email);
+    window.location.href = `mailto:${to}?subject=${subj}&body=${body}`;
+  });
+
 </script>
 </body>
 </html>

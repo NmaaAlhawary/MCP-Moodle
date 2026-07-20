@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A full course lifecycle · MCP-Moodle Docs</title>
+<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#f98012; --orange-d:#e06f00; --orange-soft:rgba(249,128,18,.12);
+    --text:#e8e9ec; --muted:#8b9099; --dim:#61656e;
+    --bg:#0a0a0c; --panel:#101013; --panel2:#141417; --line:#212127; --line2:#2c2c33;
+    --green:#4bbe8a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;font-size:15.5px}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(249,128,18,.28)}
+  code{font-family:"JetBrains Mono",monospace;font-size:.86em;background:#17171b;border:1px solid var(--line);padding:2px 6px;border-radius:5px;color:#f0a55e}
+  pre{font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.7;background:#101013;border:1px solid var(--line2);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:14px 0 6px}
+  pre code{background:none;border:0;padding:0;color:#d8dade}
+  .c{color:var(--dim)}.k{color:var(--orange)}.s{color:var(--green)}
+  nav.top{position:sticky;top:0;z-index:50;background:rgba(10,10,12,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  nav.top .in{display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 clamp(18px,3.5vw,44px)}
+  .logo{font-family:"Poppins";font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;color:#fff}
+  .top-r{display:flex;align-items:center;gap:18px}
+  .top-r a{color:var(--muted);font-size:14px;font-weight:500}
+  .top-r a:hover{color:#fff}
+  .shell{display:grid;grid-template-columns:288px minmax(0,1fr) 232px;width:100%}
+  @media(max-width:1180px){.shell{grid-template-columns:288px minmax(0,1fr)}.toc{display:none}}
+  @media(max-width:880px){.shell{grid-template-columns:1fr}.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding-bottom:10px}}
+  .side{position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--line);padding:34px 22px 40px}
+  .side h4{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:22px 0 8px}
+  .side h4:first-child{margin-top:0}
+  .side a{display:block;padding:6px 10px;border-radius:7px;color:var(--muted);font-size:13.5px}
+  .side a:hover{color:#fff;background:var(--panel)}
+  .side a.on{color:var(--orange);background:var(--orange-soft)}
+  main{padding:44px clamp(22px,4vw,64px) 90px;min-width:0}
+  h1{font-family:"Poppins";font-size:clamp(28px,3.6vw,38px);line-height:1.15;color:#fff;letter-spacing:-.02em;margin-bottom:8px}
+  .intro{color:var(--muted);margin:14px 0 0}
+  h2{font-family:"Poppins";font-size:21px;color:#fff;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);letter-spacing:-.01em}
+  p{color:var(--muted);margin:8px 0}
+  p b,li b{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--muted)}
+  li{margin:6px 0}
+  .note{background:var(--orange-soft);border:1px solid rgba(249,128,18,.3);border-radius:10px;padding:13px 16px;font-size:14px;color:var(--text);margin:16px 0}
+  .note b{color:var(--orange)}
+  table{border-collapse:collapse;margin:14px 0;font-size:14px;width:100%}
+  th,td{border:1px solid var(--line2);padding:9px 13px;text-align:left;color:var(--muted)}
+  th{color:#fff;background:var(--panel);font-weight:600}
+  .pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11px;background:#17171b;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--dim);margin:2px 3px 2px 0}
+  .pn{display:flex;justify-content:space-between;gap:14px;margin-top:56px;padding-top:22px;border-top:1px solid var(--line)}
+  .pn a{flex:1;max-width:48%;border:1px solid var(--line2);border-radius:12px;padding:14px 18px;transition:border-color .15s,transform .15s}
+  .pn a:hover{border-color:rgba(249,128,18,.5);transform:translateY(-2px)}
+  .pn .lbl{font-size:11.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+  .pn .ttl{color:#fff;font-weight:600;font-size:14.5px;margin-top:3px}
+  .pn .nx{text-align:right;margin-left:auto}
+</style>
+</head>
+<body>
+<nav class="top">
+  <div class="in">
+    <a class="logo" href="../"><img src="../assets/logo.svg" alt="" width="34" height="34" style="display:block">MCP-Moodle <span style="color:var(--dim);font-weight:500;font-size:14px">/ docs</span></a>
+    <div class="top-r">
+      <a href="../">Home</a>
+      <a href="https://github.com/NmaaAlhawary/MCP-Moodle">GitHub</a>
+    </div>
+  </div>
+</nav>
+<div class="shell">
+  <aside class="side">
+    <h4>Start</h4>
+    <a href="index.html">Overview</a>
+    <a href="requirements.html">Requirements</a>
+    <h4>Setup</h4>
+    <a href="install-plugin.html">1 · Install the plugin</a>
+    <a href="web-services.html">2 · Enable web services</a>
+    <a href="token.html">3 · Create a token</a>
+    <a href="server.html">4 · Run the MCP server</a>
+    <a href="client.html">5 · Connect your AI client</a>
+    <h4>Reference</h4>
+    <a href="lifecycle.html" class="on">A full course lifecycle</a>
+    <a href="tools.html">Tool reference</a>
+    <a href="security.html">Security model</a>
+    <a href="troubleshooting.html">Troubleshooting</a>
+  </aside>
+  <main>
+    <h1>A full course lifecycle</h1>
+    <p class="intro">Everything runs directly against your Moodle through official APIs. Real records, not simulations. Here is the whole lifecycle you can drive by chat.</p>
+
+    <h2 id="courses-and-sections">Courses &amp; sections</h2>
+    <p>Single courses or whole programs, in seconds.</p>
+    <ul>
+      <li>Create courses, categories and sections</li>
+      <li>Update course settings; list and search courses</li>
+    </ul>
+    <div class="note"><b>Say:</b> "Create a Web Development Bootcamp category with four courses."</div>
+
+    <h2 id="content-activities">Content activities</h2>
+    <p>Pages, books, labels, URLs, forums, choices and assignments with rich HTML.</p>
+    <ul>
+      <li>Create and update pages, books, labels, URLs</li>
+      <li>Forums, choices and assignments</li>
+      <li>Move and delete activities; upload files</li>
+    </ul>
+    <div class="note"><b>Say:</b> "Add a Week 1 page and a Q&amp;A forum."</div>
+
+    <h2 id="quizzes-and-questions">Quizzes &amp; questions</h2>
+    <p>Build quizzes with multiple-choice, true/false and short-answer questions.</p>
+    <div class="note"><b>Say:</b> "Add a 5-question quiz to Biology 101."</div>
+
+    <h2 id="users-and-groups">Users &amp; groups</h2>
+    <p>Create users, enrol single or in bulk, unenrol, and manage group membership.</p>
+    <div class="note"><b>Say:</b> "Enrol these five students and split them into two groups."</div>
+
+    <h2 id="edit-and-grade">Edit &amp; grade</h2>
+    <p>Rewrite page content, move activities, and grade submissions with feedback.</p>
+    <div class="note"><b>Say:</b> "Grade this submission 85 with feedback."</div>
+
+    <h2 id="read-and-analyse">Read &amp; analyse</h2>
+    <p>Grades, deadlines, progress and combined dashboards across courses.</p>
+    <div class="note"><b>Say:</b> "Show my upcoming deadlines and course health."</div>
+    <div class="pn">
+      <a href="client.html"><div class="lbl">← Previous</div><div class="ttl">5 · Connect your AI client</div></a>
+      <a class="nx" href="tools.html"><div class="lbl">Next →</div><div class="ttl">Tool reference</div></a>
+    </div>
+  </main>
+  <aside class="toc">
+    <div class="toc-h">On this page</div>
+      <a href="#courses-and-sections">Courses &amp; sections</a>
+      <a href="#content-activities">Content activities</a>
+      <a href="#quizzes-and-questions">Quizzes &amp; questions</a>
+      <a href="#users-and-groups">Users &amp; groups</a>
+      <a href="#edit-and-grade">Edit &amp; grade</a>
+      <a href="#read-and-analyse">Read &amp; analyse</a>
+  </aside>
+</div>
+<script id="toc-observer">
+  const tl=[...document.querySelectorAll('.toc a')];
+  const secs=tl.map(a=>document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+  if(secs.length){const o=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){tl.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-15% 0px -75% 0px'});secs.forEach(s=>o.observe(s));}
+</script>
+</body>
+</html>
