@@ -299,6 +299,35 @@
     .btn:hover,.shot:hover,.step:hover{transform:none}
     .logo img{animation:none}
   }
+
+  /* ===== mobile ===== */
+  @media(max-width:640px){
+    header{padding:56px 0 52px}
+    section{padding:60px 0}
+    .hero-copy{padding-left:0}
+    .hero-grid{gap:32px}
+    .cta{gap:10px}
+    .cta .btn{flex:1;justify-content:center;min-width:140px}
+    h2{font-size:clamp(28px,8vw,36px)}
+    .lead,.sub{font-size:16px}
+    .flow{margin-top:32px}
+    .grid{gap:14px;margin-top:36px}
+    .cell{padding:24px 20px}
+    .marquee{padding:16px 0}
+    .marquee .chip,.chip{font-size:13.5px;padding:9px 16px}
+    .tabs{gap:8px}
+    .tab{padding:8px 15px;font-size:13px}
+    .tb-body{font-size:12px;padding:16px}
+    .foot-grid{grid-template-columns:1fr;gap:32px}
+    .news-row{flex-wrap:wrap}
+    .scene{padding:12px}
+    .section-line,.eyebrow{letter-spacing:.08em}
+  }
+  @media(max-width:400px){
+    h1{font-size:38px}
+    .cta{flex-direction:column}
+    .cta .btn{width:100%}
+  }
 </style>
 </head>
 <body>
@@ -336,7 +365,10 @@
           <span class="bd r"></span><span class="bd y"></span><span class="bd g"></span>
           <span class="url">localhost:8100 / Web Development Bootcamp</span>
         </div>
-        <img src="images/moodle-courses.png" alt="A Moodle course category built by the AI">
+        <picture>
+          <source srcset="images/moodle-courses.webp" type="image/webp">
+          <img src="images/moodle-courses.png" alt="A Moodle course category built by the AI" width="1400" height="833" decoding="async" fetchpriority="high">
+        </picture>
       </div>
       <div class="mini-term">
         <div class="mt-bar"><span class="bd r"></span><span class="bd y"></span><span class="bd g"></span> moodle-mcp</div>
