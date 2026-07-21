@@ -100,8 +100,7 @@
     <div class="sgroup">
       <button class="sg-h" type="button">Guides<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="sg-items">
-        <a href="examples.html">Examples & recipes</a>
-        <a href="lifecycle.html">A full course lifecycle</a>
+        <a href="examples.html">Use cases & recipes</a>
       </div>
     </div>
     <div class="sgroup">
@@ -134,6 +133,15 @@
 
 <h2 id="why-it-exists">Why it exists</h2>
 <p>Moodle's built-in web services can create courses and users, but they cannot create activities (quizzes, pages, forums). The plugin fills that gap using Moodle's official <code>add_moduleinfo()</code> helper, so it stays upgrade-safe and never writes raw database tables.</p>
+
+<h2 id="what-it-can-t-do">What it can't do</h2>
+<p>It builds content <b>inside</b> Moodle, not Moodle itself. It cannot:</p>
+<ul>
+  <li>Create or install <b>Moodle plugins</b>, new activity types, blocks, themes or auth methods.</li>
+  <li>Write files or run code on the server.</li>
+  <li>Reach anything outside Moodle's REST web service API.</li>
+</ul>
+<p>The one plugin involved, <code>local_mcpbridge</code>, is installed once by an admin. The AI uses it; it does not build it.</p>
 
 <h2 id="where-to-go-next">Where to go next</h2>
 <ul>

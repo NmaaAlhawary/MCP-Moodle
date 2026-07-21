@@ -4,7 +4,7 @@
 <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Examples & recipes · MCP-Moodle Docs</title>
+<title>Use cases & recipes · MCP-Moodle Docs</title>
 <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -100,8 +100,7 @@
     <div class="sgroup">
       <button class="sg-h" type="button">Guides<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="sg-items">
-        <a href="examples.html" class="on">Examples & recipes</a>
-        <a href="lifecycle.html">A full course lifecycle</a>
+        <a href="examples.html" class="on">Use cases & recipes</a>
       </div>
     </div>
     <div class="sgroup">
@@ -115,47 +114,73 @@
     </div>
   </aside>
   <main>
-    <div class="crumbs"><a href="../" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg></a><span class="sep">›</span><span class="grp">Guides</span><span class="sep">›</span><span class="cur">Examples & recipes</span></div>
-<h1>Examples &amp; recipes</h1>
-<p class="intro">Copy-ready prompts. Say them to your AI client once the server is connected. Each one maps to real tool calls against your live Moodle.</p>
+    <div class="crumbs"><a href="../" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg></a><span class="sep">›</span><span class="grp">Guides</span><span class="sep">›</span><span class="cur">Use cases & recipes</span></div>
+<h1>Use cases &amp; recipes</h1>
+<p class="intro">Real, copy-ready prompts. Each one maps to actual tool calls against your live Moodle. Mix and match them.</p>
 
-<h2 id="create-a-single-course">Create a single course</h2>
-<div class="note"><b>Say:</b> "Create a course called <b>Biology 101</b> (short name BIO101) in the Science category."</div>
-<p>Calls <code>create_course</code>. Add content in the same breath: "…then add a welcome page and a Q&amp;A forum."</p>
+<h2 id="launch-a-whole-program-in-one-prompt">Launch a whole program in one prompt</h2>
+<div class="note"><b>Say:</b> "Create a <b>Web Development Bootcamp</b> category with four courses (HTML, CSS, JavaScript, React). Give each a welcome page, a Week 1 forum, and a 5-question quiz."</div>
+<p>One <code>create_category</code>, four <code>create_course</code>, then <code>create_page</code>, <code>create_forum</code>, <code>create_quiz</code> per course. A full program from a sentence.</p>
 
-<h2 id="create-courses-in-bulk-a-whole-program">Create courses in bulk (a whole program)</h2>
-<div class="note"><b>Say:</b> "Create a <b>Web Development Bootcamp</b> category with four courses: HTML Basics, CSS &amp; Layout, JavaScript, and React. Give each a welcome page and a Week 1 forum."</div>
-<p>Calls <code>create_category</code> once, then <code>create_course</code> four times, then <code>create_page</code> and <code>create_forum</code> per course. One sentence, a full program.</p>
-<pre><code><span class="c"># what the AI runs, conceptually</span>
-create_category("Web Development Bootcamp")
-for name in ["HTML Basics","CSS &amp; Layout","JavaScript","React"]:
-    id = create_course(name, category)
-    create_page(id, "Welcome", "&lt;h2&gt;Welcome&lt;/h2&gt;...")
-    create_forum(id, "Week 1 Q&amp;A")</code></pre>
+<h2 id="onboard-a-cohort">Onboard a cohort</h2>
+<div class="note"><b>Say:</b> "Create accounts for these 30 students, enrol them all in Biology 101, and split them into 6 balanced project groups." (paste the list)</div>
+<p><code>create_user</code> per student, <code>enrol_users</code> for the batch, then <code>create_group</code> + <code>add_group_members</code>.</p>
 
-<h2 id="add-content-to-a-course">Add content to a course</h2>
-<div class="note"><b>Say:</b> "In Biology 101 add: a <b>page</b> titled 'Week 1: The Cell' with an intro paragraph, a <b>Q&amp;A forum</b>, a <b>URL</b> to khanacademy.org, and a <b>label</b> that says 'Readings'."</div>
-<p>Calls <code>create_page</code>, <code>create_forum</code>, <code>create_url</code>, <code>create_label</code>. Content pages accept rich HTML.</p>
+<h2 id="exam-readiness-gate">Exam-readiness gate</h2>
+<div class="note"><b>Say:</b> "In Biology 101 add a 5-question <b>Readiness Check</b> quiz and a <b>Final Exam</b> quiz."</div>
+<p>The AI builds both quizzes and their questions with <code>create_quiz</code> + <code>add_*_question</code>. Then set the Final Exam's access restriction in Moodle to require a passing grade on the Readiness Check, so students can't reach the exam until they pass the check.</p>
 
-<h2 id="build-a-quiz-with-questions">Build a quiz with questions</h2>
-<div class="note"><b>Say:</b> "Add a quiz <b>'Week 1 Quiz'</b> to Biology 101 with a true/false question ('The cell membrane controls what enters the cell' — true) and a short-answer question ('Name the powerhouse of the cell' — mitochondria)."</div>
-<p>Calls <code>create_quiz</code>, then <code>add_truefalse_question</code> and <code>add_shortanswer_question</code>.</p>
+<h2 id="clone-a-course-into-next-term">Clone a course into next term</h2>
+<div class="note"><b>Say:</b> "Read the structure of Biology 101 and recreate the same sections and activities in a new course <b>Biology 102</b>."</div>
+<p><code>get_course_content</code> reads the source, then <code>create_course</code>, <code>create_section</code> and the <code>create_*</code> tools rebuild it, ready for the new term.</p>
 
-<h2 id="enrol-students-in-bulk">Enrol students in bulk</h2>
-<div class="note"><b>Say:</b> "Create accounts for these students and enrol them all in Biology 101, then split them into two groups." (paste a list)</div>
-<p>Calls <code>create_user</code> per student, <code>enrol_users</code> for the batch, then <code>create_group</code> and <code>add_group_members</code>.</p>
+<h2 id="instant-quiz-bank">Instant quiz bank</h2>
+<div class="note"><b>Say:</b> "Build a 'Chapter 3 Review' quiz with 10 questions: 6 multiple-choice, 2 true/false, 2 short-answer, on photosynthesis."</div>
+<p><code>create_quiz</code> then a mix of <code>add_quiz_question</code>, <code>add_truefalse_question</code> and <code>add_shortanswer_question</code>.</p>
 
-<h2 id="grade-submissions-with-feedback">Grade submissions with feedback</h2>
+<h2 id="batch-grade-with-feedback">Batch-grade with feedback</h2>
 <div class="note"><b>Say:</b> "Grade every submission in Assignment 2 an 85 with the feedback 'Solid work, cite two more sources.'"</div>
-<p>Calls <code>get_assignments</code> and <code>get_assignment_status</code> to find submissions, then <code>grade_assignment</code> for each.</p>
+<p><code>get_assignments</code> + <code>get_assignment_status</code> find the submissions, then <code>grade_assignment</code> for each.</p>
 
-<h2 id="read-analyse-and-plan">Read, analyse and plan</h2>
-<div class="note"><b>Say:</b> "Show my upcoming deadlines, which courses are missing a Week 1 activity, and any students who haven't submitted this month."</div>
-<p>Calls <code>get_upcoming_deadlines</code>, <code>get_course_health</code>, <code>get_course_progress</code>, and the planning tools. All read-only.</p>
+<h2 id="weekly-teaching-ops">Weekly teaching ops</h2>
+<div class="note"><b>Say:</b> "Give me this week's briefing: upcoming deadlines, overdue assignments, course health, and students who haven't submitted anything."</div>
+<p>Read-only: <code>weekly_review</code>, <code>get_upcoming_deadlines</code>, <code>get_overdue_assignments</code>, <code>get_course_health</code>, <code>get_course_progress</code>.</p>
+
+<h2 id="spin-up-a-revision-hub">Spin up a revision hub</h2>
+<div class="note"><b>Say:</b> "Add a 'Revision' section to Biology 101 with a summary page, a practice quiz, and a Q&amp;A forum."</div>
+<p><code>create_section</code>, <code>create_page</code>, <code>create_quiz</code>, <code>create_forum</code> — a ready-made study space in one go.</p>
+
+<h2 id="build-a-resource-hub">Build a resource hub</h2>
+<div class="note"><b>Say:</b> "Add a 'Resources' section to Biology 101 with a reading-list book, three external links (NCBI, Khan Academy, a YouTube playlist), and a label 'Start here'."</div>
+<p><code>create_section</code>, <code>create_book</code>, <code>create_url</code> and <code>create_label</code>, plus <code>upload_file</code> for PDFs.</p>
+
+<h2 id="poll-students-for-a-schedule">Poll students for a schedule</h2>
+<div class="note"><b>Say:</b> "Add a choice activity 'Pick your lab slot' with options Monday 10am, Tuesday 2pm, and Thursday 4pm."</div>
+<p><code>create_choice</code> with your options, ready for students to vote.</p>
+
+<h2 id="plan-a-term-of-assessments">Plan a term of assessments</h2>
+<div class="note"><b>Say:</b> "Create a weekly quiz for weeks 1 to 6, each with 5 mixed questions on that week's topic."</div>
+<p>Six <code>create_quiz</code> calls, each followed by <code>add_quiz_question</code>, <code>add_truefalse_question</code> and <code>add_shortanswer_question</code>. A whole assessment plan in one go.</p>
+
+<h2 id="set-up-group-projects">Set up group projects</h2>
+<div class="note"><b>Say:</b> "Split the class into 5 project teams, and give each team its own forum and a group assignment."</div>
+<p><code>create_group</code> + <code>add_group_members</code>, then <code>create_forum</code> and <code>create_assignment</code> per team.</p>
+
+<h2 id="refresh-outdated-content">Refresh outdated content</h2>
+<div class="note"><b>Say:</b> "Find the Week 1 page and rewrite it to add a summary box and this term's dates."</div>
+<p><code>get_course_content</code> locates the page, then <code>update_page</code> rewrites the HTML in place.</p>
+
+<h2 id="end-of-term-cleanup">End-of-term cleanup</h2>
+<div class="note"><b>Say:</b> "Delete the old 'Practice' section and remove last year's welcome page from Biology 101."</div>
+<p><code>delete_section</code> and <code>delete_activity</code>. Tidy the course for the next cohort.</p>
+
+<h2 id="audit-every-course-at-once">Audit every course at once</h2>
+<div class="note"><b>Say:</b> "Across all my courses, list which are missing a Week 1 activity, which have overdue assignments, and overall course health."</div>
+<p>Read-only: <code>list_courses</code>, <code>get_course_content</code>, <code>get_course_health</code>, <code>get_overdue_assignments</code>.</p>
 
     <div class="pn">
       <a href="client.html"><div class="lbl">← Previous</div><div class="ttl">5 · Connect your AI client</div></a>
-      <a class="nx" href="lifecycle.html"><div class="lbl">Next →</div><div class="ttl">A full course lifecycle</div></a>
+      <a class="nx" href="tools.html"><div class="lbl">Next →</div><div class="ttl">Tool reference</div></a>
     </div>
   </main>
 </div>

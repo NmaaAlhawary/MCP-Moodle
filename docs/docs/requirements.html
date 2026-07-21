@@ -100,8 +100,7 @@
     <div class="sgroup">
       <button class="sg-h" type="button">Guides<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="sg-items">
-        <a href="examples.html">Examples & recipes</a>
-        <a href="lifecycle.html">A full course lifecycle</a>
+        <a href="examples.html">Use cases & recipes</a>
       </div>
     </div>
     <div class="sgroup">
@@ -137,6 +136,13 @@
 </ul>
 
 <div class="note"><b>Managed clouds:</b> some hosts (e.g. MoodleCloud free tier) block custom plugins and full web services. Read tools may still work, but activity creation will not.</div>
+
+<h2 id="authentication-and-logins">Authentication and logins</h2>
+<p>It authenticates with a web service <b>token, never a password</b>, so it is independent of how your users sign in.</p>
+<ul>
+  <li><b>Token-based:</b> the AI sends a token an admin generates, and can only do what that user's capabilities allow.</li>
+  <li><b>Any login method:</b> SSO/SAML, LDAP, Google or Microsoft OAuth, CAS or manual accounts all work identically. Tokens are a separate channel.</li>
+</ul>
 
     <div class="pn">
       <a href="index.html"><div class="lbl">← Previous</div><div class="ttl">Overview</div></a>

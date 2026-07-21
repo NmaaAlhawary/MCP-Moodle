@@ -211,6 +211,7 @@
       radial-gradient(95% 90% at 8% 96%,rgba(226,90,0,.45),transparent 55%),
       radial-gradient(60% 55% at 50% 50%,rgba(255,166,77,.14),transparent 70%),
       linear-gradient(150deg,#2e1d10,#1b120a 55%,#120c08)}
+  .scene-vid{position:relative;z-index:1;width:100%;display:block;border-radius:12px;box-shadow:0 30px 66px -34px rgba(0,0,0,.85)}
   .scene::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 0);background-size:24px 24px;mask-image:linear-gradient(160deg,#000,transparent 70%);pointer-events:none}
   .browser{position:relative;z-index:1;max-width:96%;margin-left:auto;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.09);box-shadow:0 40px 90px -40px rgba(0,0,0,.95);background:#101013}
   .browser-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#17171b;border-bottom:1px solid var(--line)}
@@ -306,7 +307,6 @@
   <div class="wrap">
     <div class="logo"><img src="assets/logo.svg" alt="" width="40" height="40" style="display:block">MCP-Moodle</div>
     <div class="nav-links">
-      <a href="#compat">Compatibility</a>
       <a href="docs/">Docs</a>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
         <svg class="ico-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -341,10 +341,10 @@
       <div class="mini-term">
         <div class="mt-bar"><span class="bd r"></span><span class="bd y"></span><span class="bd g"></span> moodle-mcp</div>
         <div class="mt-body" id="scene-body">
-          <p class="mt-cmd"><span id="scene-type">&gt; add a quiz to Biology 101</span><span class="mt-cursor">▌</span></p>
+          <p class="mt-cmd"><span id="scene-type">&gt; add a quiz to Web Development Bootcamp</span><span class="mt-cursor">▌</span></p>
         </div>
       </div>
-      <div class="toast">✓ Quiz added to Biology 101</div>
+      <div class="toast">✓ Quiz added to Web Development Bootcamp</div></div>
     </div>
   </div>
 </header>
@@ -357,37 +357,6 @@
   </div>
 </div>
 
-
-<!-- WHO IT'S FOR -->
-<section id="who-for">
-  <div class="wrap">
-    <span class="eyebrow">Who it's for</span>
-    <h2>Built for everyone</h2>
-    <p class="lead">If you work in Moodle, you can drive it by chat.</p>
-    <div class="grid g-auto">
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 10v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></div>
-        <h3>Educators &amp; teachers</h3>
-        <p>Describe a lesson. Get pages, quizzes and forums.</p>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-        <h3>Instructional designers</h3>
-        <p>Whole programs in minutes, not weeks.</p>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <h3>Moodle administrators</h3>
-        <p>Bulk users, enrolments, groups, site health.</p>
-      </div>
-      <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/></svg></div>
-        <h3>Developers</h3>
-        <p>58 typed tools, any MCP client, fully open source.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- INSTALL -->
 <section id="install">
@@ -417,27 +386,32 @@
   </div>
 </section>
 
-<!-- COMPATIBILITY -->
-<section id="compat">
+<!-- WHO IT'S FOR -->
+<section id="who-for">
   <div class="wrap">
-    <span class="eyebrow">Compatibility &amp; authentication</span>
-    <h2>Any Moodle, any login</h2>
-    <p class="lead">Any Moodle 4.2+. Token auth, independent of how users sign in.</p>
-    <div class="grid g3">
+    <span class="eyebrow">Who it's for</span>
+    <h2>Built for everyone</h2>
+    <p class="lead">If you work in Moodle, you can drive it by chat.</p>
+    <div class="grid g-auto">
       <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <h3>Token-based auth</h3>
-        <p>A token, never a password. Scoped to that user's permissions.</p>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 10v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></div>
+        <h3>Educators &amp; teachers</h3>
+        <p>Describe a lesson. Get pages, quizzes and forums.</p>
       </div>
       <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <h3>Any login method</h3>
-        <p>SSO, LDAP, OAuth, CAS or manual. All identical.</p>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h3>Instructional designers</h3>
+        <p>Whole programs in minutes, not weeks.</p>
       </div>
       <div class="cell">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <h3>Requirements</h3>
-        <p>Admin access to install the plugin. Some managed clouds block plugins.</p>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Moodle administrators</h3>
+        <p>Bulk users, enrolments, groups, site health.</p>
+      </div>
+      <div class="cell">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/></svg></div>
+        <h3>Developers</h3>
+        <p>58 typed tools, any MCP client, fully open source.</p>
       </div>
     </div>
   </div>
@@ -503,8 +477,8 @@
   if (st && sceneBody && !reduce) {
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const SEQ = [
-      ['> create course Biology 101', '\u2713 Course created'],
-      ['> add a quiz to Biology 101', '\u2713 Quiz created \u00b7 1 question']
+      ['> create course Web Development Bootcamp', '\u2713 Course created'],
+      ['> add a quiz to Web Development Bootcamp', '\u2713 Quiz created \u00b7 1 question']
     ];
     (async () => { for (;;) {
       sceneBody.querySelectorAll('.mt-prev,.mt-ok').forEach((e) => e.remove());

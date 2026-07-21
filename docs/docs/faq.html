@@ -100,8 +100,7 @@
     <div class="sgroup">
       <button class="sg-h" type="button">Guides<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="sg-items">
-        <a href="examples.html">Examples & recipes</a>
-        <a href="lifecycle.html">A full course lifecycle</a>
+        <a href="examples.html">Use cases & recipes</a>
       </div>
     </div>
     <div class="sgroup">
@@ -134,6 +133,9 @@
 
 <h2 id="is-it-free">Is it free?</h2>
 <p>Yes. The MCP server is MIT-licensed and the Moodle plugin is GPLv3, so the whole project is open source and free to use, modify and self-host.</p>
+
+<h2 id="can-it-create-moodle-plugins">Can it create Moodle plugins?</h2>
+<p>No. It builds content inside Moodle (courses, activities, quizzes, users, grades) through Moodle's web services. It cannot write or install plugin code, activity types, blocks or themes. The single plugin it relies on, <code>local_mcpbridge</code>, is installed once by an admin and is what gives the AI its activity-creation tools.</p>
 
 <h2 id="do-i-need-to-write-code">Do I need to write code?</h2>
 <p>No. Install the plugin, run the server, and chat. The AI turns your plain-English requests into the right tool calls for you.</p>
