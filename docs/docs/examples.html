@@ -4,7 +4,7 @@
 <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>5 · Connect your AI client · MCP-Moodle Docs</title>
+<title>Examples & recipes · MCP-Moodle Docs</title>
 <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -94,13 +94,13 @@
         <a href="web-services.html">2 · Enable web services</a>
         <a href="token.html">3 · Create a token</a>
         <a href="server.html">4 · Run the MCP server</a>
-        <a href="client.html" class="on">5 · Connect your AI client</a>
+        <a href="client.html">5 · Connect your AI client</a>
       </div>
     </div>
     <div class="sgroup">
       <button class="sg-h" type="button">Guides<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="sg-items">
-        <a href="examples.html">Examples & recipes</a>
+        <a href="examples.html" class="on">Examples & recipes</a>
         <a href="lifecycle.html">A full course lifecycle</a>
       </div>
     </div>
@@ -115,36 +115,47 @@
     </div>
   </aside>
   <main>
-    <div class="crumbs"><a href="../" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg></a><span class="sep">›</span><span class="grp">Setup</span><span class="sep">›</span><span class="cur">5 · Connect your AI client</span></div>
-<h1>5 · Connect your AI client</h1>
-<p class="intro">Register the server with your MCP client. Example: Claude Desktop.</p>
+    <div class="crumbs"><a href="../" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg></a><span class="sep">›</span><span class="grp">Guides</span><span class="sep">›</span><span class="cur">Examples & recipes</span></div>
+<h1>Examples &amp; recipes</h1>
+<p class="intro">Copy-ready prompts. Say them to your AI client once the server is connected. Each one maps to real tool calls against your live Moodle.</p>
 
-<h2 id="claude-desktop">Claude Desktop</h2>
-<p>Add this to <code>claude_desktop_config.json</code>:</p>
-<pre><code>{
-  <span class="k">"mcpServers"</span>: {
-    <span class="k">"moodle"</span>: {
-      <span class="k">"command"</span>: <span class="s">"/absolute/path/to/moodle-mcp/.venv/bin/python"</span>,
-      <span class="k">"args"</span>: [<span class="s">"/absolute/path/to/moodle-mcp/server.py"</span>],
-      <span class="k">"env"</span>: {
-        <span class="k">"MOODLE_URL"</span>: <span class="s">"https://moodle.example.edu"</span>,
-        <span class="k">"MOODLE_TOKEN"</span>: <span class="s">"your_token_here"</span>,
-        <span class="k">"MOODLE_ALLOW_WRITE"</span>: <span class="s">"true"</span>
-      }
-    }
-  }
-}</code></pre>
+<h2 id="create-a-single-course">Create a single course</h2>
+<div class="note"><b>Say:</b> "Create a course called <b>Biology 101</b> (short name BIO101) in the Science category."</div>
+<p>Calls <code>create_course</code>. Add content in the same breath: "…then add a welcome page and a Q&amp;A forum."</p>
 
-<h2 id="claude-code">Claude Code</h2>
-<pre><code>claude mcp add moodle -- /path/to/.venv/bin/python /path/to/moodle-mcp/server.py</code></pre>
+<h2 id="create-courses-in-bulk-a-whole-program">Create courses in bulk (a whole program)</h2>
+<div class="note"><b>Say:</b> "Create a <b>Web Development Bootcamp</b> category with four courses: HTML Basics, CSS &amp; Layout, JavaScript, and React. Give each a welcome page and a Week 1 forum."</div>
+<p>Calls <code>create_category</code> once, then <code>create_course</code> four times, then <code>create_page</code> and <code>create_forum</code> per course. One sentence, a full program.</p>
+<pre><code><span class="c"># what the AI runs, conceptually</span>
+create_category("Web Development Bootcamp")
+for name in ["HTML Basics","CSS &amp; Layout","JavaScript","React"]:
+    id = create_course(name, category)
+    create_page(id, "Welcome", "&lt;h2&gt;Welcome&lt;/h2&gt;...")
+    create_forum(id, "Week 1 Q&amp;A")</code></pre>
 
-<h2 id="first-request">First request</h2>
-<p>Restart the client and try:</p>
-<div class="note"><b>Say:</b> "Create a course called Biology 101, then add a welcome page and a 5-question quiz."</div>
+<h2 id="add-content-to-a-course">Add content to a course</h2>
+<div class="note"><b>Say:</b> "In Biology 101 add: a <b>page</b> titled 'Week 1: The Cell' with an intro paragraph, a <b>Q&amp;A forum</b>, a <b>URL</b> to khanacademy.org, and a <b>label</b> that says 'Readings'."</div>
+<p>Calls <code>create_page</code>, <code>create_forum</code>, <code>create_url</code>, <code>create_label</code>. Content pages accept rich HTML.</p>
+
+<h2 id="build-a-quiz-with-questions">Build a quiz with questions</h2>
+<div class="note"><b>Say:</b> "Add a quiz <b>'Week 1 Quiz'</b> to Biology 101 with a true/false question ('The cell membrane controls what enters the cell' — true) and a short-answer question ('Name the powerhouse of the cell' — mitochondria)."</div>
+<p>Calls <code>create_quiz</code>, then <code>add_truefalse_question</code> and <code>add_shortanswer_question</code>.</p>
+
+<h2 id="enrol-students-in-bulk">Enrol students in bulk</h2>
+<div class="note"><b>Say:</b> "Create accounts for these students and enrol them all in Biology 101, then split them into two groups." (paste a list)</div>
+<p>Calls <code>create_user</code> per student, <code>enrol_users</code> for the batch, then <code>create_group</code> and <code>add_group_members</code>.</p>
+
+<h2 id="grade-submissions-with-feedback">Grade submissions with feedback</h2>
+<div class="note"><b>Say:</b> "Grade every submission in Assignment 2 an 85 with the feedback 'Solid work, cite two more sources.'"</div>
+<p>Calls <code>get_assignments</code> and <code>get_assignment_status</code> to find submissions, then <code>grade_assignment</code> for each.</p>
+
+<h2 id="read-analyse-and-plan">Read, analyse and plan</h2>
+<div class="note"><b>Say:</b> "Show my upcoming deadlines, which courses are missing a Week 1 activity, and any students who haven't submitted this month."</div>
+<p>Calls <code>get_upcoming_deadlines</code>, <code>get_course_health</code>, <code>get_course_progress</code>, and the planning tools. All read-only.</p>
 
     <div class="pn">
-      <a href="server.html"><div class="lbl">← Previous</div><div class="ttl">4 · Run the MCP server</div></a>
-      <a class="nx" href="examples.html"><div class="lbl">Next →</div><div class="ttl">Examples & recipes</div></a>
+      <a href="client.html"><div class="lbl">← Previous</div><div class="ttl">5 · Connect your AI client</div></a>
+      <a class="nx" href="lifecycle.html"><div class="lbl">Next →</div><div class="ttl">A full course lifecycle</div></a>
     </div>
   </main>
 </div>
