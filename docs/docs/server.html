@@ -116,9 +116,15 @@
   <main>
     <div class="crumbs"><a href="../" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg></a><span class="sep">›</span><span class="grp">Setup</span><span class="sep">›</span><span class="cur">4 · Run the MCP server</span></div>
 <h1>4 · Run the MCP server</h1>
-<p class="intro">Clone the repository, install dependencies, add your URL and token, and start the server.</p>
+<p class="intro">Install from PyPI (easiest) or run from a repository checkout.</p>
 
-<h2 id="install-and-run">Install and run</h2>
+<h2 id="install-from-pypi">Install from PyPI</h2>
+<pre><code>pip install moodle-mcp-bridge
+
+<span class="c"># run (or set the variables in your MCP client config instead)</span>
+MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=your_token moodle-mcp-bridge</code></pre>
+
+<h2 id="install-and-run">Or run from a checkout</h2>
 <pre><code><span class="c"># clone</span>
 git clone https://github.com/NmaaAlhawary/MCP-Moodle
 cd MCP-Moodle/moodle-mcp

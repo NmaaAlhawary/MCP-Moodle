@@ -5,6 +5,7 @@
 <br><br>
 
 [![Website](https://img.shields.io/badge/website-live-3fb950.svg?style=flat-square&logo=githubpages&logoColor=white)](https://nmaaalhawary.github.io/MCP-Moodle/)
+[![PyPI](https://img.shields.io/pypi/v/moodle-mcp-bridge?style=flat-square&logo=pypi&logoColor=white&color=3775A9)](https://pypi.org/project/moodle-mcp-bridge/)
 [![CI](https://img.shields.io/github/actions/workflow/status/NmaaAlhawary/MCP-Moodle/ci.yml?branch=main&style=flat-square&label=CI&logo=github)](https://github.com/NmaaAlhawary/MCP-Moodle/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
@@ -139,6 +140,15 @@ In Moodle as an admin:
 
 ### 3. Run the MCP server
 
+**Easiest — from PyPI:**
+
+```bash
+pip install moodle-mcp-bridge
+MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=your_token moodle-mcp-bridge
+```
+
+**Or from a checkout:**
+
 ```bash
 cd moodle-mcp
 python3 -m venv .venv && source .venv/bin/activate
@@ -155,14 +165,13 @@ python server.py
 
 ### 4. Connect Claude Desktop
 
-Add to `claude_desktop_config.json`:
+Add to `claude_desktop_config.json` (pip install):
 
 ```json
 {
   "mcpServers": {
     "moodle": {
-      "command": "/absolute/path/to/moodle-mcp/.venv/bin/python",
-      "args": ["/absolute/path/to/moodle-mcp/server.py"],
+      "command": "moodle-mcp-bridge",
       "env": {
         "MOODLE_URL": "https://moodle.example.edu",
         "MOODLE_TOKEN": "your_token_here",
@@ -172,6 +181,8 @@ Add to `claude_desktop_config.json`:
   }
 }
 ```
+
+Running from a checkout instead? Use `"command": "/absolute/path/to/moodle-mcp/.venv/bin/python"` with `"args": ["/absolute/path/to/moodle-mcp/server.py"]`.
 
 Restart Claude Desktop and the Moodle tools appear.
 

@@ -394,8 +394,8 @@
     <h2>Install once.</h2>
     <p class="lead">Two steps: the Moodle plugin, then the MCP server.</p>
     <div class="tabs">
-      <button class="tab on" data-cmd="git">Clone &amp; run</button>
-      <button class="tab" data-cmd="pip">pip</button>
+      <button class="tab on" data-cmd="pip">pip install</button>
+      <button class="tab" data-cmd="git">Clone &amp; run</button>
       <button class="tab" data-cmd="plugin">Moodle plugin</button>
       <button class="tab" data-cmd="claude">Claude config</button>
     </div>
@@ -404,12 +404,8 @@
         <span class="tb-l"><span class="bd r"></span><span class="bd y"></span><span class="bd g"></span> bash</span>
         <button class="tb-copy" id="tb-copy"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="tb-copy-t">Click to copy</span></button>
       </div>
-      <div class="tb-body" id="tb-body"><span class="dl">$</span> git clone https://github.com/NmaaAlhawary/MCP-Moodle
-<span class="dl">$</span> cd MCP-Moodle/moodle-mcp
-<span class="dl">$</span> python3 -m venv .venv &amp;&amp; source .venv/bin/activate
-<span class="dl">$</span> pip install -r requirements.txt
-<span class="dl">$</span> cp .env.example .env   <span style="color:var(--dim)"># add MOODLE_URL + token</span>
-<span class="dl">$</span> python server.py</div>
+      <div class="tb-body" id="tb-body"><span class="dl">$</span> pip install moodle-mcp-bridge
+<span class="dl">$</span> MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=your_token moodle-mcp-bridge</div>
     </div>
     <p class="chips-note">Full guide in the <a href="docs/">docs</a>.</p>
   </div>
@@ -531,9 +527,9 @@
   // ---- install tabs + copy ----
   const TB = {
     git: '$ git clone https://github.com/NmaaAlhawary/MCP-Moodle\n$ cd MCP-Moodle/moodle-mcp\n$ python3 -m venv .venv && source .venv/bin/activate\n$ pip install -r requirements.txt\n$ cp .env.example .env   # add MOODLE_URL + token\n$ python server.py',
-    pip: '$ pip install -r requirements.txt\n$ cp .env.example .env   # add MOODLE_URL + token\n$ python server.py',
+    pip: '$ pip install moodle-mcp-bridge\n$ MOODLE_URL=https://moodle.example.edu MOODLE_TOKEN=your_token moodle-mcp-bridge',
     plugin: '# Moodle: Site administration -> Plugins -> Install plugins\n# Upload mcpbridge.zip and confirm the upgrade',
-    claude: '{\n  "mcpServers": {\n    "moodle": {\n      "command": "/path/to/moodle-mcp/.venv/bin/python",\n      "args": ["/path/to/moodle-mcp/server.py"],\n      "env": { "MOODLE_URL": "https://moodle.example.edu", "MOODLE_TOKEN": "your_token", "MOODLE_ALLOW_WRITE": "true" }\n    }\n  }\n}'
+    claude: '{\n  "mcpServers": {\n    "moodle": {\n      "command": "moodle-mcp-bridge",\n      "env": { "MOODLE_URL": "https://moodle.example.edu", "MOODLE_TOKEN": "your_token", "MOODLE_ALLOW_WRITE": "true" }\n    }\n  }\n}'
   };
   const tbBody = document.getElementById('tb-body');
   const tabs = document.querySelectorAll('.tab');

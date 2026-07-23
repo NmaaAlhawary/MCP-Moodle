@@ -119,12 +119,11 @@
 <p class="intro">Register the server with your MCP client. Example: Claude Desktop.</p>
 
 <h2 id="claude-desktop">Claude Desktop</h2>
-<p>Add this to <code>claude_desktop_config.json</code>:</p>
+<p>With the server installed from PyPI (<code>pip install moodle-mcp-bridge</code>), add this to <code>claude_desktop_config.json</code>:</p>
 <pre><code>{
   <span class="k">"mcpServers"</span>: {
     <span class="k">"moodle"</span>: {
-      <span class="k">"command"</span>: <span class="s">"/absolute/path/to/moodle-mcp/.venv/bin/python"</span>,
-      <span class="k">"args"</span>: [<span class="s">"/absolute/path/to/moodle-mcp/server.py"</span>],
+      <span class="k">"command"</span>: <span class="s">"moodle-mcp-bridge"</span>,
       <span class="k">"env"</span>: {
         <span class="k">"MOODLE_URL"</span>: <span class="s">"https://moodle.example.edu"</span>,
         <span class="k">"MOODLE_TOKEN"</span>: <span class="s">"your_token_here"</span>,
@@ -133,9 +132,10 @@
     }
   }
 }</code></pre>
+<p>Running from a checkout instead? Use <code>"command": "/absolute/path/to/moodle-mcp/.venv/bin/python"</code> with <code>"args": ["/absolute/path/to/moodle-mcp/server.py"]</code>.</p>
 
 <h2 id="claude-code">Claude Code</h2>
-<pre><code>claude mcp add moodle -- /path/to/.venv/bin/python /path/to/moodle-mcp/server.py</code></pre>
+<pre><code>claude mcp add moodle -e MOODLE_URL=https://moodle.example.edu -e MOODLE_TOKEN=your_token -- moodle-mcp-bridge</code></pre>
 
 <h2 id="first-request">First request</h2>
 <p>Restart the client and try:</p>
