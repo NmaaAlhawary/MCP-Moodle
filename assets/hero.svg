@@ -1,33 +1,58 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="240" viewBox="0 0 1000 240" role="img" aria-label="MCP-Moodle">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0d1117"/>
-      <stop offset="1" stop-color="#161b22"/>
+      <stop offset="0" stop-color="#0a0a0c"/>
+      <stop offset="1" stop-color="#141417"/>
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#f98012"/>
-      <stop offset="1" stop-color="#8a2be2"/>
+      <stop offset="0.5" stop-color="#ffc07a"/>
+      <stop offset="1" stop-color="#f98012"/>
+    </linearGradient>
+    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffa53f"/>
+      <stop offset="1" stop-color="#f26a00"/>
     </linearGradient>
   </defs>
 
   <rect width="1000" height="240" rx="16" fill="url(#bg)"/>
+  <rect x="0.5" y="0.5" width="999" height="239" rx="15.5" fill="none" stroke="#212127"/>
 
-  <!-- title -->
-  <text x="500" y="104" text-anchor="middle" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="60" font-weight="800" fill="#ffffff" letter-spacing="-1">MCP-Moodle</text>
+  <!-- soft orange glow behind the mark -->
+  <circle cx="296" cy="86" r="90" fill="#f98012" opacity="0.07"/>
+
+  <!-- logo: speech bubble with graduation cap (from assets/logo.svg) -->
+  <g transform="translate(256,46) scale(0.16)">
+    <path fill="url(#bubble)" d="
+      M156 60 h200 a96 96 0 0 1 96 96 v160 a96 96 0 0 1 -96 96 H210
+      l-58 56 a10 10 0 0 1 -17 -7 v-49 h-3 a96 96 0 0 1 -76 -96 V156
+      a96 96 0 0 1 96 -96 z"/>
+    <g transform="translate(0,-10)" fill="#ffffff">
+      <polygon points="252,150 372,203 252,256 132,203"/>
+      <path d="M184 219 L252 249 L320 219 L320 272 C320 300 184 300 184 272 Z"/>
+    </g>
+    <path d="M372 193 L372 262" transform="translate(0,-10)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="372" cy="264" r="16" fill="#ffffff"/>
+    <circle cx="372" cy="264" r="7" fill="#f26a00"/>
+    <circle cx="252" cy="193" r="13" fill="#f26a00"/>
+  </g>
+
+  <!-- title, offset right to sit beside the mark -->
+  <text x="540" y="106" text-anchor="middle" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="60" font-weight="800" fill="#ffffff" letter-spacing="-1">MCP-Moodle</text>
 
   <!-- gradient accent underline -->
-  <rect x="440" y="122" width="120" height="4" rx="2" fill="url(#accent)"/>
+  <rect x="480" y="124" width="120" height="4" rx="2" fill="url(#accent)"/>
 
   <!-- subtitle -->
-  <text x="500" y="160" text-anchor="middle" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="22" font-weight="500" fill="#adbac7">Talk to Moodle. It reads your courses and builds the content.</text>
+  <text x="500" y="162" text-anchor="middle" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="22" font-weight="500" fill="#c9ccd2">Talk to Moodle. It reads your courses and builds the content.</text>
 
-  <!-- tag chips (centered as a group) -->
+  <!-- tag chips (centered as a group, site palette) -->
   <g font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="600">
-    <rect x="276" y="186" width="150" height="26" rx="13" fill="#21262d" stroke="#30363d"/>
-    <text x="351" y="203" text-anchor="middle" fill="#f98012">Moodle plugin</text>
-    <rect x="436" y="186" width="150" height="26" rx="13" fill="#21262d" stroke="#30363d"/>
-    <text x="511" y="203" text-anchor="middle" fill="#8a2be2">MCP server</text>
-    <rect x="596" y="186" width="128" height="26" rx="13" fill="#21262d" stroke="#30363d"/>
-    <text x="660" y="203" text-anchor="middle" fill="#3fb950">40+ tools</text>
+    <rect x="276" y="188" width="150" height="26" rx="13" fill="#17171b" stroke="#2c2c33"/>
+    <text x="351" y="205" text-anchor="middle" fill="#f98012">Moodle plugin</text>
+    <rect x="436" y="188" width="150" height="26" rx="13" fill="#17171b" stroke="#2c2c33"/>
+    <text x="511" y="205" text-anchor="middle" fill="#6ea8ff">MCP server</text>
+    <rect x="596" y="188" width="128" height="26" rx="13" fill="#17171b" stroke="#2c2c33"/>
+    <text x="660" y="205" text-anchor="middle" fill="#4bbe8a">87 tools</text>
   </g>
 </svg>

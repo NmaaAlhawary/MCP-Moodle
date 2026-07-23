@@ -122,13 +122,13 @@
 <p>The project is deliberately split in two, joined by a single web service token:</p>
 <ul>
   <li><b>The Moodle plugin</b> (<code>local_mcpbridge</code>) adds the activity-creation web service functions that Moodle core is missing: create a quiz, add a question, create a page, forum, assignment, and more. 17 functions in total.</li>
-  <li><b>The MCP server</b> (<code>moodle-mcp</code>, Python) wraps Moodle's own read/write APIs <i>and</i> the plugin's new functions, and exposes all of them as 58 typed tools that any MCP client can call.</li>
+  <li><b>The MCP server</b> (<code>moodle-mcp</code>, Python) wraps Moodle's own read/write APIs <i>and</i> the plugin's new functions, and exposes all of them as 87 typed tools that any MCP client can call.</li>
 </ul>
 
 <h2 id="the-mental-model">The mental model</h2>
 <pre><code> you talk        MCP server           Moodle
  --------   --tools-->  --------  --REST-->  -------
- "add a quiz"   58 typed tools    real records created</code></pre>
+ "add a quiz"   87 typed tools    real records created</code></pre>
 <p>You type a request. The AI chooses the right tool, the server calls Moodle's REST API with your token, and Moodle creates real records. Nothing is simulated.</p>
 
 <h2 id="why-it-exists">Why it exists</h2>

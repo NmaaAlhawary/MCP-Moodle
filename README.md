@@ -20,6 +20,15 @@
 > _"Create a course called Biology 101, add a welcome page, and enrol these five students."_
 > <br>→ and it actually happens.
 
+> _"Build the whole midterm: one quiz, ten questions — multiple choice, matching, essay."_
+> <br>→ one call, every question type.
+
+> _"How did my students do on the Week 1 quiz? Grade the late reports and tell each one why."_
+> <br>→ results read, grades saved, feedback delivered.
+
+> _"Back the course up before we experiment — and restore it if I break something."_
+> <br>→ a real .mbz, saved to your disk.
+
 </div>
 
 ---
@@ -49,9 +58,12 @@ Moodle is the learning platform used by thousands of universities and schools.
 **MCP-Moodle** connects it to any [Model Context Protocol](https://modelcontextprotocol.io/)
 client (like Claude Desktop), so an AI can:
 
-- **Read**: list courses, inspect course contents, see enrolled students, quizzes, and grades.
+- **Read**: list courses, inspect course contents, see enrolled students, quizzes, grades,
+  quiz results, activity completion, notifications, and competencies.
 - **Build**: create courses, users, categories, groups, enrolments, and *actual content*:
-  pages, books, labels, URLs, quizzes, and quiz questions.
+  pages, books, labels, URLs, forums, assignments, quizzes, and six quiz question types —
+  or a whole course from one JSON outline with `build_course`.
+- **Protect**: back any course up to a real `.mbz` file on your disk and restore it later.
 - **Safely**: every write operation is off by default and only enabled with an explicit flag.
 
 ## How it works (two pieces)
@@ -104,7 +116,9 @@ exactly the same: an admin just creates a token.
 
 ## Features
 
-- **40+ tools**: reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, and activity creation
+- **87 tools**: reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, activity creation, quiz results, completion tracking, backup/restore, and a one-call course builder
+- **Six quiz question types**: multiple choice, true/false, short answer, essay, numerical (with tolerances), matching
+- **Chatbot bridge**: if the site runs the `block_chatbot` RAG assistant, `ask_course_chatbot` answers from the same content index
 - **Read/write split**: read tools always on; write tools gated behind `MOODLE_ALLOW_WRITE=true`
 - **Upgrade-safe plugin**: uses Moodle's own `add_moduleinfo()`, never touches module tables directly
 - **Clean error handling**: detects Moodle's JSON-error-on-HTTP-200 quirk and surfaces readable messages
@@ -191,6 +205,14 @@ Restart Claude Desktop and the Moodle tools appear.
 | `get_enrolled_users` | `core_enrol_get_enrolled_users` |
 | `list_quizzes` | `mod_quiz_get_quizzes_by_courses` |
 | `get_user_grades` | `gradereport_user_get_grade_items` |
+| `get_quiz_results` | `mod_quiz_get_user_attempts` + `mod_quiz_get_user_best_grade` |
+| `get_quiz_attempt_review` | `mod_quiz_get_attempt_review` |
+| `get_activity_completion` | `core_completion_get_activities_completion_status` |
+| `get_course_completion_status` | `core_completion_get_course_completion_status` |
+| `get_notifications` | `message_popup_get_popup_notifications` |
+| `list_course_competencies` | `core_competency_list_course_competencies` |
+| `get_learning_plans` | `core_competency_list_user_plans` |
+| `ask_course_chatbot` | `local_mcpbridge_ask_chatbot` (needs `block_chatbot` on the site) |
 
 ### Student & analysis (always on)
 
@@ -266,10 +288,33 @@ the calling AI does the natural-language reasoning over it.
 | `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
 | `add_truefalse_question` | `local_mcpbridge_add_truefalse_question` | **plugin** |
 | `add_shortanswer_question` | `local_mcpbridge_add_shortanswer_question` | **plugin** |
+| `add_essay_question` | `local_mcpbridge_add_essay_question` | **plugin** |
+| `add_numerical_question` | `local_mcpbridge_add_numerical_question` | **plugin** |
+| `add_matching_question` | `local_mcpbridge_add_matching_question` | **plugin** |
+| `backup_course` | `local_mcpbridge_backup_course` | **plugin** |
+| `restore_course` | `local_mcpbridge_restore_course` | **plugin** |
+| `build_course` | orchestrates the tools above from one JSON outline | server |
+| `mark_activity_complete` | `core_completion_update_activity_completion_status_manually` | core |
+| `override_activity_completion` | `core_completion_override_activity_completion_status` | core |
+| `delete_courses` | `core_course_delete_courses` | core |
+| `delete_category` | `core_course_delete_categories` | core |
+| `update_user` | `core_user_update_users` | core |
+| `delete_users` | `core_user_delete_users` | core |
+| `assign_role` / `unassign_role` | `core_role_assign_roles` / `core_role_unassign_roles` | core |
+| `create_cohort` / `add_cohort_members` | `core_cohort_*` | core |
+| `start_forum_discussion` / `reply_forum_post` | `mod_forum_*` | core |
+| `send_message` | `core_message_send_instant_messages` | core |
+| `import_course` | `core_course_import_course` | core |
+| `download_file` | webservice file download | core |
 
-> **Quizzes:** `create_quiz` makes the container; `add_quiz_question` (stretch goal)
-> uses Moodle's Question Bank API to add a multiple-choice question. That API is
-> version-sensitive, test it on your Moodle version first.
+> **Quizzes:** `create_quiz` makes the container; the six `add_*_question` tools
+> use Moodle's Question Bank API (multiple choice, true/false, short answer,
+> essay, numerical, matching). That API is version-sensitive — tested on
+> Moodle 5.0; test on your version first.
+
+> **Course builder:** `build_course` takes one JSON outline (course → sections →
+> activities → quiz questions) and builds everything in a single call, with a
+> per-item build log. One failing activity is reported without stopping the rest.
 
 ---
 

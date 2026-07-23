@@ -116,33 +116,41 @@
   <main>
     <div class="crumbs"><a href="../" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg></a><span class="sep">›</span><span class="grp">Reference</span><span class="sep">›</span><span class="cur">Tool reference</span></div>
 <h1>Tool reference</h1>
-<p class="intro">58 tools the AI can call. Read tools are always available; write tools require <code>MOODLE_ALLOW_WRITE=true</code>.</p>
+<p class="intro">87 tools the AI can call. Read tools are always available; write tools require <code>MOODLE_ALLOW_WRITE=true</code>.</p>
 
 <h2 id="courses-and-structure">Courses &amp; structure</h2>
-<p><code>create_course</code> · <code>create_category</code> · <code>create_section</code> · <code>update_course</code> · <code>delete_section</code> · <code>get_course_content</code> · <code>list_courses</code> · <code>search_courses</code> · <code>get_my_courses</code></p>
+<p><code>create_course</code> · <code>create_category</code> · <code>create_section</code> · <code>update_course</code> · <code>delete_section</code> · <code>delete_courses</code> · <code>delete_category</code> · <code>import_course</code> · <code>get_course_content</code> · <code>list_courses</code> · <code>search_courses</code> · <code>get_my_courses</code></p>
+
+<h2 id="builder-and-backup">Course builder &amp; backup</h2>
+<p><code>build_course</code> builds a whole course — sections, activities, quizzes and their questions — from one JSON outline. <code>backup_course</code> saves a real Moodle <code>.mbz</code> backup to your local disk; <code>restore_course</code> restores it into a brand-new course.</p>
 
 <h2 id="content-and-activities">Content &amp; activities</h2>
-<p><code>create_page</code> · <code>create_book</code> · <code>create_label</code> · <code>create_url</code> · <code>create_forum</code> · <code>create_choice</code> · <code>create_assignment</code> · <code>update_page</code> · <code>update_activity</code> · <code>move_activity</code> · <code>delete_activity</code> · <code>upload_file</code></p>
+<p><code>create_page</code> · <code>create_book</code> · <code>create_label</code> · <code>create_url</code> · <code>create_forum</code> · <code>create_choice</code> · <code>create_assignment</code> · <code>update_page</code> · <code>update_activity</code> · <code>move_activity</code> · <code>delete_activity</code> · <code>upload_file</code> · <code>download_file</code></p>
 
 <h2 id="quizzes-and-questions">Quizzes &amp; questions</h2>
-<p><code>create_quiz</code> · <code>add_quiz_question</code> · <code>add_truefalse_question</code> · <code>add_shortanswer_question</code> · <code>list_quizzes</code></p>
+<p><code>create_quiz</code> · <code>add_quiz_question</code> · <code>add_truefalse_question</code> · <code>add_shortanswer_question</code> · <code>add_essay_question</code> · <code>add_numerical_question</code> · <code>add_matching_question</code> · <code>list_quizzes</code> · <code>get_quiz_results</code> · <code>get_quiz_attempt_review</code></p>
+<p>Six question types: multiple choice, true/false, short answer, essay (manually graded), numerical with tolerances, and matching pairs. <code>get_quiz_results</code> shows a user's attempts and best grade; <code>get_quiz_attempt_review</code> walks a finished attempt question by question.</p>
 
 <h2 id="users-enrolment-and-groups">Users, enrolment &amp; groups</h2>
-<p><code>create_user</code> · <code>enrol_user</code> · <code>enrol_users</code> · <code>unenrol_user</code> · <code>create_group</code> · <code>add_group_members</code> · <code>get_enrolled_users</code></p>
+<p><code>create_user</code> · <code>update_user</code> · <code>delete_users</code> · <code>enrol_user</code> · <code>enrol_users</code> · <code>unenrol_user</code> · <code>assign_role</code> · <code>unassign_role</code> · <code>create_group</code> · <code>add_group_members</code> · <code>create_cohort</code> · <code>add_cohort_members</code> · <code>get_enrolled_users</code></p>
+
+<h2 id="communication">Communication</h2>
+<p><code>send_message</code> · <code>start_forum_discussion</code> · <code>reply_forum_post</code> · <code>get_notifications</code> · <code>get_course_announcements</code></p>
 
 <h2 id="assignments-and-grading">Assignments &amp; grading</h2>
-<p><code>get_assignments</code> · <code>get_assignment_status</code> · <code>grade_assignment</code> · <code>analyze_assignment</code> · <code>extract_assignment_requirements</code> · <code>get_overdue_assignments</code></p>
+<p><code>get_assignments</code> · <code>get_assignment_status</code> · <code>grade_assignment</code> (with feedback text) · <code>analyze_assignment</code> · <code>extract_assignment_requirements</code> · <code>get_overdue_assignments</code></p>
 
-<h2 id="grades-and-progress">Grades &amp; progress</h2>
-<p><code>get_grades</code> · <code>get_user_grades</code> · <code>get_course_progress</code> · <code>get_course_health</code></p>
+<h2 id="grades-and-progress">Grades, progress &amp; completion</h2>
+<p><code>get_grades</code> · <code>get_user_grades</code> · <code>get_course_progress</code> · <code>get_course_health</code> · <code>get_activity_completion</code> · <code>get_course_completion_status</code> · <code>mark_activity_complete</code> · <code>override_activity_completion</code> · <code>list_course_competencies</code> · <code>get_learning_plans</code></p>
 
 <h2 id="planning-and-insights">Planning &amp; insights</h2>
-<p><code>get_upcoming_deadlines</code> · <code>get_upcoming_events</code> · <code>get_study_load</code> · <code>semester_dashboard</code> · <code>daily_briefing</code> · <code>weekly_review</code> · <code>get_actionable_tasks</code> · <code>get_recent_activity</code> · <code>get_course_announcements</code></p>
+<p><code>get_upcoming_deadlines</code> · <code>get_upcoming_events</code> · <code>get_study_load</code> · <code>semester_dashboard</code> · <code>daily_briefing</code> · <code>weekly_review</code> · <code>get_actionable_tasks</code> · <code>get_recent_activity</code></p>
 
 <h2 id="search-and-assist">Search &amp; assist</h2>
-<p><code>search_course_materials</code> · <code>find_relevant_materials</code> · <code>ask_moodle</code> · <code>decompose_task</code> · <code>create_implementation_plan</code> · <code>verify_connection</code></p>
+<p><code>search_course_materials</code> · <code>find_relevant_materials</code> · <code>ask_moodle</code> · <code>ask_course_chatbot</code> · <code>decompose_task</code> · <code>create_implementation_plan</code> · <code>verify_connection</code></p>
+<div class="note"><b>Chatbot bridge:</b> <code>ask_course_chatbot</code> answers from the same RAG content index as the <code>block_chatbot</code> in-page assistant. It needs that block installed, enabled and synced for the course — otherwise it returns a clean error.</div>
 
-<p style="margin-top:22px"><span class="pill">17 plugin functions</span><span class="pill">58 MCP tools</span><span class="pill">REST only</span></p>
+<p style="margin-top:22px"><span class="pill">23 plugin functions</span><span class="pill">87 MCP tools</span><span class="pill">REST only</span></p>
 
     <div class="pn">
       <a href="examples.html"><div class="lbl">← Previous</div><div class="ttl">Use cases & recipes</div></a>

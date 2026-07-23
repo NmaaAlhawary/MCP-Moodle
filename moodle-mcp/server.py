@@ -902,6 +902,229 @@ async def ask_moodle(question: str) -> dict:
     return {"question": question, "routed_to": source, "data": data}
 
 
+# --- Quiz results ----------------------------------------------------------- #
+
+@mcp.tool()
+async def get_quiz_results(quizid: int, userid: int = 0) -> dict:
+    """See how a user did on a quiz: all attempts plus their best grade.
+
+    Read-only. `quizid` is the quiz instance id (from list_quizzes — NOT the
+    cmid). `userid` 0 means the current user; teachers can pass any student's
+    id. Each attempt includes its id (usable with get_quiz_attempt_review),
+    state, timing and summed grade.
+    """
+    params: dict[str, Any] = {"quizid": quizid, "status": "all"}
+    if userid:
+        params["userid"] = userid
+    attempts = await _call("mod_quiz_get_user_attempts", params)
+    best = await _call(
+        "mod_quiz_get_user_best_grade",
+        {"quizid": quizid, **({"userid": userid} if userid else {})},
+    )
+    return {
+        "quizid": quizid,
+        "userid": userid or "current",
+        "bestgrade": best.get("grade") if best.get("hasgrade") else None,
+        "gradetopass": best.get("gradetopass"),
+        "attempts": [
+            {
+                "attemptid": a.get("id"),
+                "attempt": a.get("attempt"),
+                "state": a.get("state"),
+                "started": _iso(a.get("timestart")),
+                "finished": _iso(a.get("timefinish")),
+                "sumgrades": a.get("sumgrades"),
+            }
+            for a in attempts.get("attempts", [])
+        ],
+    }
+
+
+@mcp.tool()
+async def get_quiz_attempt_review(attemptid: int) -> dict:
+    """Review a finished quiz attempt question by question.
+
+    Read-only. `attemptid` comes from get_quiz_results. Returns the grade and,
+    for each question, its text, the response summary and the mark obtained.
+    Requires the attempt to be finished and the caller to be allowed to review
+    it (students: their own attempts; teachers: any).
+    """
+    review = await _call("mod_quiz_get_attempt_review", {"attemptid": attemptid})
+    return {
+        "attemptid": attemptid,
+        "grade": review.get("grade"),
+        "state": (review.get("attempt") or {}).get("state"),
+        "questions": [
+            {
+                "slot": q.get("slot"),
+                "type": q.get("type"),
+                "question": _strip_html(q.get("html"))[:500],
+                "status": q.get("status"),
+                "mark": q.get("mark"),
+                "maxmark": q.get("maxmark"),
+            }
+            for q in review.get("questions", [])
+        ],
+    }
+
+
+# --- Completion tracking ---------------------------------------------------- #
+
+@mcp.tool()
+async def get_activity_completion(courseid: int, userid: int = 0) -> list:
+    """See which activities a user has completed in a course.
+
+    Read-only. `userid` 0 means the current user. Returns one entry per
+    activity with its cmid, name, whether completion is manual or automatic,
+    and the completion state (0 = incomplete, 1 = complete, 2 = complete with
+    pass, 3 = complete with fail).
+    """
+    uid = userid or await _get_userid()
+    data = await _call(
+        "core_completion_get_activities_completion_status",
+        {"courseid": courseid, "userid": uid},
+    )
+    return [
+        {
+            "cmid": s.get("cmid"),
+            "activity": s.get("modname"),
+            "state": s.get("state"),
+            "completed": s.get("state", 0) in (1, 2),
+            "tracking": "manual" if s.get("tracking") == 1 else "automatic",
+            "timecompleted": _iso(s.get("timecompleted")),
+        }
+        for s in data.get("statuses", [])
+    ]
+
+
+@mcp.tool()
+async def get_course_completion_status(courseid: int, userid: int = 0) -> dict:
+    """See whether a user has completed a whole course and which criteria remain.
+
+    Read-only. `userid` 0 means the current user. The course must have
+    completion criteria configured, otherwise Moodle returns an error.
+    """
+    uid = userid or await _get_userid()
+    data = await _call(
+        "core_completion_get_course_completion_status",
+        {"courseid": courseid, "userid": uid},
+    )
+    status = data.get("completionstatus", {})
+    return {
+        "courseid": courseid,
+        "userid": uid,
+        "completed": status.get("completed"),
+        "criteria": [
+            {
+                "title": c.get("title"),
+                "status": _strip_html(c.get("status")),
+                "complete": c.get("complete"),
+            }
+            for c in status.get("completions", [])
+        ],
+    }
+
+
+# --- Notifications ---------------------------------------------------------- #
+
+@mcp.tool()
+async def get_notifications(limit: int = 20, unread_only: bool = False) -> dict:
+    """Read your Moodle notifications (new grades, forum posts, due dates...).
+
+    Read-only. Returns the unread count plus the most recent notifications
+    (newest first), each with its subject, a plain-text preview, when it
+    arrived and whether it is still unread.
+    """
+    uid = await _get_userid()
+    unread = await _call(
+        "message_popup_get_unread_popup_notification_count", {"useridto": uid}
+    )
+    data = await _call(
+        "message_popup_get_popup_notifications",
+        {
+            "useridto": uid,
+            "newestfirst": 1,
+            "limit": limit,
+            "offset": 0,
+        },
+    )
+    notifications = data.get("notifications", [])
+    if unread_only:
+        notifications = [n for n in notifications if not n.get("read")]
+    return {
+        "unreadcount": unread,
+        "notifications": [
+            {
+                "subject": n.get("subject"),
+                "preview": _strip_html(n.get("smallmessage") or n.get("fullmessage"))[:300],
+                "received": _iso(n.get("timecreated")),
+                "unread": not n.get("read"),
+                "url": n.get("contexturl") or None,
+            }
+            for n in notifications
+        ],
+    }
+
+
+# --- Competencies & learning plans ------------------------------------------ #
+
+@mcp.tool()
+async def list_course_competencies(courseid: int) -> list:
+    """List the competencies attached to a course.
+
+    Read-only. Returns each competency's id, name, description and id number.
+    Empty list if the course uses no competencies.
+    """
+    data = await _call(
+        "core_competency_list_course_competencies", {"id": courseid}
+    )
+    return [
+        {
+            "competencyid": (c.get("competency") or {}).get("id"),
+            "shortname": (c.get("competency") or {}).get("shortname"),
+            "idnumber": (c.get("competency") or {}).get("idnumber"),
+            "description": _strip_html((c.get("competency") or {}).get("description")),
+        }
+        for c in data
+    ]
+
+
+@mcp.tool()
+async def get_learning_plans(userid: int = 0) -> list:
+    """List a user's learning plans (competency-based development plans).
+
+    Read-only. `userid` 0 means the current user. Returns each plan's id,
+    name, status and due date. Empty list if the user has no plans.
+    """
+    uid = userid or await _get_userid()
+    data = await _call("core_competency_list_user_plans", {"userid": uid})
+    return [
+        {
+            "planid": p.get("id"),
+            "name": p.get("name"),
+            "status": p.get("statusname"),
+            "duedate": _iso(p.get("duedate")),
+        }
+        for p in data
+    ]
+
+
+# --- Chatbot bridge --------------------------------------------------------- #
+
+@mcp.tool()
+async def ask_course_chatbot(courseid: int, question: str) -> dict:
+    """Ask the course's AI chatbot (block_chatbot) a question about its content.
+
+    Read-only. Bridges to the block_chatbot plugin's RAG pipeline, so answers
+    come from the same content index the in-page chatbot uses. Requires
+    block_chatbot to be installed on the Moodle site and enabled (and synced)
+    for the course; returns a clean error otherwise.
+    """
+    return await _call(
+        "local_mcpbridge_ask_chatbot", {"courseid": courseid, "question": question}
+    )
+
+
 # --------------------------------------------------------------------------- #
 # WRITE TOOLS (registered only when MOODLE_ALLOW_WRITE=true).
 # --------------------------------------------------------------------------- #
@@ -1250,6 +1473,94 @@ def _register_write_tools() -> None:
         )
 
     @mcp.tool()
+    async def add_essay_question(
+        quizcmid: int,
+        name: str,
+        questiontext: str,
+        graderinfo: str = "",
+        responsetemplate: str = "",
+        responselines: int = 15,
+        attachments: int = 0,
+        defaultmark: float = 1.0,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Add an essay (free-text) question to a quiz.
+
+        Requires the local_mcpbridge plugin. Essay questions are graded
+        manually. `graderinfo` is private guidance for whoever marks it;
+        `responsetemplate` pre-fills the student's answer box; `attachments`
+        allows file uploads (0 = none, 1-3 = that many, -1 = unlimited).
+        Returns the new question id and its slot.
+        """
+        return await _call(
+            "local_mcpbridge_add_essay_question",
+            {
+                "quizcmid": quizcmid,
+                "name": name,
+                "questiontext": questiontext,
+                "graderinfo": graderinfo,
+                "responsetemplate": responsetemplate,
+                "responselines": responselines,
+                "attachments": attachments,
+                "defaultmark": defaultmark,
+            },
+        )
+
+    @mcp.tool()
+    async def add_numerical_question(
+        quizcmid: int,
+        name: str,
+        questiontext: str,
+        answers: list[dict],
+        defaultmark: float = 1.0,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Add a numerical question to a quiz.
+
+        Requires the local_mcpbridge plugin. `answers` is a list of dicts,
+        each: {"answer": 42.0, "tolerance": 0.5, "fraction": 1.0,
+        "feedback": ""} — a student response within ±tolerance of answer
+        earns that fraction of the marks (1.0 = full credit). Returns the new
+        question id and its slot.
+        """
+        return await _call(
+            "local_mcpbridge_add_numerical_question",
+            {
+                "quizcmid": quizcmid,
+                "name": name,
+                "questiontext": questiontext,
+                "answers": answers,
+                "defaultmark": defaultmark,
+            },
+        )
+
+    @mcp.tool()
+    async def add_matching_question(
+        quizcmid: int,
+        name: str,
+        questiontext: str,
+        pairs: list[dict],
+        shuffleanswers: int = 1,
+        defaultmark: float = 1.0,
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Add a matching question to a quiz.
+
+        Requires the local_mcpbridge plugin. `pairs` is a list of dicts, each:
+        {"question": "Capital of France", "answer": "Paris"} — students match
+        each left-hand item to the right answer. At least two pairs. Returns
+        the new question id and its slot.
+        """
+        return await _call(
+            "local_mcpbridge_add_matching_question",
+            {
+                "quizcmid": quizcmid,
+                "name": name,
+                "questiontext": questiontext,
+                "pairs": pairs,
+                "shuffleanswers": shuffleanswers,
+                "defaultmark": defaultmark,
+            },
+        )
+
+    @mcp.tool()
     async def enrol_users(enrolments: list[dict]) -> None:
         """⚠️ WRITES LIVE DATA. Enrol many users at once (bulk).
 
@@ -1516,6 +1827,496 @@ def _register_write_tools() -> None:
             "local_mcpbridge_delete_section",
             {"courseid": courseid, "sectionnum": sectionnum},
         )
+
+    # --- Extended core writes (Moodle core web services) ------------------- #
+
+    @mcp.tool()
+    async def delete_courses(courseids: list[int]) -> None:
+        """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete one or more courses.
+
+        Uses core_course_delete_courses. Every course and all its content is
+        permanently removed. Pass a list of course ids.
+        """
+        return await _call("core_course_delete_courses", {"courseids": courseids})
+
+    @mcp.tool()
+    async def delete_category(categoryid: int, recursive: int = 0) -> None:
+        """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete a course category.
+
+        Uses core_course_delete_categories. `recursive` 1 also deletes the
+        category's courses and sub-categories; 0 fails if it is not empty.
+        """
+        cat = {"id": categoryid, "recursive": recursive}
+        return await _call("core_course_delete_categories", {"categories": [cat]})
+
+    @mcp.tool()
+    async def update_user(
+        userid: int,
+        firstname: str = "",
+        lastname: str = "",
+        email: str = "",
+        suspended: int = -1,
+    ) -> None:
+        """⚠️ WRITES LIVE DATA. Update an existing user (incl. suspend).
+
+        Uses core_user_update_users. Only non-empty fields are sent. Set
+        `suspended` to 1 to disable the account or 0 to re-enable it (leave -1
+        to keep it unchanged).
+        """
+        user: dict[str, Any] = {"id": userid}
+        if firstname:
+            user["firstname"] = firstname
+        if lastname:
+            user["lastname"] = lastname
+        if email:
+            user["email"] = email
+        if suspended in (0, 1):
+            user["suspended"] = suspended
+        return await _call("core_user_update_users", {"users": [user]})
+
+    @mcp.tool()
+    async def delete_users(userids: list[int]) -> None:
+        """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete user accounts.
+
+        Uses core_user_delete_users. Pass a list of user ids.
+        """
+        return await _call("core_user_delete_users", {"userids": userids})
+
+    @mcp.tool()
+    async def assign_role(
+        roleid: int, userid: int, contextlevel: str = "course", instanceid: int = 0
+    ) -> None:
+        """⚠️ WRITES LIVE DATA. Assign a role to a user in a context.
+
+        Uses core_role_assign_roles. `contextlevel` is usually "course" (with
+        `instanceid` = course id), "coursecat", "user", or "system". Common
+        role ids: 3 editingteacher, 4 teacher, 5 student, 1 manager.
+        """
+        a = {
+            "roleid": roleid,
+            "userid": userid,
+            "contextlevel": contextlevel,
+            "instanceid": instanceid,
+        }
+        return await _call("core_role_assign_roles", {"assignments": [a]})
+
+    @mcp.tool()
+    async def unassign_role(
+        roleid: int, userid: int, contextlevel: str = "course", instanceid: int = 0
+    ) -> None:
+        """⚠️ WRITES LIVE DATA. Remove a role from a user in a context.
+
+        Uses core_role_unassign_roles. Same arguments as assign_role.
+        """
+        a = {
+            "roleid": roleid,
+            "userid": userid,
+            "contextlevel": contextlevel,
+            "instanceid": instanceid,
+        }
+        return await _call("core_role_unassign_roles", {"unassignments": [a]})
+
+    @mcp.tool()
+    async def create_cohort(
+        name: str, idnumber: str, categoryid: int = 0, description: str = ""
+    ) -> list:
+        """⚠️ WRITES LIVE DATA. Create a cohort (site-wide user group).
+
+        Uses core_cohort_create_cohorts. `categoryid` 0 = system context.
+        Returns the new cohort id.
+        """
+        ctxid = categoryid or 1
+        cohort = {
+            "categorytype": {"type": "id", "value": str(ctxid)},
+            "name": name,
+            "idnumber": idnumber,
+            "description": description,
+        }
+        return await _call("core_cohort_create_cohorts", {"cohorts": [cohort]})
+
+    @mcp.tool()
+    async def add_cohort_members(cohortid: int, userids: list[int]) -> dict:
+        """⚠️ WRITES LIVE DATA. Add users to a cohort.
+
+        Uses core_cohort_add_cohort_members.
+        """
+        members = [
+            {
+                "cohorttype": {"type": "id", "value": str(cohortid)},
+                "usertype": {"type": "id", "value": str(uid)},
+            }
+            for uid in userids
+        ]
+        return await _call("core_cohort_add_cohort_members", {"members": members})
+
+    @mcp.tool()
+    async def start_forum_discussion(
+        forumid: int, subject: str, message: str
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Start a new forum discussion (topic).
+
+        Uses mod_forum_add_discussion. `forumid` is the forum instance id.
+        Returns the new discussion id.
+        """
+        return await _call(
+            "mod_forum_add_discussion",
+            {"forumid": forumid, "subject": subject, "message": message},
+        )
+
+    @mcp.tool()
+    async def reply_forum_post(postid: int, subject: str, message: str) -> dict:
+        """⚠️ WRITES LIVE DATA. Reply to a forum post.
+
+        Uses mod_forum_add_discussion_post. `postid` is the parent post id (the
+        discussion's first post to reply at the top level). Returns the new post id.
+        """
+        return await _call(
+            "mod_forum_add_discussion_post",
+            {"postid": postid, "subject": subject, "message": message},
+        )
+
+    @mcp.tool()
+    async def send_message(touserid: int, text: str) -> list:
+        """⚠️ WRITES LIVE DATA. Send a private message to a user.
+
+        Uses core_message_send_instant_messages. Requires messaging enabled and
+        the moodle/site:sendmessage capability.
+        """
+        msg = {"touserid": touserid, "text": text, "textformat": 1}
+        return await _call(
+            "core_message_send_instant_messages", {"messages": [msg]}
+        )
+
+    @mcp.tool()
+    async def import_course(importfrom: int, importto: int, deletecontent: int = 0) -> None:
+        """⚠️ WRITES LIVE DATA. Import content from one course into another.
+
+        Uses core_course_import_course. Copies activities/resources from
+        `importfrom` into `importto`. `deletecontent` 1 wipes the target first.
+        """
+        return await _call(
+            "core_course_import_course",
+            {"importfrom": importfrom, "importto": importto, "deletecontent": deletecontent},
+        )
+
+    @mcp.tool()
+    async def download_file(fileurl: str) -> dict:
+        """Download a file from the Moodle site by its pluginfile URL.
+
+        Requires the service to allow file downloads (downloadfiles=1). Appends
+        the token, fetches the bytes, and returns the size and base64 content.
+        """
+        import base64 as _b64
+
+        sep = "&" if "?" in fileurl else "?"
+        url = f"{fileurl}{sep}token={MOODLE_TOKEN}"
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.get(url)
+            resp.raise_for_status()
+            content = resp.content
+        return {
+            "size": len(content),
+            "content_type": resp.headers.get("content-type", ""),
+            "content_base64": _b64.b64encode(content).decode("ascii"),
+        }
+
+    @mcp.tool()
+    async def mark_activity_complete(cmid: int, completed: bool = True) -> dict:
+        """⚠️ WRITES LIVE DATA. Tick (or untick) your own manual completion box.
+
+        Works only on activities set to manual completion tracking, and only
+        for the current user. Use override_activity_completion to set another
+        student's state as a teacher.
+        """
+        await _call(
+            "core_completion_update_activity_completion_status_manually",
+            {"cmid": cmid, "completed": completed},
+        )
+        return {"cmid": cmid, "completed": completed}
+
+    @mcp.tool()
+    async def override_activity_completion(
+        cmid: int, userid: int, newstate: int = 1
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Override a student's activity completion state.
+
+        Teacher action. `newstate`: 0 = incomplete, 1 = complete. The override
+        is recorded against the acting user in Moodle's completion log.
+        """
+        return await _call(
+            "core_completion_override_activity_completion_status",
+            {"cmid": cmid, "userid": userid, "newstate": newstate},
+        )
+
+    @mcp.tool()
+    async def backup_course(
+        courseid: int, save_to: str = "", includeusers: int = 0
+    ) -> dict:
+        """Back a whole course up to a .mbz file on the local machine.
+
+        Requires the local_mcpbridge plugin. The backup runs on the Moodle
+        server, is transferred base64-encoded, and is written to `save_to`
+        (default: ./course_<id>.mbz). Content-only by default; pass
+        includeusers=1 to keep enrolments and user data. Courses over 100MB
+        are refused. Returns the saved path and size.
+        """
+        import base64 as _b64
+
+        result = await _call(
+            "local_mcpbridge_backup_course",
+            {"courseid": courseid, "includeusers": includeusers},
+        )
+        path = save_to or f"course_{courseid}.mbz"
+        with open(path, "wb") as fh:
+            fh.write(_b64.b64decode(result["content_base64"]))
+        return {
+            "saved_to": os.path.abspath(path),
+            "size": result["size"],
+            "filename": result["filename"],
+        }
+
+    @mcp.tool()
+    async def restore_course(
+        filepath: str,
+        categoryid: int = 1,
+        fullname: str = "",
+        shortname: str = "",
+    ) -> dict:
+        """⚠️ WRITES LIVE DATA. Restore a .mbz backup file into a NEW course.
+
+        Requires the local_mcpbridge plugin. Reads the local `filepath`
+        (created by backup_course, or any Moodle .mbz), uploads it and
+        restores it as a brand-new course in `categoryid`. `fullname` and
+        `shortname` override the names stored in the backup. Returns the new
+        course's id and names.
+        """
+        import base64 as _b64
+
+        with open(filepath, "rb") as fh:
+            content = fh.read()
+        return await _call(
+            "local_mcpbridge_restore_course",
+            {
+                "content_base64": _b64.b64encode(content).decode("ascii"),
+                "categoryid": categoryid,
+                "fullname": fullname,
+                "shortname": shortname,
+            },
+        )
+
+    @mcp.tool()
+    async def build_course(outline: dict) -> dict:
+        """⚠️ WRITES LIVE DATA. Build a whole course from one JSON outline.
+
+        One call instead of many. `outline` shape:
+        {
+          "fullname": "Biology 101", "shortname": "bio101", "categoryid": 1,
+          "summary": "...",            # optional
+          "courseid": 0,               # optional: build into an existing course
+          "sections": [
+            {"name": "Week 1", "summary": "...",
+             "activities": [
+               {"type": "page", "name": "Welcome", "content": "<p>Hi</p>"},
+               {"type": "label", "text": "<b>Read this first</b>"},
+               {"type": "url", "name": "Syllabus", "url": "https://..."},
+               {"type": "forum", "name": "Q&A", "intro": "..."},
+               {"type": "assignment", "name": "Report", "intro": "...",
+                "duedate": 0},
+               {"type": "quiz", "name": "Checkpoint", "intro": "...",
+                "questions": [
+                  {"qtype": "multichoice", "name": "Q1", "text": "...",
+                   "answers": [{"text": "A", "fraction": 1.0},
+                                {"text": "B", "fraction": 0.0}]},
+                  {"qtype": "truefalse", "name": "Q2", "text": "...",
+                   "correct": 1},
+                  {"qtype": "shortanswer", "name": "Q3", "text": "...",
+                   "answers": ["Paris"]},
+                  {"qtype": "essay", "name": "Q4", "text": "..."},
+                  {"qtype": "numerical", "name": "Q5", "text": "...",
+                   "answers": [{"answer": 42, "tolerance": 0.5}]},
+                  {"qtype": "matching", "name": "Q6", "text": "...",
+                   "pairs": [{"question": "France", "answer": "Paris"},
+                              {"question": "Italy", "answer": "Rome"}]}
+                ]}
+             ]}
+          ]
+        }
+        Creates the course (unless `courseid` is given), then every section
+        and activity in order. Returns the course id plus a per-item build
+        log; one failing activity is reported but does not stop the rest.
+        """
+        log: list[dict] = []
+
+        courseid = int(outline.get("courseid") or 0)
+        if not courseid:
+            created = await _call(
+                "core_course_create_courses",
+                {
+                    "courses": [
+                        {
+                            "fullname": outline["fullname"],
+                            "shortname": outline["shortname"],
+                            "categoryid": outline.get("categoryid", 1),
+                            "summary": outline.get("summary", ""),
+                            "summaryformat": 1,
+                            "format": "topics",
+                        }
+                    ]
+                },
+            )
+            courseid = created[0]["id"]
+            log.append({"created": "course", "id": courseid})
+
+        async def build_activity(sectionnum: int, act: dict) -> None:
+            atype = act.get("type", "")
+            name = act.get("name", "")
+            if atype == "page":
+                r = await _call(
+                    "local_mcpbridge_create_page",
+                    {
+                        "courseid": courseid,
+                        "name": name,
+                        "content": act.get("content", ""),
+                        "section": sectionnum,
+                        "intro": act.get("intro", ""),
+                    },
+                )
+            elif atype == "label":
+                r = await _call(
+                    "local_mcpbridge_create_label",
+                    {
+                        "courseid": courseid,
+                        "content": act.get("text", act.get("content", "")),
+                        "section": sectionnum,
+                    },
+                )
+            elif atype == "url":
+                r = await _call(
+                    "local_mcpbridge_create_url",
+                    {
+                        "courseid": courseid,
+                        "name": name,
+                        "externalurl": act.get("url", ""),
+                        "section": sectionnum,
+                        "intro": act.get("intro", ""),
+                    },
+                )
+            elif atype == "forum":
+                r = await _call(
+                    "local_mcpbridge_create_forum",
+                    {
+                        "courseid": courseid,
+                        "name": name,
+                        "section": sectionnum,
+                        "intro": act.get("intro", ""),
+                        "type": act.get("forumtype", "general"),
+                    },
+                )
+            elif atype == "assignment":
+                r = await _call(
+                    "local_mcpbridge_create_assignment",
+                    {
+                        "courseid": courseid,
+                        "name": name,
+                        "section": sectionnum,
+                        "intro": act.get("intro", ""),
+                        "duedate": act.get("duedate", 0),
+                        "grade": act.get("grade", 100),
+                    },
+                )
+            elif atype == "choice":
+                r = await _call(
+                    "local_mcpbridge_create_choice",
+                    {
+                        "courseid": courseid,
+                        "name": name,
+                        "question": act.get("question", name),
+                        "options": act.get("options", []),
+                        "section": sectionnum,
+                    },
+                )
+            elif atype == "quiz":
+                r = await _call(
+                    "local_mcpbridge_create_quiz",
+                    {
+                        "courseid": courseid,
+                        "name": name,
+                        "section": sectionnum,
+                        "intro": act.get("intro", ""),
+                    },
+                )
+                quizcmid = r.get("cmid")
+                for q in act.get("questions", []):
+                    await build_question(quizcmid, q)
+            else:
+                raise MoodleError(f"Unknown activity type: {atype!r}")
+            log.append({"created": atype or "?", "name": name, "result": r})
+
+        async def build_question(quizcmid: int, q: dict) -> None:
+            qtype = q.get("qtype", "multichoice")
+            common = {
+                "quizcmid": quizcmid,
+                "name": q.get("name", "Question"),
+                "questiontext": q.get("text", ""),
+                "defaultmark": q.get("defaultmark", 1.0),
+            }
+            if qtype == "multichoice":
+                await _call(
+                    "local_mcpbridge_add_quiz_question",
+                    {**common, "answers": q.get("answers", []),
+                     "single": q.get("single", 1)},
+                )
+            elif qtype == "truefalse":
+                await _call(
+                    "local_mcpbridge_add_truefalse_question",
+                    {**common, "correctanswer": q.get("correct", 1)},
+                )
+            elif qtype == "shortanswer":
+                await _call(
+                    "local_mcpbridge_add_shortanswer_question",
+                    {**common, "answers": q.get("answers", []),
+                     "usecase": q.get("usecase", 0)},
+                )
+            elif qtype == "essay":
+                await _call(
+                    "local_mcpbridge_add_essay_question",
+                    {**common, "graderinfo": q.get("graderinfo", "")},
+                )
+            elif qtype == "numerical":
+                await _call(
+                    "local_mcpbridge_add_numerical_question",
+                    {**common, "answers": q.get("answers", [])},
+                )
+            elif qtype == "matching":
+                await _call(
+                    "local_mcpbridge_add_matching_question",
+                    {**common, "pairs": q.get("pairs", [])},
+                )
+            else:
+                raise MoodleError(f"Unknown question type: {qtype!r}")
+
+        for i, sec in enumerate(outline.get("sections", []), start=1):
+            r = await _call(
+                "local_mcpbridge_create_section",
+                {
+                    "courseid": courseid,
+                    "name": sec.get("name", f"Section {i}"),
+                    "summary": sec.get("summary", ""),
+                },
+            )
+            sectionnum = r.get("sectionnum", i)
+            log.append({"created": "section", "name": sec.get("name"),
+                        "sectionnum": sectionnum})
+            for act in sec.get("activities", []):
+                try:
+                    await build_activity(sectionnum, act)
+                except (MoodleError, httpx.HTTPError) as exc:
+                    log.append({
+                        "error": str(exc),
+                        "activity": act.get("name", act.get("type", "?")),
+                    })
+
+        return {"courseid": courseid, "built": log}
 
 
 if ALLOW_WRITE:
