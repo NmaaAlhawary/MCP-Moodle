@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moodle-mcp-bridge"
+version = "1.6.0"
+description = "MCP server exposing a Moodle site as 86 typed AI tools: read courses, grades and deadlines; build courses, quizzes, questions and content."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Namaa Alhawary", email = "namaa.alhawary@htu.edu.jo" }]
+keywords = ["moodle", "mcp", "model-context-protocol", "lms", "ai", "claude", "education"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
+]
+dependencies = [
+    "mcp>=1.2.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://nmaaalhawary.github.io/MCP-Moodle/"
+Documentation = "https://nmaaalhawary.github.io/MCP-Moodle/docs/"
+Repository = "https://github.com/NmaaAlhawary/MCP-Moodle"
+Issues = "https://github.com/NmaaAlhawary/MCP-Moodle/issues"
+
+[project.scripts]
+moodle-mcp-bridge = "moodle_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["moodle_mcp"]
+
+[tool.hatch.build.targets.sdist]
+include = ["moodle_mcp", "README.md", "LICENSE", "pyproject.toml"]
+exclude = [".env", "__pycache__", "*.pyc"]

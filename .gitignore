@@ -5,6 +5,8 @@
 moodle-mcp/.venv/
 __pycache__/
 *.pyc
+moodle-mcp/dist/
+*.egg-info/
 
 # Build artifact (attached to releases instead)
 mcpbridge.zip

@@ -45,10 +45,10 @@ jobs:
           pip install ruff
 
       - name: Compile check
-        run: python -m py_compile moodle-mcp/server.py
+        run: python -m py_compile moodle-mcp/server.py moodle-mcp/moodle_mcp/server.py
 
       - name: Ruff (lint)
-        run: ruff check moodle-mcp/server.py
+        run: ruff check moodle-mcp/server.py moodle-mcp/moodle_mcp
 
       - name: Import & tool-registration smoke test
         env:
