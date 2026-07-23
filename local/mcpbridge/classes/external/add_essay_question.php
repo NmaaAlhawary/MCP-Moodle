@@ -51,7 +51,7 @@ class add_essay_question extends external_api {
             'graderinfo'       => new external_value(PARAM_RAW, 'Notes for graders (HTML)', VALUE_DEFAULT, ''),
             'responsetemplate' => new external_value(PARAM_RAW, 'Template pre-filled in the answer box', VALUE_DEFAULT, ''),
             'responselines'    => new external_value(PARAM_INT, 'Height of the answer box in lines', VALUE_DEFAULT, 15),
-            'attachments'      => new external_value(PARAM_INT, 'Allowed attachments: 0, 1, 2, 3 or -1 (unlimited)', VALUE_DEFAULT, 0),
+            'attachments'      => new external_value(PARAM_INT, 'Allowed attachments: 0-3 or -1 (unlimited)', VALUE_DEFAULT, 0),
             'defaultmark'      => new external_value(PARAM_FLOAT, 'Marks this question is worth', VALUE_DEFAULT, 1.0),
         ]);
     }
@@ -69,8 +69,16 @@ class add_essay_question extends external_api {
      * @param float $defaultmark Marks this question is worth.
      * @return array question id and its slot number in the quiz.
      */
-    public static function execute($quizcmid, $name, $questiontext, $graderinfo = '',
-            $responsetemplate = '', $responselines = 15, $attachments = 0, $defaultmark = 1.0) {
+    public static function execute(
+        $quizcmid,
+        $name,
+        $questiontext,
+        $graderinfo = '',
+        $responsetemplate = '',
+        $responselines = 15,
+        $attachments = 0,
+        $defaultmark = 1.0
+    ) {
         global $CFG, $DB, $USER;
         require_once($CFG->dirroot . '/question/editlib.php');
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');

@@ -47,8 +47,8 @@ class restore_course extends external_api {
         return new external_function_parameters([
             'content_base64' => new external_value(PARAM_RAW, 'Base64-encoded .mbz backup content'),
             'categoryid'     => new external_value(PARAM_INT, 'Category to create the new course in', VALUE_DEFAULT, 1),
-            'fullname'       => new external_value(PARAM_TEXT, 'Full name for the new course (default: from backup)', VALUE_DEFAULT, ''),
-            'shortname'      => new external_value(PARAM_TEXT, 'Short name for the new course (default: from backup)', VALUE_DEFAULT, ''),
+            'fullname'       => new external_value(PARAM_TEXT, 'Full name for the new course', VALUE_DEFAULT, ''),
+            'shortname'      => new external_value(PARAM_TEXT, 'Short name for the new course', VALUE_DEFAULT, ''),
         ]);
     }
 
@@ -100,14 +100,19 @@ class restore_course extends external_api {
             : uniqid('restored_');
         $courseid = \restore_dbops::create_new_course($newfullname, $newshortname, $params['categoryid']);
 
-        $rc = new \restore_controller($backupid, $courseid, \backup::INTERACTIVE_NO,
-            \backup::MODE_GENERAL, $USER->id, \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $courseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
         try {
             if (!$rc->execute_precheck()) {
                 $results = $rc->get_precheck_results();
                 if (!empty($results['errors'])) {
-                    throw new \moodle_exception('restoreerror', 'error', '', null,
-                        json_encode($results['errors']));
+                    throw new \moodle_exception('restoreerror', 'error', '', null, json_encode($results['errors']));
                 }
             }
             $rc->execute_plan();

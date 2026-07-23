@@ -23,6 +23,7 @@ import os
 import re
 import time as _time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -2051,8 +2052,7 @@ def _register_write_tools() -> None:
             {"courseid": courseid, "includeusers": includeusers},
         )
         path = save_to or f"course_{courseid}.mbz"
-        with open(path, "wb") as fh:
-            fh.write(_b64.b64decode(result["content_base64"]))
+        await asyncio.to_thread(Path(path).write_bytes, _b64.b64decode(result["content_base64"]))
         return {
             "saved_to": os.path.abspath(path),
             "size": result["size"],
@@ -2076,8 +2076,7 @@ def _register_write_tools() -> None:
         """
         import base64 as _b64
 
-        with open(filepath, "rb") as fh:
-            content = fh.read()
+        content = await asyncio.to_thread(Path(filepath).read_bytes)
         return await _call(
             "local_mcpbridge_restore_course",
             {

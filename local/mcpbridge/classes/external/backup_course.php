@@ -73,8 +73,14 @@ class backup_course extends external_api {
         self::validate_context($context);
         require_capability('moodle/backup:backupcourse', $context);
 
-        $bc = new \backup_controller(\backup::TYPE_1COURSE, $params['courseid'],
-            \backup::FORMAT_MOODLE, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id);
+        $bc = new \backup_controller(
+            \backup::TYPE_1COURSE,
+            $params['courseid'],
+            \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id
+        );
 
         try {
             if (!$params['includeusers']) {
@@ -88,13 +94,11 @@ class backup_course extends external_api {
             $file = $results['backup_destination'];
 
             if (!$file) {
-                throw new \moodle_exception('backupfailed', 'error', '', null,
-                    'Backup produced no destination file');
+                throw new \moodle_exception('backupfailed', 'error', '', null, 'Backup produced no destination file');
             }
             if ($file->get_filesize() > self::MAX_BYTES) {
                 $file->delete();
-                throw new \moodle_exception('backupfailed', 'error', '', null,
-                    'Backup exceeds the 100MB inline transfer limit');
+                throw new \moodle_exception('backupfailed', 'error', '', null, 'Backup exceeds the 100MB transfer limit');
             }
 
             $content = $file->get_content();
