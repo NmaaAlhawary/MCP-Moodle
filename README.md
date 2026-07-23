@@ -102,9 +102,8 @@ exactly the same: an admin just creates a token.
 
 ## Features
 
-- **87 tools**: reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, activity creation, quiz results, completion tracking, backup/restore, and a one-call course builder
+- **86 tools**: reads, a student-assistant layer (deadlines, dashboards, task analysis), core writes, activity creation, quiz results, completion tracking, backup/restore, and a one-call course builder
 - **Six quiz question types**: multiple choice, true/false, short answer, essay, numerical (with tolerances), matching
-- **Chatbot bridge**: if the site runs the `block_chatbot` RAG assistant, `ask_course_chatbot` answers from the same content index
 - **Read/write split**: read tools always on; write tools gated behind `MOODLE_ALLOW_WRITE=true`
 - **Upgrade-safe plugin**: uses Moodle's own `add_moduleinfo()`, never touches module tables directly
 - **Clean error handling**: detects Moodle's JSON-error-on-HTTP-200 quirk and surfaces readable messages
@@ -180,7 +179,7 @@ Restart Claude Desktop and the Moodle tools appear.
 
 ## Tool reference
 
-87 tools, grouped by what they touch. **Access** shows whether a tool is
+86 tools, grouped by what they touch. **Access** shows whether a tool is
 always available (read) or needs `MOODLE_ALLOW_WRITE=true` (write). Tools
 backed by the plugin are marked **plugin**; everything else uses Moodle core
 functions.
@@ -293,7 +292,6 @@ functions.
 | `verify_connection` | Site info + available functions (start here) | read |
 | `search_course_materials` | Search across course materials | read |
 | `ask_moodle` | Route a natural-language question to the right data | read |
-| `ask_course_chatbot` <sup>plugin</sup> | Ask the `block_chatbot` RAG assistant about course content (needs that block installed and synced) | read |
 
 > **Quizzes:** the six `add_*_question` tools use Moodle's Question Bank API
 > (multiple choice, true/false, short answer, essay, numerical, matching).

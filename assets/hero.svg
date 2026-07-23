@@ -53,6 +53,6 @@
     <rect x="436" y="188" width="150" height="26" rx="13" fill="#17171b" stroke="#2c2c33"/>
     <text x="511" y="205" text-anchor="middle" fill="#6ea8ff">MCP server</text>
     <rect x="596" y="188" width="128" height="26" rx="13" fill="#17171b" stroke="#2c2c33"/>
-    <text x="660" y="205" text-anchor="middle" fill="#4bbe8a">87 tools</text>
+    <text x="660" y="205" text-anchor="middle" fill="#4bbe8a">86 tools</text>
   </g>
 </svg>

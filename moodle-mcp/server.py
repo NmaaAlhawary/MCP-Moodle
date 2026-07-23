@@ -1109,22 +1109,6 @@ async def get_learning_plans(userid: int = 0) -> list:
     ]
 
 
-# --- Chatbot bridge --------------------------------------------------------- #
-
-@mcp.tool()
-async def ask_course_chatbot(courseid: int, question: str) -> dict:
-    """Ask the course's AI chatbot (block_chatbot) a question about its content.
-
-    Read-only. Bridges to the block_chatbot plugin's RAG pipeline, so answers
-    come from the same content index the in-page chatbot uses. Requires
-    block_chatbot to be installed on the Moodle site and enabled (and synced)
-    for the course; returns a clean error otherwise.
-    """
-    return await _call(
-        "local_mcpbridge_ask_chatbot", {"courseid": courseid, "question": question}
-    )
-
-
 # --------------------------------------------------------------------------- #
 # WRITE TOOLS (registered only when MOODLE_ALLOW_WRITE=true).
 # --------------------------------------------------------------------------- #

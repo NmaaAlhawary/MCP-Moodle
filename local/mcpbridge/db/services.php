@@ -201,14 +201,6 @@ $functions = [
         'capabilities' => 'moodle/restore:restorecourse',
         'ajax'         => false,
     ],
-    'local_mcpbridge_ask_chatbot' => [
-        'classname'    => 'local_mcpbridge\external\ask_chatbot',
-        'methodname'   => 'execute',
-        'description'  => 'Ask the block_chatbot course assistant (RAG over course content)',
-        'type'         => 'read',
-        'capabilities' => 'moodle/course:view',
-        'ajax'         => false,
-    ],
 ];
 
 // Core Moodle functions bundled into the service so a single token covers
