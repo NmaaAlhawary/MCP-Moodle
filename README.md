@@ -15,20 +15,6 @@
 
 <samp>🌐 **[Live site & guide](https://nmaaalhawary.github.io/MCP-Moodle/)** · [**Quick start**](#quick-start) · [**Tools**](#tool-reference) · [**How it works**](#how-it-works-two-pieces) · [**Contributing**](#contributing) · [**Releases**](https://github.com/NmaaAlhawary/MCP-Moodle/releases)</samp>
 
-<br>
-
-> _"Create a course called Biology 101, add a welcome page, and enrol these five students."_
-> <br>→ and it actually happens.
-
-> _"Build the whole midterm: one quiz, ten questions — multiple choice, matching, essay."_
-> <br>→ one call, every question type.
-
-> _"How did my students do on the Week 1 quiz? Grade the late reports and tell each one why."_
-> <br>→ results read, grades saved, feedback delivered.
-
-> _"Back the course up before we experiment — and restore it if I break something."_
-> <br>→ a real .mbz, saved to your disk.
-
 </div>
 
 ---
