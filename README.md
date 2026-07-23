@@ -180,127 +180,129 @@ Restart Claude Desktop and the Moodle tools appear.
 
 ## Tool reference
 
-### Read (always on)
+87 tools, grouped by what they touch. **Access** shows whether a tool is
+always available (read) or needs `MOODLE_ALLOW_WRITE=true` (write). Tools
+backed by the plugin are marked **plugin**; everything else uses Moodle core
+functions.
 
-| Tool | Moodle function |
-|---|---|
-| `verify_connection` | `core_webservice_get_site_info` |
-| `list_courses` | `core_course_get_courses` |
-| `search_courses` | `core_course_get_courses_by_field` |
-| `get_course_content` | `core_course_get_contents` |
-| `get_enrolled_users` | `core_enrol_get_enrolled_users` |
-| `list_quizzes` | `mod_quiz_get_quizzes_by_courses` |
-| `get_user_grades` | `gradereport_user_get_grade_items` |
-| `get_quiz_results` | `mod_quiz_get_user_attempts` + `mod_quiz_get_user_best_grade` |
-| `get_quiz_attempt_review` | `mod_quiz_get_attempt_review` |
-| `get_activity_completion` | `core_completion_get_activities_completion_status` |
-| `get_course_completion_status` | `core_completion_get_course_completion_status` |
-| `get_notifications` | `message_popup_get_popup_notifications` |
-| `list_course_competencies` | `core_competency_list_course_competencies` |
-| `get_learning_plans` | `core_competency_list_user_plans` |
-| `ask_course_chatbot` | `local_mcpbridge_ask_chatbot` (needs `block_chatbot` on the site) |
+### Courses & structure
 
-### Student & analysis (always on)
-
-Higher-level tools that combine the raw functions above into a student's-eye
-view. The **analysis** tools (`analyze_assignment`, `decompose_task`,
-`create_implementation_plan`, …) gather and structure the relevant Moodle data;
-the calling AI does the natural-language reasoning over it.
-
-| Tool | Description |
-|---|---|
-| `get_my_courses` | All courses the current user is enrolled in |
-| `search_course_materials` | Search across all course materials by query |
-| `get_course_announcements` | Announcements from course news forums (optional course filter) |
-| `get_recent_activity` | Recent activity/updates across courses since a given time |
-| `get_assignments` | Assignments for courses (optional course filter) |
-| `get_assignment_status` | Submission and grading status for one assignment |
-| `get_upcoming_deadlines` | Upcoming deadlines across courses, soonest first |
-| `get_overdue_assignments` | Unsubmitted assignments past due, most overdue first |
-| `get_actionable_tasks` | Prioritized list of tasks needing action, by urgency |
-| `analyze_assignment` | Status, requirements, materials, progress, deadline for one assignment |
-| `extract_assignment_requirements` | Source text + attachments for requirement analysis |
-| `find_relevant_materials` | Course content relevant to an assignment, ranked |
-| `decompose_task` | Assignment context + days available (scaffold for subtasks) |
-| `create_implementation_plan` | Context + milestone dates (scaffold for a step-by-step plan) |
-| `get_grades` | Grade overview for all courses, or detailed grades for one |
-| `get_course_progress` | Progress/completion for one course or all |
-| `get_course_health` | Progress, grade, unsubmitted & overdue counts for a course |
-| `get_study_load` | Assignment distribution by week to spot heavy weeks |
-| `get_upcoming_events` | Upcoming calendar events |
-| `semester_dashboard` | Combined courses + deadlines + grades snapshot |
-| `daily_briefing` | Overdue count, today's deadlines, recent grades, events, tasks |
-| `weekly_review` | Submitted/graded counts, deadlines, overdue, progress |
-| `ask_moodle` | Route a natural-language question to the right data source |
-
-> These need extra web service functions in the token's service:
-> `core_enrol_get_users_courses`, `mod_assign_get_assignments`,
-> `mod_assign_get_submission_status`, `gradereport_overview_get_course_grades`,
-> `core_calendar_get_action_events_by_timesort`, `mod_forum_get_forums_by_courses`,
-> `mod_forum_get_forum_discussions`, and
-> `core_completion_get_activities_completion_status`. Add the ones you need to
-> **MCP Bridge Service** (a tool that needs a missing function returns a clean
-> "access control exception" you can act on).
-
-### Write (only when `MOODLE_ALLOW_WRITE=true`)
-
-| Tool | Moodle function | Source |
+| Tool | What it does | Access |
 |---|---|---|
-| `create_course` | `core_course_create_courses` | core |
-| `update_course` | `core_course_update_courses` | core |
-| `create_category` | `core_course_create_categories` | core |
-| `create_user` | `core_user_create_users` | core |
-| `enrol_user` | `enrol_manual_enrol_users` | core |
-| `unenrol_user` | `enrol_manual_unenrol_users` | core |
-| `grade_assignment` | `mod_assign_save_grade` | core |
-| `enrol_users` (bulk) | `enrol_manual_enrol_users` | core |
-| `add_group_members` | `core_group_add_group_members` | core |
-| `create_group` | `core_group_create_groups` | core |
-| `upload_file` | `core_files_upload` | core |
-| `create_page` | `local_mcpbridge_create_page` | **plugin** |
-| `create_book` | `local_mcpbridge_create_book` | **plugin** |
-| `create_label` | `local_mcpbridge_create_label` | **plugin** |
-| `create_url` | `local_mcpbridge_create_url` | **plugin** |
-| `create_quiz` | `local_mcpbridge_create_quiz` | **plugin** |
-| `create_forum` | `local_mcpbridge_create_forum` | **plugin** |
-| `create_choice` | `local_mcpbridge_create_choice` | **plugin** |
-| `create_assignment` | `local_mcpbridge_create_assignment` | **plugin** |
-| `create_section` | `local_mcpbridge_create_section` | **plugin** |
-| `update_activity` | `local_mcpbridge_update_activity` | **plugin** |
-| `update_page` | `local_mcpbridge_update_page` | **plugin** |
-| `move_activity` | `local_mcpbridge_move_activity` | **plugin** |
-| `delete_section` | `local_mcpbridge_delete_section` | **plugin** |
-| `delete_activity` | `local_mcpbridge_delete_activity` | **plugin** |
-| `add_quiz_question` | `local_mcpbridge_add_quiz_question` | **plugin** |
-| `add_truefalse_question` | `local_mcpbridge_add_truefalse_question` | **plugin** |
-| `add_shortanswer_question` | `local_mcpbridge_add_shortanswer_question` | **plugin** |
-| `add_essay_question` | `local_mcpbridge_add_essay_question` | **plugin** |
-| `add_numerical_question` | `local_mcpbridge_add_numerical_question` | **plugin** |
-| `add_matching_question` | `local_mcpbridge_add_matching_question` | **plugin** |
-| `backup_course` | `local_mcpbridge_backup_course` | **plugin** |
-| `restore_course` | `local_mcpbridge_restore_course` | **plugin** |
-| `build_course` | orchestrates the tools above from one JSON outline | server |
-| `mark_activity_complete` | `core_completion_update_activity_completion_status_manually` | core |
-| `override_activity_completion` | `core_completion_override_activity_completion_status` | core |
-| `delete_courses` | `core_course_delete_courses` | core |
-| `delete_category` | `core_course_delete_categories` | core |
-| `update_user` | `core_user_update_users` | core |
-| `delete_users` | `core_user_delete_users` | core |
-| `assign_role` / `unassign_role` | `core_role_assign_roles` / `core_role_unassign_roles` | core |
-| `create_cohort` / `add_cohort_members` | `core_cohort_*` | core |
-| `start_forum_discussion` / `reply_forum_post` | `mod_forum_*` | core |
-| `send_message` | `core_message_send_instant_messages` | core |
-| `import_course` | `core_course_import_course` | core |
-| `download_file` | webservice file download | core |
+| `list_courses` / `search_courses` | List all courses / search by field | read |
+| `get_course_content` | Everything inside a course (sections, activities, files) | read |
+| `get_my_courses` | Courses the current user is enrolled in | read |
+| `create_course` / `update_course` | Create or update a course | write |
+| `create_category` / `delete_category` | Manage course categories | write |
+| `create_section` / `delete_section` <sup>plugin</sup> | Manage course sections | write |
+| `delete_courses` | Delete courses (irreversible) | write |
+| `import_course` | Copy content from one course into another | write |
 
-> **Quizzes:** `create_quiz` makes the container; the six `add_*_question` tools
-> use Moodle's Question Bank API (multiple choice, true/false, short answer,
-> essay, numerical, matching). That API is version-sensitive — tested on
-> Moodle 5.0; test on your version first.
+### Course builder & backup
 
-> **Course builder:** `build_course` takes one JSON outline (course → sections →
-> activities → quiz questions) and builds everything in a single call, with a
-> per-item build log. One failing activity is reported without stopping the rest.
+| Tool | What it does | Access |
+|---|---|---|
+| `build_course` | Build a whole course — sections, activities, quizzes with questions — from **one JSON outline**, with a per-item build log | write |
+| `backup_course` <sup>plugin</sup> | Full course backup, saved as a real `.mbz` on your local disk | write |
+| `restore_course` <sup>plugin</sup> | Restore a `.mbz` file into a brand-new course | write |
+
+### Content & activities
+
+| Tool | What it does | Access |
+|---|---|---|
+| `create_page` / `update_page` <sup>plugin</sup> | HTML page activities | write |
+| `create_book` <sup>plugin</sup> | Book with its first chapter | write |
+| `create_label` <sup>plugin</sup> | Inline text/label on the course page | write |
+| `create_url` <sup>plugin</sup> | External link resource | write |
+| `create_forum` / `create_choice` <sup>plugin</sup> | Forum / poll activities | write |
+| `create_assignment` <sup>plugin</sup> | Assignment with due date and grade | write |
+| `update_activity` / `move_activity` / `delete_activity` <sup>plugin</sup> | Rename, hide, move or delete any activity | write |
+| `upload_file` / `download_file` | Transfer files to/from Moodle | write |
+
+### Quizzes & questions
+
+| Tool | What it does | Access |
+|---|---|---|
+| `list_quizzes` | Quizzes in given courses | read |
+| `get_quiz_results` | A user's attempts + best grade for a quiz | read |
+| `get_quiz_attempt_review` | Finished attempt, question by question | read |
+| `create_quiz` <sup>plugin</sup> | Quiz container with timing/grade settings | write |
+| `add_quiz_question` <sup>plugin</sup> | Multiple-choice question | write |
+| `add_truefalse_question` <sup>plugin</sup> | True/false question | write |
+| `add_shortanswer_question` <sup>plugin</sup> | Short-answer question | write |
+| `add_essay_question` <sup>plugin</sup> | Essay (manually graded) question | write |
+| `add_numerical_question` <sup>plugin</sup> | Numerical question with tolerances | write |
+| `add_matching_question` <sup>plugin</sup> | Matching-pairs question | write |
+
+### Users, enrolment & groups
+
+| Tool | What it does | Access |
+|---|---|---|
+| `get_enrolled_users` | Who is enrolled in a course | read |
+| `create_user` / `update_user` / `delete_users` | Manage user accounts | write |
+| `enrol_user` / `enrol_users` / `unenrol_user` | Manual enrolment (single or bulk) | write |
+| `assign_role` / `unassign_role` | Role assignments | write |
+| `create_group` / `add_group_members` | Course groups | write |
+| `create_cohort` / `add_cohort_members` | Site-wide cohorts | write |
+
+### Communication
+
+| Tool | What it does | Access |
+|---|---|---|
+| `get_course_announcements` | News-forum announcements | read |
+| `get_notifications` | Unread count + recent notifications | read |
+| `send_message` | Direct message to a user | write |
+| `start_forum_discussion` / `reply_forum_post` | Post in forums | write |
+
+### Assignments & grading
+
+| Tool | What it does | Access |
+|---|---|---|
+| `get_assignments` / `get_assignment_status` | Assignments and submission/grading state | read |
+| `get_upcoming_deadlines` / `get_overdue_assignments` | Deadline tracking | read |
+| `analyze_assignment` / `extract_assignment_requirements` | Requirements + context for one assignment | read |
+| `find_relevant_materials` / `decompose_task` / `create_implementation_plan` | Scaffolds for working on an assignment | read |
+| `grade_assignment` | Save a grade **with feedback text** to the gradebook | write |
+
+### Grades, progress & completion
+
+| Tool | What it does | Access |
+|---|---|---|
+| `get_grades` / `get_user_grades` | Grade overview or per-course detail | read |
+| `get_course_progress` / `get_course_health` | Progress and at-a-glance course health | read |
+| `get_activity_completion` | Which activities a user completed | read |
+| `get_course_completion_status` | Whole-course completion criteria | read |
+| `list_course_competencies` / `get_learning_plans` | Competency framework data | read |
+| `mark_activity_complete` | Tick your own manual completion box | write |
+| `override_activity_completion` | Teacher: set a student's completion state | write |
+
+### Planning & insights
+
+| Tool | What it does | Access |
+|---|---|---|
+| `get_upcoming_events` | Calendar events | read |
+| `get_recent_activity` | Updates across courses since a time | read |
+| `get_study_load` | Assignment distribution by week | read |
+| `get_actionable_tasks` | Prioritized to-do list by urgency | read |
+| `semester_dashboard` / `daily_briefing` / `weekly_review` | Combined snapshots | read |
+
+### Search & assist
+
+| Tool | What it does | Access |
+|---|---|---|
+| `verify_connection` | Site info + available functions (start here) | read |
+| `search_course_materials` | Search across course materials | read |
+| `ask_moodle` | Route a natural-language question to the right data | read |
+| `ask_course_chatbot` <sup>plugin</sup> | Ask the `block_chatbot` RAG assistant about course content (needs that block installed and synced) | read |
+
+> **Quizzes:** the six `add_*_question` tools use Moodle's Question Bank API
+> (multiple choice, true/false, short answer, essay, numerical, matching).
+> That API is version-sensitive — tested on Moodle 5.0; test on your version first.
+
+> **Missing function?** A tool whose web service function isn't in the token's
+> service returns a clean "access control exception" — add the function to
+> **MCP Bridge Service** and retry. Installing plugin 1.6.0+ registers the
+> complete list automatically.
 
 ---
 
