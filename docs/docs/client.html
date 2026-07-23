@@ -137,6 +137,22 @@
 <h2 id="claude-code">Claude Code</h2>
 <pre><code>claude mcp add moodle -e MOODLE_URL=https://moodle.example.edu -e MOODLE_TOKEN=your_token -- moodle-mcp-bridge</code></pre>
 
+<h2 id="other-clients">Other MCP clients (Gemini, ChatGPT, Cursor…)</h2>
+<p>MCP is an open protocol — the server is not tied to Claude. The same command + env vars work in <b>Gemini CLI, ChatGPT desktop (developer mode), Cursor, Windsurf, VS Code Copilot agent mode, Cline and LM Studio</b>. Example for Gemini CLI (<code>~/.gemini/settings.json</code>):</p>
+<pre><code>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"moodle"</span>: {
+      <span class="k">"command"</span>: <span class="s">"moodle-mcp-bridge"</span>,
+      <span class="k">"env"</span>: {
+        <span class="k">"MOODLE_URL"</span>: <span class="s">"https://moodle.example.edu"</span>,
+        <span class="k">"MOODLE_TOKEN"</span>: <span class="s">"your_token_here"</span>,
+        <span class="k">"MOODLE_ALLOW_WRITE"</span>: <span class="s">"true"</span>
+      }
+    }
+  }
+}</code></pre>
+<div class="note"><b>Model quality matters:</b> with 86 tools, stronger models (Claude, Gemini Pro, GPT-4-class) chain calls like create course → add section → add quiz more reliably than small local models.</div>
+
 <h2 id="first-request">First request</h2>
 <p>Restart the client and try:</p>
 <div class="note"><b>Say:</b> "Create a course called Biology 101, then add a welcome page and a 5-question quiz."</div>

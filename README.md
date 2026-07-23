@@ -43,7 +43,8 @@
 
 Moodle is the learning platform used by thousands of universities and schools.
 **MCP-Moodle** connects it to any [Model Context Protocol](https://modelcontextprotocol.io/)
-client (like Claude Desktop), so an AI can:
+client — Claude Desktop, Gemini CLI, ChatGPT desktop, Cursor, VS Code, and
+more — so an AI can:
 
 - **Read**: list courses, inspect course contents, see enrolled students, quizzes, grades,
   quiz results, activity completion, notifications, and competencies.
@@ -183,6 +184,33 @@ Add to `claude_desktop_config.json` (pip install):
 ```
 
 Running from a checkout instead? Use `"command": "/absolute/path/to/moodle-mcp/.venv/bin/python"` with `"args": ["/absolute/path/to/moodle-mcp/server.py"]`.
+
+### Not just Claude: any MCP client works
+
+MCP is an open protocol, so the same server works with **Gemini CLI, ChatGPT
+desktop (developer mode), Cursor, Windsurf, VS Code Copilot agent mode, Cline,
+LM Studio**, and anything else that speaks MCP. The config is nearly identical
+everywhere — the `moodle-mcp-bridge` command plus the three env vars. Example
+for **Gemini CLI** (`~/.gemini/settings.json`):
+
+```json
+{
+  "mcpServers": {
+    "moodle": {
+      "command": "moodle-mcp-bridge",
+      "env": {
+        "MOODLE_URL": "https://moodle.example.edu",
+        "MOODLE_TOKEN": "your_token_here",
+        "MOODLE_ALLOW_WRITE": "true"
+      }
+    }
+  }
+}
+```
+
+Tool-use quality depends on the model: with 86 tools, stronger models chain
+calls (create course → add section → add quiz) more reliably than small local
+ones.
 
 Restart Claude Desktop and the Moodle tools appear.
 
