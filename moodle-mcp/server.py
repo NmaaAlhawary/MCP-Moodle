@@ -1816,11 +1816,12 @@ def _register_write_tools() -> None:
     # --- Extended core writes (Moodle core web services) ------------------- #
 
     @mcp.tool()
-    async def delete_courses(courseids: list[int]) -> None:
+    async def delete_courses(courseids: list[int]) -> dict:
         """⚠️ WRITES LIVE DATA — IRREVERSIBLE. Delete one or more courses.
 
         Uses core_course_delete_courses. Every course and all its content is
-        permanently removed. Pass a list of course ids.
+        permanently removed. Pass a list of course ids. Returns Moodle's
+        warnings list (empty when everything deleted cleanly).
         """
         return await _call("core_course_delete_courses", {"courseids": courseids})
 
