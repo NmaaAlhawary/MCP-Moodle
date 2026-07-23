@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moodle-mcp-bridge"
-version = "1.6.0"
+version = "1.6.1"
 description = "MCP server exposing a Moodle site as 86 typed AI tools: read courses, grades and deadlines; build courses, quizzes, questions and content."
 readme = "README.md"
 requires-python = ">=3.11"

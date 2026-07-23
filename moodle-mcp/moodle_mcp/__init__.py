@@ -2,5 +2,5 @@
 
 from moodle_mcp.server import main, mcp
 
-__version__ = "1.6.0"
+__version__ = "1.6.1"
 __all__ = ["main", "mcp", "__version__"]
